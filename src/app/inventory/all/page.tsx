@@ -568,7 +568,7 @@ function UnifiedInventoryContent() {
         onClose={() => setActiveDetailItem(null)}
         onProceedStrategy={(item) => handleProceedStrategy(item)}
         initialMode={viewTab === 'ALL' ? 'OPERATIONS' : 'RISK_ANALYSIS'}
-        hideRiskTabs={viewTab === 'ALL'}
+        hideRiskTabs={false}
       />
 
       {/* Bundle Modal (위험 재고 관제 탭 전용) */}
