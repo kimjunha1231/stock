@@ -31,6 +31,8 @@ import {
   ComposedChart,
   Legend,
   Line,
+  ReferenceDot,
+  ReferenceLine,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -89,7 +91,8 @@ export default function StrategySimulationPage() {
   };
 
   const chartData = useMemo(() => {
-    const rates = [0, 5, 10, 15, 20, 25, 30, 35, 40, 50];
+    const baseRates = [0, 5, 10, 15, 20, 25, 30, 35, 40, 50];
+    const rates = Array.from(new Set([...baseRates, activeControls.discountRate])).sort((a, b) => a - b);
     return rates.map((rate) => {
       const point: Record<string, number | string> = { discountRate: `${rate}%` };
       selectedOptions.forEach((option) => {
@@ -100,7 +103,7 @@ export default function StrategySimulationPage() {
       });
       return point;
     });
-  }, [controlsByOption, selectedOptions]);
+  }, [activeControls.discountRate, controlsByOption, selectedOptions]);
 
   const colors: Record<string, string> = {
     'OPT-PROFIT-1': '#0F4C3A', 'OPT-PROFIT-2': '#059669', 'OPT-PROFIT-3': '#10B981',
