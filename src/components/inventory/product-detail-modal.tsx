@@ -24,13 +24,15 @@ interface ProductDetailModalProps {
   onClose: () => void;
   onProceedStrategy?: (item: InventoryItem) => void;
   initialMode?: 'OPERATIONS' | 'RISK_ANALYSIS' | 'HISTORY';
+  hideRiskTabs?: boolean;
 }
 
 export function ProductDetailModal({ 
   item, 
   onClose, 
   onProceedStrategy,
-  initialMode = 'OPERATIONS'
+  initialMode = 'OPERATIONS',
+  hideRiskTabs = false
 }: ProductDetailModalProps) {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<'OPERATIONS' | 'RISK_ANALYSIS' | 'HISTORY'>(initialMode);
@@ -119,47 +121,56 @@ export function ProductDetailModal({
           </button>
         </div>
 
-        {/* Modal Main View Tabs (상단 탭 바 3개) */}
-        <div className="flex items-center gap-2 border-b border-slate-200">
-          <button
-            onClick={() => setActiveTab('OPERATIONS')}
-            className={`pb-3 px-4 text-xs font-bold border-b-2 transition-all flex items-center gap-1.5 cursor-pointer ${
-              activeTab === 'OPERATIONS'
-                ? 'border-[#0F4C3A] text-[#0F4C3A]'
-                : 'border-transparent text-slate-500 hover:text-slate-800'
-            }`}
-          >
-            <Package className="w-4 h-4" />
-            <span>상품 운영 정보</span>
-          </button>
+        {/* Modal Main View Tabs (전체 재고 조회에서는 hideRiskTabs=true로 위험 탭 숨김) */}
+        {!hideRiskTabs ? (
+          <div className="flex items-center gap-2 border-b border-slate-200">
+            <button
+              onClick={() => setActiveTab('OPERATIONS')}
+              className={`pb-3 px-4 text-xs font-bold border-b-2 transition-all flex items-center gap-1.5 cursor-pointer ${
+                activeTab === 'OPERATIONS'
+                  ? 'border-[#0F4C3A] text-[#0F4C3A]'
+                  : 'border-transparent text-slate-500 hover:text-slate-800'
+              }`}
+            >
+              <Package className="w-4 h-4" />
+              <span>상품 운영 정보</span>
+            </button>
 
-          <button
-            onClick={() => setActiveTab('RISK_ANALYSIS')}
-            className={`pb-3 px-4 text-xs font-bold border-b-2 transition-all flex items-center gap-1.5 cursor-pointer ${
-              activeTab === 'RISK_ANALYSIS'
-                ? 'border-[#0F4C3A] text-[#0F4C3A]'
-                : 'border-transparent text-slate-500 hover:text-slate-800'
-            }`}
-          >
-            <ShieldAlert className="w-4 h-4 text-rose-600" />
-            <span>AI 위험 분석 및 기준선</span>
-          </button>
+            <button
+              onClick={() => setActiveTab('RISK_ANALYSIS')}
+              className={`pb-3 px-4 text-xs font-bold border-b-2 transition-all flex items-center gap-1.5 cursor-pointer ${
+                activeTab === 'RISK_ANALYSIS'
+                  ? 'border-[#0F4C3A] text-[#0F4C3A]'
+                  : 'border-transparent text-slate-500 hover:text-slate-800'
+              }`}
+            >
+              <ShieldAlert className="w-4 h-4 text-rose-600" />
+              <span>AI 위험 분석 및 기준선</span>
+            </button>
 
-          <button
-            onClick={() => setActiveTab('HISTORY')}
-            className={`pb-3 px-4 text-xs font-bold border-b-2 transition-all flex items-center gap-1.5 cursor-pointer ${
-              activeTab === 'HISTORY'
-                ? 'border-[#0F4C3A] text-[#0F4C3A]'
-                : 'border-transparent text-slate-500 hover:text-slate-800'
-            }`}
-          >
-            <History className="w-4 h-4 text-[#9E7C3B]" />
-            <span>수립 전략 히스토리 ({relatedCases.length}건)</span>
-          </button>
-        </div>
+            <button
+              onClick={() => setActiveTab('HISTORY')}
+              className={`pb-3 px-4 text-xs font-bold border-b-2 transition-all flex items-center gap-1.5 cursor-pointer ${
+                activeTab === 'HISTORY'
+                  ? 'border-[#0F4C3A] text-[#0F4C3A]'
+                  : 'border-transparent text-slate-500 hover:text-slate-800'
+              }`}
+            >
+              <History className="w-4 h-4 text-[#9E7C3B]" />
+              <span>수립 전략 히스토리 ({relatedCases.length}건)</span>
+            </button>
+          </div>
+        ) : (
+          <div className="border-b border-slate-200 pb-2">
+            <h4 className="text-xs font-bold text-[#0F4C3A] flex items-center gap-1.5">
+              <Package className="w-4 h-4" />
+              <span>더현대 서울 품목 운영 상세 정보 (수량·재고량·판매 추이)</span>
+            </h4>
+          </div>
+        )}
 
         {/* TAB 1: 상품 운영 정보 (Product Operations Info) */}
-        {activeTab === 'OPERATIONS' && (
+        {(activeTab === 'OPERATIONS' || hideRiskTabs) && (
           <div className="space-y-4 text-xs">
             {/* Direct Purchase Notice */}
             {item.purchaseType !== '직매입' && (
@@ -239,27 +250,29 @@ export function ProductDetailModal({
               </div>
             </div>
 
-            {/* Transition Link to Risk View */}
-            <div className="p-4 bg-emerald-50/60 border border-emerald-200 rounded-xl flex items-center justify-between">
-              <div>
-                <p className="font-bold text-[#0F4C3A]">현재 AI 위험 상태: {badge.label}</p>
-                <p className="text-[11px] text-slate-600 mt-0.5">{item.reason}</p>
+            {/* If hideRiskTabs is true, provide a clean link to Risk Inventory */}
+            {hideRiskTabs && (
+              <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl flex items-center justify-between">
+                <div>
+                  <p className="font-bold text-slate-800">현재 위험 관리 상태 요약: {badge.label}</p>
+                  <p className="text-[11px] text-slate-500 mt-0.5">상세한 AI 위험 분석과 Do Nothing 기준선은 [위험(악성) 재고 조회]에서 확인합니다.</p>
+                </div>
+                <button
+                  onClick={() => router.push(`/inventory/risk`)}
+                  className="px-3.5 py-2 bg-white border border-slate-300 hover:border-[#0F4C3A] text-slate-700 hover:text-[#0F4C3A] rounded-lg font-bold text-xs flex items-center gap-1 shrink-0 cursor-pointer shadow-2xs"
+                >
+                  <span>위험 재고 관제로 이동</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </button>
               </div>
-              <button
-                onClick={() => setActiveTab('RISK_ANALYSIS')}
-                className="px-3.5 py-2 bg-[#0F4C3A] hover:bg-[#0B392B] text-white rounded-lg font-bold text-xs flex items-center gap-1 shrink-0 cursor-pointer"
-              >
-                <span>AI 위험 분석 상세 보기</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </button>
-            </div>
+            )}
           </div>
         )}
 
-        {/* TAB 2: AI 위험 분석 및 기준선 (AI Risk Analysis & Baseline) */}
-        {activeTab === 'RISK_ANALYSIS' && (
+        {/* TAB 2: AI 위험 분석 및 기준선 (AI Risk Analysis & Baseline - 위험 재고 모달 전용) */}
+        {!hideRiskTabs && activeTab === 'RISK_ANALYSIS' && (
           <div className="space-y-4 text-xs">
-            {/* Risk Sub-navigation Toggles (상단으로 히스토리를 뺐으므로 2개 버튼으로 구성) */}
+            {/* Risk Sub-navigation Toggles */}
             <div className="flex items-center gap-2 bg-slate-100 p-1 rounded-xl">
               <button
                 onClick={() => setRiskSubSection('ANALYSIS')}
@@ -389,8 +402,8 @@ export function ProductDetailModal({
           </div>
         )}
 
-        {/* TAB 3: 수립 전략 히스토리 (상단 메인 탭으로 뺀 영역) */}
-        {activeTab === 'HISTORY' && (
+        {/* TAB 3: 수립 전략 히스토리 (위험 재고 모달 전용) */}
+        {!hideRiskTabs && activeTab === 'HISTORY' && (
           <div className="space-y-3 text-xs">
             <div className="flex items-center justify-between">
               <h4 className="font-bold text-slate-900 flex items-center gap-1.5">
@@ -462,13 +475,15 @@ export function ProductDetailModal({
           >
             닫기
           </button>
-          <button
-            onClick={handleStartStrategy}
-            className="px-5 py-2 bg-[#0F4C3A] hover:bg-[#0B392B] text-white rounded-xl text-xs font-bold shadow-xs transition-all flex items-center gap-1.5 cursor-pointer"
-          >
-            <Sparkles className="w-4 h-4 text-[#9E7C3B]" />
-            <span>이 상품으로 AI 전략 수립 이동</span>
-          </button>
+          {!hideRiskTabs && (
+            <button
+              onClick={handleStartStrategy}
+              className="px-5 py-2 bg-[#0F4C3A] hover:bg-[#0B392B] text-white rounded-xl text-xs font-bold shadow-xs transition-all flex items-center gap-1.5 cursor-pointer"
+            >
+              <Sparkles className="w-4 h-4 text-[#9E7C3B]" />
+              <span>이 상품으로 AI 전략 수립 이동</span>
+            </button>
+          )}
         </div>
       </div>
     </div>

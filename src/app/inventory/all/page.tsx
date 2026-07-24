@@ -394,13 +394,14 @@ export default function AllInventoryPage() {
           </div>
         </div>
 
-        {/* Product Detail Modal */}
-        <ProductDetailModal
-          item={activeDetailItem}
-          onClose={() => setActiveDetailItem(null)}
-          onProceedStrategy={(item) => handleProceedStrategy(item)}
-          initialMode="OPERATIONS"
-        />
+       {/* Product Detail Modal */}
+       <ProductDetailModal
+         item={activeDetailItem}
+         onClose={() => setActiveDetailItem(null)}
+         onProceedStrategy={(item) => handleProceedStrategy(item)}
+         initialMode="OPERATIONS"
+         hideRiskTabs={true}
+       />
 
         {/* Bottom Drawer */}
         {selectedItemIds.length > 0 && (
