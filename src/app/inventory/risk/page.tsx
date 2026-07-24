@@ -5,20 +5,18 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { AppLayout } from '@/components/layout/app-layout';
 import { MOCK_INVENTORY_ITEMS } from '@/lib/mock-data';
 import { InventoryItem, RiskStatus } from '@/lib/types';
+import { ProductDetailModal } from '@/components/inventory/product-detail-modal';
 import { 
   AlertTriangle, 
   Sparkles, 
   Plus, 
-  Check, 
   X, 
   Search, 
   Layers, 
   TrendingUp, 
   ArrowRight,
   ShieldAlert,
-  Info,
-  PackageCheck,
-  Building2
+  PackageCheck
 } from 'lucide-react';
 
 function RiskInventoryContent() {
@@ -28,6 +26,7 @@ function RiskInventoryContent() {
 
   const [selectedFloor, setSelectedFloor] = useState<string>(initialFloor);
   const [selectedItemIds, setSelectedItemIds] = useState<string[]>([]);
+  const [activeDetailItem, setActiveDetailItem] = useState<InventoryItem | null>(null);
   
   const [isBundleModalOpen, setIsBundleModalOpen] = useState(false);
   const [targetItemForBundle, setTargetItemForBundle] = useState<InventoryItem | null>(null);
@@ -55,7 +54,8 @@ function RiskInventoryContent() {
     }
   };
 
-  const handleSelectItem = (id: string) => {
+  const handleSelectItem = (id: string, e?: React.SyntheticEvent) => {
+    if (e) e.stopPropagation();
     setSelectedItemIds((prev) =>
       prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
     );
@@ -74,7 +74,8 @@ function RiskInventoryContent() {
     };
   }, [selectedItemIds]);
 
-  const openBundleModal = (item?: InventoryItem) => {
+  const openBundleModal = (item?: InventoryItem, e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
     if (item) {
       setTargetItemForBundle(item);
       setBundleList([item]);
@@ -127,11 +128,12 @@ function RiskInventoryContent() {
     ).slice(0, 4);
   }, [targetItemForBundle]);
 
-  const handleProceedStrategy = () => {
-    if (selectedItemIds.length === 0) return;
-    const itemQuery = selectedItemIds.join(',');
+  const handleProceedStrategy = (singleItem?: InventoryItem) => {
+    const ids = singleItem ? [singleItem.id] : selectedItemIds;
+    if (ids.length === 0) return;
+    const itemQuery = ids.join(',');
     const bundleQuery = createdBundles.map((b) => b.parentId).join(',');
-    router.push(`/strategy/generate?items=${itemQuery}&bundles=${bundleQuery}`);
+    router.push(`/strategy/history?created=true&items=${itemQuery}&bundles=${bundleQuery}`);
   };
 
   const STATUS_BADGE = {
@@ -153,7 +155,7 @@ function RiskInventoryContent() {
           </div>
           <h1 className="text-2xl font-bold text-slate-900 tracking-tight">더현대 서울 위험·악성 재고 집중 관리</h1>
           <p className="text-xs text-slate-500 mt-1">
-            더현대 서울 2F 여성패션, 3F 남성잡화, B1 식품관, 1F 뷰티리빙 매장의 장기보관 및 유통기한 임박 직매입 위험재고를 진단합니다.
+            더현대 서울 2F 여성패션, 3F 남성잡화, B1 식품관, 1F 뷰티리빙 매장의 장기보관 및 유통기한 임박 직매입 위험재고를 관제합니다. (로우 클릭 시 상세 진단 모달을 엽니다)
           </p>
         </div>
         <div className="flex items-center gap-3 shrink-0">
@@ -237,18 +239,17 @@ function RiskInventoryContent() {
         </div>
 
         <div className="overflow-x-auto w-full">
-          <table className="w-full text-left border-collapse min-w-[1100px] table-fixed">
+          <table className="w-full text-left border-collapse min-w-[1000px] table-fixed">
             <thead>
               <tr className="bg-slate-50 text-[11px] font-bold text-slate-600 border-b border-slate-200 uppercase tracking-wider">
                 <th className="py-3 px-4 w-12 text-center">선택</th>
                 <th className="py-3 px-4 w-28">위험 상태</th>
                 <th className="py-3 px-4 w-28">지점</th>
                 <th className="py-3 px-4 w-32">상품코드</th>
-                <th className="py-3 px-4 min-w-[220px]">상품명 및 미세 사유</th>
+                <th className="py-3 px-4 min-w-[240px]">상품명 및 미세 사유</th>
                 <th className="py-3 px-4 w-44">더현대 서울 층/매장</th>
                 <th className="py-3 px-4 w-24 text-right">현재고</th>
                 <th className="py-3 px-4 w-36 text-right">원가 / 정상가</th>
-                <th className="py-3 px-4 w-28 text-center">위험도 점수</th>
                 <th className="py-3 px-4 w-24 text-center">번들 결합</th>
               </tr>
             </thead>
@@ -261,15 +262,17 @@ function RiskInventoryContent() {
                 return (
                   <tr
                     key={item.id}
-                    className={`hover:bg-slate-50/80 transition-colors ${
-                      isSelected ? 'bg-emerald-50/40' : ''
+                    onClick={() => setActiveDetailItem(item)}
+                    className={`hover:bg-[#0F4C3A]/5 transition-colors cursor-pointer ${
+                      isSelected ? 'bg-emerald-50/60' : ''
                     }`}
+                    title="클릭 시 상세 AI 진단 및 시뮬레이션을 엽니다"
                   >
-                    <td className="py-3.5 px-4 text-center">
+                    <td className="py-3.5 px-4 text-center" onClick={(e) => e.stopPropagation()}>
                       <input
                         type="checkbox"
                         checked={isSelected}
-                        onChange={() => handleSelectItem(item.id)}
+                        onChange={(e) => handleSelectItem(item.id, e)}
                         className="rounded border-slate-300 text-[#0F4C3A] focus:ring-[#0F4C3A] w-4 h-4 cursor-pointer"
                       />
                     </td>
@@ -295,16 +298,10 @@ function RiskInventoryContent() {
                       <p className="text-slate-900 font-bold">₩{item.sellingPrice.toLocaleString()}</p>
                       <p className="text-[10px] text-slate-400">원가 ₩{item.costPrice.toLocaleString()}</p>
                     </td>
-                    <td className="py-3.5 px-4 text-center whitespace-nowrap">
-                      <div className="inline-flex items-center gap-1 font-bold text-red-600 tabular-nums">
-                        <span>{item.riskScore}점</span>
-                        <span className="text-[10px] text-slate-400 font-normal">(D-{item.expiryDaysLeft})</span>
-                      </div>
-                    </td>
-                    <td className="py-3.5 px-4 text-center whitespace-nowrap">
+                    <td className="py-3.5 px-4 text-center whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
                       {itemBundle ? (
                         <span
-                          onClick={() => openBundleModal(item)}
+                          onClick={(e) => openBundleModal(item, e)}
                           className="inline-flex items-center gap-1 px-2 py-1 rounded bg-amber-50 text-amber-800 border border-amber-200 text-[10px] font-bold cursor-pointer hover:bg-amber-100"
                         >
                           <Layers className="w-3 h-3" />
@@ -312,7 +309,7 @@ function RiskInventoryContent() {
                         </span>
                       ) : (
                         <button
-                          onClick={() => openBundleModal(item)}
+                          onClick={(e) => openBundleModal(item, e)}
                           className="p-1.5 rounded-lg border border-slate-200 hover:bg-[#0F4C3A] hover:text-white hover:border-[#0F4C3A] text-slate-600 transition-all cursor-pointer"
                           title="번들 구성 모달 열기"
                         >
@@ -328,7 +325,14 @@ function RiskInventoryContent() {
         </div>
       </div>
 
-      {/* Modal */}
+      {/* Product Detail Modal */}
+      <ProductDetailModal
+        item={activeDetailItem}
+        onClose={() => setActiveDetailItem(null)}
+        onProceedStrategy={(item) => handleProceedStrategy(item)}
+      />
+
+      {/* Bundle Modal */}
       {isBundleModalOpen && targetItemForBundle && (
         <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
           <div className="bg-white border border-slate-200 rounded-2xl shadow-2xl max-w-2xl w-full p-6 space-y-5 animate-in fade-in zoom-in-95 duration-150">
@@ -486,7 +490,7 @@ function RiskInventoryContent() {
           </div>
 
           <button
-            onClick={handleProceedStrategy}
+            onClick={() => handleProceedStrategy()}
             className="flex items-center gap-2 px-6 py-3 bg-[#0F4C3A] hover:bg-[#0B392B] text-white text-xs font-bold rounded-xl shadow-md transition-all cursor-pointer"
           >
             <span>선택 항목으로 개별/번들 AI 전략 수립</span>

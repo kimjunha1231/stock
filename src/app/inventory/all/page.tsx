@@ -5,16 +5,15 @@ import { useRouter } from 'next/navigation';
 import { AppLayout } from '@/components/layout/app-layout';
 import { MOCK_INVENTORY_ITEMS } from '@/lib/mock-data';
 import { InventoryItem, RiskStatus } from '@/lib/types';
+import { ProductDetailModal } from '@/components/inventory/product-detail-modal';
 import { 
   Search, 
-  Info, 
   Sparkles, 
   X, 
   Building2, 
   ArrowRight,
   AlertTriangle,
   Package,
-  ShieldAlert,
   Clock,
   CheckCircle2
 } from 'lucide-react';
@@ -29,7 +28,7 @@ export default function AllInventoryPage() {
   const [searchQuery, setSearchQuery] = useState<string>('');
 
   const [selectedItemIds, setSelectedItemIds] = useState<string[]>([]);
-  const [activeReasonItem, setActiveReasonItem] = useState<InventoryItem | null>(null);
+  const [activeDetailItem, setActiveDetailItem] = useState<InventoryItem | null>(null);
 
   // 정밀 필터링 로직
   const filteredItems = useMemo(() => {
@@ -62,7 +61,7 @@ export default function AllInventoryPage() {
     });
   }, [selectedFloor, selectedPurchaseType, selectedStatus, searchQuery]);
 
-  // AI 위험 태그별 품목 수 및 금액 계산 (두 번째 이미지 카드 4개 구성용)
+  // AI 위험 태그별 품목 수 및 금액 계산
   const tagMetrics = useMemo(() => {
     const deadStockItems = filteredItems.filter((i) => i.status === 'DEAD_STOCK');
     const criticalItems = filteredItems.filter((i) => i.status === 'CRITICAL_NEAR');
@@ -106,16 +105,18 @@ export default function AllInventoryPage() {
     }
   };
 
-  const handleSelectItem = (id: string) => {
+  const handleSelectItem = (id: string, e?: React.SyntheticEvent) => {
+    if (e) e.stopPropagation();
     setSelectedItemIds((prev) =>
       prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
     );
   };
 
-  const handleProceedStrategy = () => {
-    if (selectedItemIds.length === 0) return;
-    const itemQuery = selectedItemIds.join(',');
-    router.push(`/strategy/generate?items=${itemQuery}`);
+  const handleProceedStrategy = (singleItem?: InventoryItem) => {
+    const ids = singleItem ? [singleItem.id] : selectedItemIds;
+    if (ids.length === 0) return;
+    const itemQuery = ids.join(',');
+    router.push(`/strategy/history?created=true&items=${itemQuery}`);
   };
 
   const resetFilters = () => {
@@ -145,13 +146,13 @@ export default function AllInventoryPage() {
             </span>
             <h1 className="text-2xl font-bold text-slate-900 tracking-tight mt-0.5">더현대 서울 재고 통합 조회</h1>
             <p className="text-xs text-slate-500 mt-1">
-              더현대 서울 2F 여성패션, 3F 남성잡화, B1 식품관, 1F 뷰티리빙 매장의 직매입 및 보유 재고 흐름을 관제합니다.
+              더현대 서울 2F 여성패션, 3F 남성잡화, B1 식품관, 1F 뷰티리빙 매장의 직매입 및 보유 재고 흐름을 관제합니다. (로우 클릭 시 상세 진단 및 시뮬레이션을 확인합니다)
             </p>
           </div>
 
           <div className="flex items-center gap-3 shrink-0">
             <button
-              onClick={handleProceedStrategy}
+              onClick={() => handleProceedStrategy()}
               disabled={selectedItemIds.length === 0}
               className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all shadow-xs flex items-center gap-1.5 cursor-pointer ${
                 selectedItemIds.length > 0
@@ -165,9 +166,8 @@ export default function AllInventoryPage() {
           </div>
         </div>
 
-        {/* AI 위험 태그별 품목 수 & 원가 금액 요약 카드 4종 (두 번째 이미지 스타일 카드 스트립) */}
+        {/* AI 위험 태그별 요약 카드 */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {/* Card 1: 더현대 서울 조회 재고 총액 */}
           <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-xs space-y-2">
             <div className="flex items-center justify-between text-xs text-slate-500 font-medium">
               <span>더현대 서울 조회 재고 총액</span>
@@ -182,7 +182,6 @@ export default function AllInventoryPage() {
             </div>
           </div>
 
-          {/* Card 2: 악성 재고 (DEAD_STOCK) */}
           <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-xs space-y-2">
             <div className="flex items-center justify-between text-xs text-slate-500 font-medium">
               <span>악성 재고 (DEAD_STOCK)</span>
@@ -197,7 +196,6 @@ export default function AllInventoryPage() {
             </div>
           </div>
 
-          {/* Card 3: 악성 임박 (CRITICAL_NEAR) */}
           <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-xs space-y-2">
             <div className="flex items-center justify-between text-xs text-slate-500 font-medium">
               <span>악성 임박 (CRITICAL_NEAR)</span>
@@ -212,7 +210,6 @@ export default function AllInventoryPage() {
             </div>
           </div>
 
-          {/* Card 4: 위험 & 주의/안전 (WARNING / CAUTION / SAFE) */}
           <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-xs space-y-2">
             <div className="flex items-center justify-between text-xs text-slate-500 font-medium">
               <span>위험 & 주의/안전 재고</span>
@@ -305,7 +302,7 @@ export default function AllInventoryPage() {
 
           {/* Table */}
           <div className="overflow-x-auto w-full">
-            <table className="w-full text-left border-collapse min-w-[1150px] table-fixed">
+            <table className="w-full text-left border-collapse min-w-[1050px] table-fixed">
               <thead>
                 <tr className="bg-slate-50 text-[11px] font-bold text-slate-600 border-b border-slate-200 uppercase tracking-wider">
                   <th className="py-3 px-4 w-12 text-center whitespace-nowrap">
@@ -318,7 +315,7 @@ export default function AllInventoryPage() {
                   </th>
                   <th className="py-3 px-4 w-28 whitespace-nowrap">지점</th>
                   <th className="py-3 px-4 w-32 whitespace-nowrap">상품코드</th>
-                  <th className="py-3 px-4 w-52 whitespace-nowrap">상품명 및 카테고리</th>
+                  <th className="py-3 px-4 w-60 whitespace-nowrap">상품명 및 카테고리</th>
                   <th className="py-3 px-4 w-44 whitespace-nowrap">더현대 서울 층/매장</th>
                   <th className="py-3 px-4 w-24 whitespace-nowrap">매입구분</th>
                   <th className="py-3 px-4 w-24 text-right whitespace-nowrap">현재고</th>
@@ -326,13 +323,12 @@ export default function AllInventoryPage() {
                   <th className="py-3 px-4 w-32 text-right whitespace-nowrap">판매가</th>
                   <th className="py-3 px-4 w-24 text-center whitespace-nowrap">보관일수</th>
                   <th className="py-3 px-4 w-28 text-center whitespace-nowrap">AI 위험 태그</th>
-                  <th className="py-3 px-4 w-24 text-center whitespace-nowrap">판단사유</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 text-xs">
                 {filteredItems.length === 0 ? (
                   <tr>
-                    <td colSpan={12} className="py-12 text-center text-slate-500 font-medium">
+                    <td colSpan={11} className="py-12 text-center text-slate-500 font-medium">
                       선택하신 조건에 일치하는 재고 품목이 없습니다.
                     </td>
                   </tr>
@@ -344,22 +340,24 @@ export default function AllInventoryPage() {
                     return (
                       <tr
                         key={item.id}
-                        className={`hover:bg-slate-50/90 transition-colors ${
-                          isSelected ? 'bg-emerald-50/40' : ''
+                        onClick={() => setActiveDetailItem(item)}
+                        className={`hover:bg-[#0F4C3A]/5 transition-colors cursor-pointer ${
+                          isSelected ? 'bg-emerald-50/60' : ''
                         }`}
+                        title="클릭 시 상품 상세 AI 진단 및 시뮬레이션을 엽니다"
                       >
-                        <td className="py-3.5 px-4 text-center whitespace-nowrap">
+                        <td className="py-3.5 px-4 text-center whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
                           <input
                             type="checkbox"
                             checked={isSelected}
-                            onChange={() => handleSelectItem(item.id)}
+                            onChange={(e) => handleSelectItem(item.id, e)}
                             className="rounded border-slate-300 text-[#0F4C3A] focus:ring-[#0F4C3A] cursor-pointer"
                           />
                         </td>
                         <td className="py-3.5 px-4 whitespace-nowrap font-bold text-slate-800">더현대 서울</td>
                         <td className="py-3.5 px-4 whitespace-nowrap font-mono text-[11px] text-slate-500">{item.code}</td>
                         <td className="py-3.5 px-4">
-                          <p className="font-bold text-slate-900 truncate max-w-[200px]">{item.name}</p>
+                          <p className="font-bold text-slate-900 truncate max-w-[240px]">{item.name}</p>
                           <p className="text-[10px] text-slate-400 truncate mt-0.5">{item.category}</p>
                         </td>
                         <td className="py-3.5 px-4 whitespace-nowrap text-slate-800 font-medium">{item.store}</td>
@@ -387,15 +385,6 @@ export default function AllInventoryPage() {
                             {badge.label}
                           </span>
                         </td>
-                        <td className="py-3.5 px-4 text-center whitespace-nowrap">
-                          <button
-                            onClick={() => setActiveReasonItem(item)}
-                            className="px-2 py-1 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium text-[11px] inline-flex items-center gap-1 transition-all cursor-pointer"
-                          >
-                            <Info className="w-3 h-3 text-[#0F4C3A]" />
-                            <span>사유</span>
-                          </button>
-                        </td>
                       </tr>
                     );
                   })
@@ -405,63 +394,12 @@ export default function AllInventoryPage() {
           </div>
         </div>
 
-        {/* Reason Modal */}
-        {activeReasonItem && (
-          <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-            <div className="bg-white border border-slate-200 rounded-2xl shadow-2xl max-w-lg w-full p-6 space-y-4 animate-in fade-in zoom-in-95 duration-150">
-              <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-                <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-lg bg-emerald-100 text-[#0F4C3A] flex items-center justify-center font-bold">
-                    <Sparkles className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-slate-900 text-sm">더현대 서울 AI 재고 미세 진단</h3>
-                    <p className="text-[11px] text-slate-500">{activeReasonItem.store} · {activeReasonItem.code}</p>
-                  </div>
-                </div>
-                <button onClick={() => setActiveReasonItem(null)} className="text-slate-400 hover:text-slate-600 p-1 cursor-pointer">
-                  <X className="w-5 h-5" />
-                </button>
-              </div>
-
-              <div>
-                <p className="text-xs font-bold text-slate-900">{activeReasonItem.name}</p>
-                <div className="mt-3 p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-2 text-xs">
-                  <div className="flex justify-between border-b border-slate-200 pb-2">
-                    <span className="text-slate-500">진단 등급:</span>
-                    <span className="font-bold text-red-600">{activeReasonItem.status} (위험점수 {activeReasonItem.riskScore}점)</span>
-                  </div>
-                  <div className="flex justify-between border-b border-slate-200 pb-2">
-                    <span className="text-slate-500">유통기한/시즌 잔여:</span>
-                    <span className="font-bold text-slate-800">D-{activeReasonItem.expiryDaysLeft}일</span>
-                  </div>
-                  <div className="flex justify-between border-b border-slate-200 pb-2">
-                    <span className="text-slate-500">일일 보관 손실 누적:</span>
-                    <span className="font-bold text-slate-900 font-mono">₩{activeReasonItem.holdingCostPerDay.toLocaleString()}/일</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-slate-500">예상 폐기 회손액:</span>
-                    <span className="font-bold text-emerald-700 font-mono">₩{(activeReasonItem.estimatedDisposalCost * activeReasonItem.quantity).toLocaleString()}</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="p-3 bg-emerald-50/60 border border-emerald-200 rounded-xl text-xs text-slate-700">
-                <p className="font-bold text-[#0F4C3A] mb-1">AI 파이프라인 분석 사유:</p>
-                <p className="leading-relaxed">{activeReasonItem.reason}</p>
-              </div>
-
-              <div className="flex justify-end border-t border-slate-100 pt-3">
-                <button
-                  onClick={() => setActiveReasonItem(null)}
-                  className="px-4 py-2 bg-slate-900 text-white rounded-lg text-xs font-bold hover:bg-slate-800 cursor-pointer"
-                >
-                  확인 닫기
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
+        {/* Product Detail Modal */}
+        <ProductDetailModal
+          item={activeDetailItem}
+          onClose={() => setActiveDetailItem(null)}
+          onProceedStrategy={(item) => handleProceedStrategy(item)}
+        />
 
         {/* Bottom Drawer */}
         {selectedItemIds.length > 0 && (
@@ -479,7 +417,7 @@ export default function AllInventoryPage() {
             </div>
 
             <button
-              onClick={handleProceedStrategy}
+              onClick={() => handleProceedStrategy()}
               className="flex items-center gap-2 px-6 py-3 bg-[#0F4C3A] hover:bg-[#0B392B] text-white text-xs font-bold rounded-xl shadow-md transition-all cursor-pointer"
             >
               <span>선택 품목으로 AI 전략 수립 이동</span>

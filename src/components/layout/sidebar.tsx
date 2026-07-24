@@ -17,7 +17,6 @@ const NAV_ITEMS = [
   { name: '대시보드', href: '/dashboard', icon: LayoutDashboard },
   { name: '전체 재고 조회', href: '/inventory/all', icon: Boxes },
   { name: '위험(악성) 재고 조회', href: '/inventory/risk', icon: AlertTriangle, badge: '우선처리' },
-  { name: 'AI 전략 수립', href: '/strategy/generate', icon: Sparkles },
   { name: '전략 기록 & 비교', href: '/strategy/history', icon: History },
   { name: '재고 건강도 통계', href: '/analytics', icon: BarChart3 },
 ];
