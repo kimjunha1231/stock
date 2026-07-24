@@ -10,7 +10,8 @@ import {
   History, 
   BarChart3, 
   Building2,
-  ShieldCheck
+  ShieldCheck,
+  PlayCircle
 } from 'lucide-react';
 
 const NAV_ITEMS = [
@@ -18,6 +19,7 @@ const NAV_ITEMS = [
   { name: '전체 재고 조회', href: '/inventory/all', icon: Boxes },
   { name: '위험(악성) 재고 조회', href: '/inventory/risk', icon: AlertTriangle, badge: '우선처리' },
   { name: '전략 기록 & 비교', href: '/strategy/history', icon: History },
+  { name: '실행 전략 & 성과 관제', href: '/strategy/execution', icon: PlayCircle },
   { name: '재고 건강도 통계', href: '/analytics', icon: BarChart3 },
 ];
 

@@ -64,9 +64,9 @@
 ├── [사이드바]
 │   ├── 1. 대시보드 (Dashboard)
 │   ├── 2. 전체 재고 조회 (All Inventory)
-│   ├── 3. 위험(악성) 재고 조회 (Risk Inventory)
-│   ├── 4. AI 전략 수립 및 실행 (Strategy Generation)
-│   ├── 5. 전략 기록 및 상세 비교 (Strategy History & Details)
+│   ├── 3. 위험(악성) 재고 조회 (Risk Inventory) [우선처리]
+│   ├── 4. 전략 기록 & 비교 (Strategy History & Details)
+│   ├── 5. 실행 전략 & 성과 관제 (Executed Strategies & Performance Control)
 │   └── 6. 재고 건강도 통계 (Inventory Analytics)
 ```
 
