@@ -396,6 +396,90 @@ export const MOCK_INVENTORY_ITEMS: InventoryItem[] = [
 
 export const MOCK_OPTIMIZATION_CASES: OptimizationCase[] = [
   {
+    id: 'CASE-2026-003',
+    title: '더현대 서울 3F 이탈리안 가죽 가방 단독 AI 최적화 (실행 완료)',
+    company: '현대백화점',
+    targetItems: [MOCK_INVENTORY_ITEMS[4]],
+    isBundle: false,
+    createdAt: '2026-07-15 09:30',
+    status: 'FINISHED',
+    selectedOptionId: 'OPT-03-A',
+    executionStatus: 'COMPLETED',
+    executionStartDate: '2026-07-16',
+    executionEndDate: '2026-07-30',
+    actualSalesQty: 103,
+    actualLiquidationDays: 15,
+    actualNetContributionMargin: 26400000,
+    actualRemainingQty: 42,
+    varianceReason: '할인 반응 저조 (온라인 노출 부족 및 장마철 내방객 감소)',
+    approverName: '이규원 수석 MD (더현대 서울 재고전략팀)',
+    approvedAt: '2026-07-15 15:20',
+    options: [
+      {
+        id: 'OPT-03-A',
+        name: '시나리오 A: 20% 타깃 할인 + 3F POP-UP 라운지 이관 (실행 완료)',
+        type: 'PURE_PROFIT',
+        discountRate: 20,
+        targetChannel: '더현대 서울 3F 중앙 행사장 & H.Point 앱 핫딜 Push',
+        expectedSalesQty: 120,
+        expectedRevenue: 46080000,
+        expectedGrossMargin: 32000000,
+        expectedNetContributionMargin: 29120000,
+        savedDisposalCost: 4200000,
+        liquidationDays: 12,
+        confidenceScore: 91,
+        reasoning: '가죽 브리프케이스 보관일수 210일 이상 품목에 20% 할인을 적용하여 증분 기여현금이익 2,912만원 및 폐기손실 방어 비율 91% 달성 예상',
+        fallbackPlan: {
+          conditionTrigger: '7일 차 소진율 50% 미달 시',
+          action: 'H.Point 3,000점 추가 즉시 적립 쿠폰 발송',
+          expectedImpact: '최종 소진율 92% 달성'
+        }
+      }
+    ]
+  },
+  {
+    id: 'CASE-2026-004',
+    title: '더현대 서울 B1 한우 구이용 럭셔리 세트 긴급 타임세일 (실행 중)',
+    company: '현대백화점',
+    targetItems: [MOCK_INVENTORY_ITEMS[11]],
+    isBundle: false,
+    createdAt: '2026-07-22 08:30',
+    status: 'EXECUTING',
+    selectedOptionId: 'OPT-04-A',
+    executionStatus: 'EXECUTING',
+    executionStartDate: '2026-07-22',
+    executionEndDate: '2026-07-26',
+    actualSalesQty: 72,
+    actualLiquidationDays: 3,
+    actualNetContributionMargin: 14800000,
+    actualRemainingQty: 38,
+    varianceReason: '특정 포장 규격(1kg) 소진 속도 지연 및 저녁 퇴근길 현장 방문객 집중',
+    approverName: '김민준 책임 MD (더현대 서울 식품팀)',
+    approvedAt: '2026-07-22 09:10',
+    options: [
+      {
+        id: 'OPT-04-A',
+        name: '시나리오 A: 25% 즉시 타임세일 + 퇴근길 VIP 쿠폰 (실행 중)',
+        type: 'FAST_LIQUIDATION',
+        discountRate: 25,
+        targetChannel: '더현대 서울 B1 Tasty SEOUL 현장 핫딜',
+        expectedSalesQty: 90,
+        expectedRevenue: 18900000,
+        expectedGrossMargin: 16800000,
+        expectedNetContributionMargin: 18200000,
+        savedDisposalCost: 5850000,
+        liquidationDays: 2,
+        confidenceScore: 94,
+        reasoning: '유통기한 D-6 한우 재고에 대해 당일 현장 25% 타임세일을 실행하여 폐기손실 1,595만원을 회피',
+        fallbackPlan: {
+          conditionTrigger: '당일 18시 소진율 60% 미달 시',
+          action: '마감 2시간 전 35% 타임 세일 전환',
+          expectedImpact: '당일 전량 소진'
+        }
+      }
+    ]
+  },
+  {
     id: 'CASE-2026-001',
     title: '더현대 서울 2F 캐시미어 코트 단독 AI 최적화',
     company: '현대백화점',
