@@ -61,7 +61,17 @@ export interface OptimizationCase {
   bundleItems?: InventoryItem[];
   isBundle: boolean;
   createdAt: string;
-  status: 'PENDING' | 'GENERATING' | 'COMPLETED' | 'APPROVED' | 'REJECTED';
+  status: 'PENDING' | 'GENERATING' | 'COMPLETED' | 'APPROVED' | 'REJECTED' | 'EXECUTING' | 'FINISHED';
   options: StrategyOption[];
   selectedOptionId?: string;
+  executionStatus?: 'NOT_STARTED' | 'EXECUTING' | 'COMPLETED' | 'FAILED';
+  executionStartDate?: string;
+  executionEndDate?: string;
+  actualSalesQty?: number;
+  actualLiquidationDays?: number;
+  actualNetContributionMargin?: number;
+  actualRemainingQty?: number;
+  varianceReason?: string;
+  approverName?: string;
+  approvedAt?: string;
 }

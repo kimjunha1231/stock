@@ -330,6 +330,7 @@ function RiskInventoryContent() {
         item={activeDetailItem}
         onClose={() => setActiveDetailItem(null)}
         onProceedStrategy={(item) => handleProceedStrategy(item)}
+        initialMode="RISK_ANALYSIS"
       />
 
       {/* Bundle Modal */}

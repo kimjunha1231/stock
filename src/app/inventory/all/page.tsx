@@ -399,6 +399,7 @@ export default function AllInventoryPage() {
           item={activeDetailItem}
           onClose={() => setActiveDetailItem(null)}
           onProceedStrategy={(item) => handleProceedStrategy(item)}
+          initialMode="OPERATIONS"
         />
 
         {/* Bottom Drawer */}
