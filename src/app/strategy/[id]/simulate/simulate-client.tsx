@@ -25,14 +25,18 @@ import {
   SlidersHorizontal,
   Sparkles,
   Truck,
+  Send,
+  MessageSquare,
+  UserCheck,
+  Calendar,
+  X,
+  Share2
 } from 'lucide-react';
 import {
   CartesianGrid,
   ComposedChart,
   Legend,
   Line,
-  ReferenceDot,
-  ReferenceLine,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -45,7 +49,7 @@ const formatWon = (value: number) => `₩${Math.round(value).toLocaleString()}`;
 const toneClasses = {
   normal: { card: 'border-emerald-200 bg-emerald-50/70', badge: 'border-emerald-200 bg-emerald-100 text-emerald-800' },
   watch: { card: 'border-sky-200 bg-sky-50/70', badge: 'border-sky-200 bg-sky-100 text-sky-800' },
-  adjust: { card: 'border-amber-200 bg-amber-50/70', badge: 'border-amber-200 bg-amber-100 text-amber-800' },
+  adjust: { card: 'border-[#9E7C3B]/30 bg-amber-50/70', badge: 'border-amber-200 bg-amber-100 text-amber-800' },
   urgent: { card: 'border-orange-200 bg-orange-50/70', badge: 'border-orange-200 bg-orange-100 text-orange-800' },
   protect: { card: 'border-red-200 bg-red-50/70', badge: 'border-red-200 bg-red-100 text-red-800' },
 } as const;
@@ -69,8 +73,16 @@ export default function StrategySimulationPage() {
   const [controlsByOption, setControlsByOption] = useState<Record<string, SimulationControls>>(initialControls);
   const [saved, setSaved] = useState(false);
   const [approved, setApproved] = useState(false);
+  const [sentNotice, setSentNotice] = useState<string | null>(null);
+
+  // 검토 요청 모달 관련 상태
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+  const [selectedChannel, setSelectedChannel] = useState<'TEAMS' | 'SLACK'>('TEAMS');
+  const [selectedReviewer, setSelectedReviewer] = useState<string>('이규원 수석 MD (그룹 본사 재고전략팀)');
+  const [dueDate, setDueDate] = useState<string>('2026-07-27');
+  const [customNote, setCustomNote] = useState<string>('');
+
   const [showAdvanced, setShowAdvanced] = useState(false);
-  const [chartMetric, setChartMetric] = useState<"profit" | "sales" | "both">("profit");
 
   const activeOption = selectedOptions.find((option) => option.id === activeOptionId) || selectedOptions[0];
   const activeControls = controlsByOption[activeOption.id] || getDefaultControls(activeOption);
@@ -121,18 +133,33 @@ export default function StrategySimulationPage() {
     ['회피되는 폐기 비용', activeResult.avoidedDisposalCost],
   ];
 
+  const handleSendProposal = () => {
+    const channelName = selectedChannel === 'TEAMS' ? 'Microsoft Teams' : 'Slack';
+    const timestamp = new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' });
+    setApproved(true);
+    setSentNotice(`${channelName} 채널을 통해 [${selectedReviewer}] 님께 시뮬레이션 조정안 검토 요청 메시지가 전송되었습니다. (${timestamp})`);
+    setIsReviewModalOpen(false);
+  };
+
+  const REVIEWERS = [
+    '이규원 수석 MD (그룹 본사 재고전략팀)',
+    '김민준 책임 MD (더현대 서울 2F 여성패션)',
+    '박서연 수석 MD (더현대 서울 B1 식품관)',
+    '최현우 팀장 (더현대 서울 3F 남성잡화)'
+  ];
+
   return (
     <AppLayout>
       <div className="simulation-workbench space-y-5 pb-24">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <button onClick={() => router.back()} className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 transition-colors hover:text-slate-900">
+          <button onClick={() => router.back()} className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 transition-colors hover:text-slate-900 cursor-pointer">
             <ArrowLeft className="h-4 w-4" /> 전략 카드 목록으로 돌아가기
           </button>
           <div className="flex items-center gap-2">
-            <button onClick={resetActive} className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-bold text-slate-600 hover:bg-slate-50">
+            <button onClick={resetActive} className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-bold text-slate-600 hover:bg-slate-50 cursor-pointer">
               <RotateCcw className="h-3.5 w-3.5" /> AI 추천값으로 복원
             </button>
-            <button onClick={() => { setSaved(true); setApproved(false); }} className="inline-flex items-center gap-1.5 rounded-xl bg-[#0F4C3A] px-3.5 py-2 text-xs font-bold text-white shadow-sm hover:bg-[#0B392B]">
+            <button onClick={() => { setSaved(true); setApproved(false); }} className="inline-flex items-center gap-1.5 rounded-xl bg-[#0F4C3A] px-3.5 py-2 text-xs font-bold text-white shadow-sm hover:bg-[#0B392B] cursor-pointer">
               <Save className="h-3.5 w-3.5" /> 사용자 조정안 저장
             </button>
           </div>
@@ -156,7 +183,7 @@ export default function StrategySimulationPage() {
               const item = results.find((entry) => entry.option.id === option.id);
               const isActive = option.id === activeOption.id;
               return (
-                <button key={option.id} type="button" onClick={() => setActiveOptionId(option.id)} className={`rounded-xl border p-3 text-left transition-all ${isActive ? 'border-[#0F4C3A] bg-emerald-50/70 shadow-sm ring-1 ring-[#0F4C3A]/20' : 'border-slate-200 bg-slate-50 hover:border-slate-300'}`}>
+                <button key={option.id} type="button" onClick={() => setActiveOptionId(option.id)} className={`rounded-xl border p-3 text-left transition-all cursor-pointer ${isActive ? 'border-[#0F4C3A] bg-emerald-50/70 shadow-sm ring-1 ring-[#0F4C3A]/20' : 'border-slate-200 bg-slate-50 hover:border-slate-300'}`}>
                   <div className="flex items-center justify-between gap-2">
                     <span className="text-[10px] font-bold" style={{ color: colors[option.id] }}>{option.categoryLabel}</span>
                     {isActive && <span className="rounded bg-[#0F4C3A] px-1.5 py-0.5 text-[10px] font-bold text-white">조정 중</span>}
@@ -179,8 +206,20 @@ export default function StrategySimulationPage() {
         </section>
 
         {saved && (
-          <div className="flex items-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-xs font-semibold text-emerald-800">
-            <CheckCircle2 className="h-4 w-4" /> 사용자 조정안이 초안으로 저장되었습니다. 승인 전에는 실제 실행되지 않습니다.
+          <div className="flex items-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-xs font-semibold text-emerald-800 animate-in fade-in">
+            <CheckCircle2 className="h-4 w-4 text-emerald-600" /> 사용자 조정안이 초안으로 저장되었습니다. 승인 전에는 실제 실행되지 않습니다.
+          </div>
+        )}
+
+        {sentNotice && (
+          <div className="flex items-center justify-between gap-2 rounded-xl border border-emerald-300 bg-emerald-100 p-4 text-xs font-bold text-emerald-900 shadow-xs animate-in fade-in">
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="h-5 w-5 text-emerald-700 shrink-0" />
+              <span>{sentNotice}</span>
+            </div>
+            <button onClick={() => setSentNotice(null)} className="text-emerald-700 hover:text-emerald-900 cursor-pointer">
+              <X className="w-4 h-4" />
+            </button>
           </div>
         )}
 
@@ -191,7 +230,7 @@ export default function StrategySimulationPage() {
                 <p className="flex items-center gap-1.5 text-sm font-bold text-slate-900"><SlidersHorizontal className="h-4 w-4 text-[#0F4C3A]" /> 조건 세밀 조정</p>
                 <p className="mt-1 text-[11px] text-slate-500">{activeOption.rankLabel} · {activeOption.targetChannel}</p>
               </div>
-              <span className="rounded-full bg-amber-50 px-2 py-1 text-[10px] font-bold text-amber-800">더미 시뮬레이션</span>
+              <span className="rounded-full bg-amber-50 px-2 py-1 text-[10px] font-bold text-[#9E7C3B]">더미 시뮬레이션</span>
             </div>
 
             <div className="space-y-4 pt-4">
@@ -208,7 +247,7 @@ export default function StrategySimulationPage() {
 
               <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">
                 <label className="flex cursor-pointer items-center justify-between gap-2 text-xs font-bold text-slate-700"><span className="flex items-center gap-1.5"><Truck className="h-3.5 w-3.5 text-[#0F4C3A]" />무료배송 지원</span><input type="checkbox" checked={activeControls.freeShipping} onChange={(event) => updateControl('freeShipping', event.target.checked)} className="h-4 w-4 accent-[#0F4C3A]" /></label>
-                <label className={`mt-3 block ${activeControls.freeShipping ? '' : 'opacity-50'}`}><span className="text-[11px] font-semibold text-slate-600">건당 배송비 부담</span><div className="relative mt-1"><input aria-label="건당 배송비 부담" disabled={!activeControls.freeShipping} type="number" min="0" max="20000" step="500" value={activeControls.shippingSubsidy} onChange={(event) => updateControl('shippingSubsidy', Math.min(20000, Math.max(0, Number(event.target.value))))} className="w-full rounded-lg border border-slate-300 bg-white px-2.5 py-2 pr-8 text-xs font-mono font-bold text-slate-900 bg-white outline-none focus:border-[#0F4C3A]" /><span className="absolute right-2 top-2 text-[11px] font-bold text-slate-900" style={{ color: "#0f172a", WebkitTextFillColor: "#0f172a" }}>원</span></div></label>
+                <label className={`mt-3 block ${activeControls.freeShipping ? '' : 'opacity-50'}`}><span className="text-[11px] font-semibold text-slate-600">건당 배송비 부담</span><div className="relative mt-1"><input aria-label="건당 배송비 부담" disabled={!activeControls.freeShipping} type="number" min="0" max="20000" step="500" value={activeControls.shippingSubsidy} onChange={(event) => updateControl('shippingSubsidy', Math.min(20000, Math.max(0, Number(event.target.value))))} className="w-full rounded-lg border border-slate-300 bg-white px-2.5 py-2 pr-8 text-xs font-mono font-bold text-slate-900 outline-none focus:border-[#0F4C3A]" /><span className="absolute right-2 top-2 text-[11px] font-bold text-slate-900" style={{ color: "#0f172a", WebkitTextFillColor: "#0f172a" }}>원</span></div></label>
               </div>
 
               <div className="grid grid-cols-2 gap-2">
@@ -218,11 +257,11 @@ export default function StrategySimulationPage() {
 
               <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">
                 <label className="flex cursor-pointer items-center justify-between gap-2 text-xs font-bold text-slate-700"><span>번들 판매 구성</span><input type="checkbox" checked={activeControls.bundleEnabled} onChange={(event) => updateControl('bundleEnabled', event.target.checked)} className="h-4 w-4 accent-[#0F4C3A]" /></label>
-                {activeControls.bundleEnabled && <label className="mt-3 block"><span className="text-[11px] font-semibold text-slate-600">번들 추가 할인율</span><div className="relative mt-1"><input aria-label="번들 추가 할인율" type="number" min="0" max="25" step="1" value={activeControls.bundleDiscountRate} onChange={(event) => updateControl('bundleDiscountRate', Math.min(25, Math.max(0, Number(event.target.value))))} className="w-full rounded-lg border border-slate-300 bg-white px-2.5 py-2 pr-7 text-xs font-mono font-bold text-slate-900 bg-white outline-none focus:border-[#0F4C3A]" /><span className="absolute right-2 top-2 text-xs font-bold text-slate-900" style={{ color: "#0f172a", WebkitTextFillColor: "#0f172a" }}>%</span></div></label>}
+                {activeControls.bundleEnabled && <label className="mt-3 block"><span className="text-[11px] font-semibold text-slate-600">번들 추가 할인율</span><div className="relative mt-1"><input aria-label="번들 추가 할인율" type="number" min="0" max="25" step="1" value={activeControls.bundleDiscountRate} onChange={(event) => updateControl('bundleDiscountRate', Math.min(25, Math.max(0, Number(event.target.value))))} className="w-full rounded-lg border border-slate-300 bg-white px-2.5 py-2 pr-7 text-xs font-mono font-bold text-slate-900 outline-none focus:border-[#0F4C3A]" /><span className="absolute right-2 top-2 text-xs font-bold text-slate-900" style={{ color: "#0f172a", WebkitTextFillColor: "#0f172a" }}>%</span></div></label>}
               </div>
 
               <div className="rounded-xl border border-slate-200 bg-white">
-                <button type="button" onClick={() => setShowAdvanced((current) => !current)} className="flex w-full items-center justify-between px-3 py-3 text-left text-xs font-bold text-slate-800">
+                <button type="button" onClick={() => setShowAdvanced((current) => !current)} className="flex w-full items-center justify-between px-3 py-3 text-left text-xs font-bold text-slate-800 cursor-pointer">
                   <span>운영비·채널 가정 (P1)</span>
                   <ChevronDown className={`h-4 w-4 text-slate-400 transition-transform ${showAdvanced ? 'rotate-180' : ''}`} />
                 </button>
@@ -261,7 +300,7 @@ export default function StrategySimulationPage() {
             {activeResult.warningMessages.length > 0 && <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4"><p className="flex items-center gap-1.5 text-xs font-bold text-amber-900"><AlertTriangle className="h-4 w-4" /> 조정안 검토 필요</p><div className="mt-2 grid gap-1 sm:grid-cols-2">{activeResult.warningMessages.map((warning) => <p key={warning} className="text-[11px] text-amber-900">· {warning}</p>)}</div></div>}
 
             <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-xs">
-              <div className="flex flex-wrap items-start justify-between gap-2 border-b border-slate-100 pb-3"><div><h2 className="text-sm font-bold text-slate-900">할인율별 전략 비교</h2><p className="mt-1 text-[11px] text-slate-500">조정한 전략은 실선, 같은 조건에서 할인율만 바꾼 예상 곡선으로 표시합니다.</p></div><span className="text-[10px] font-bold text-[#0F4C3A]">단위: 만원 / 개</span></div>
+              <div className="flex flex-wrap items-start justify-between gap-2 border-b border-slate-100 pb-3"><div><h2 className="text-sm font-bold text-slate-900">할인율별 전략 비교</h2><p className="mt-1 text-[11px] text-slate-500">조용한 전략은 실선, 같은 조건에서 할인율만 바꾼 예상 곡선으로 표시합니다.</p></div><span className="text-[10px] font-bold text-[#0F4C3A]">단위: 만원 / 개</span></div>
               <div className="mt-4 h-[380px] w-full"><ResponsiveContainer width="100%" height="100%"><ComposedChart data={chartData} margin={{ top: 10, right: 18, left: 4, bottom: 8 }}><CartesianGrid strokeDasharray="3 3" stroke="#dbe4e8" /><XAxis dataKey="discountRate" fontSize={12} stroke="#475569" /><YAxis yAxisId="margin" fontSize={12} stroke="#0F4C3A" unit="만" /><YAxis yAxisId="sales" orientation="right" fontSize={12} stroke="#1D4ED8" unit="개" /><Tooltip formatter={(value: number, name: string) => [name.includes('margin') ? `${value.toLocaleString()}만원` : `${value.toLocaleString()}개`, name.includes('margin') ? '예상 기여이익' : '예상 판매량']} contentStyle={{ borderRadius: 10, borderColor: '#94a3b8', fontSize: 12 }} /><Legend wrapperStyle={{ fontSize: 12, paddingTop: 10 }} />{selectedOptions.map((option) => <Line key={`margin-${option.id}`} yAxisId="margin" type="monotone" dataKey={`margin_${option.id}`} name={`${option.categoryLabel} · 이익`} stroke={colors[option.id] || '#0F4C3A'} strokeWidth={option.id === activeOption.id ? 4 : 2.5} dot={{ r: option.id === activeOption.id ? 3 : 2 }} />)}{selectedOptions.map((option) => <Line key={`sales-${option.id}`} yAxisId="sales" type="monotone" dataKey={`sales_${option.id}`} name={`${option.categoryLabel} · 판매량`} stroke={colors[option.id] || '#2563EB'} strokeOpacity={0.6} strokeDasharray="6 4" strokeWidth={2} dot={false} />)}</ComposedChart></ResponsiveContainer></div>
             </section>
 
@@ -272,9 +311,159 @@ export default function StrategySimulationPage() {
 
             <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-xs"><div className="flex items-center justify-between border-b border-slate-100 pb-3"><div><h2 className="flex items-center gap-2 text-sm font-bold text-slate-900"><GitBranch className="h-4 w-4 text-[#0F4C3A]" />사후 대처 (Fallback Action Plan)</h2><p className="mt-1 text-[11px] text-slate-500">조정한 할인율·기간·수량을 기준으로 판매 달성률 구간별 대응을 다시 계산합니다.</p></div><span className="rounded-full border border-emerald-200 bg-emerald-50 px-2 py-1 text-[10px] font-bold text-[#0F4C3A]">5단계</span></div><div className="mt-4 space-y-2.5">{fallbackSteps.map((step) => <div key={step.id} className={`rounded-xl border p-3 ${toneClasses[step.tone].card}`}><div className="grid gap-3 lg:grid-cols-[145px_minmax(0,1fr)_minmax(0,1.2fr)_minmax(0,1.1fr)] lg:items-start lg:gap-4"><div className="flex items-center justify-between gap-2 lg:block"><div className="flex items-center gap-2"><span className={`rounded-md border px-2 py-1 text-[10px] font-bold ${toneClasses[step.tone].badge}`}>{step.range}</span><span className="text-xs font-bold text-slate-800">{step.level}</span></div><span className="mt-1 block text-[10px] font-semibold text-slate-500">{step.checkpoint}</span></div><div><p className="text-[10px] font-bold uppercase tracking-wide text-slate-500">발동 조건</p><p className="mt-1 text-xs font-semibold leading-relaxed text-slate-800">{step.trigger}</p></div><div className="lg:border-l lg:border-slate-200/80 lg:pl-4"><p className="text-[10px] font-bold uppercase tracking-wide text-slate-500">추천 후속 전략</p><p className="mt-1 text-xs font-bold leading-relaxed text-slate-900">{step.action}</p></div><div className="lg:border-l lg:border-slate-200/80 lg:pl-4"><p className="text-[10px] font-bold uppercase tracking-wide text-slate-500">예상 효과</p><p className="mt-1 text-xs font-semibold leading-relaxed text-emerald-800">{step.expectedImpact}</p></div></div></div>)}</div></section>
 
-            <div className="flex flex-col items-start justify-between gap-3 rounded-2xl border border-[#0F4C3A]/20 bg-emerald-50/70 p-4 sm:flex-row sm:items-center"><div><p className="text-xs font-bold text-[#0F4C3A]">승인 전 검토</p><p className="mt-1 text-[11px] text-slate-600">승인하면 선택한 사용자 조정안이 더현대 서울 담당자 검토 상태로 기록됩니다. 실제 가격·쿠폰·재고는 자동 변경되지 않습니다.</p></div><button onClick={() => setApproved(true)} className={`inline-flex shrink-0 items-center gap-1.5 rounded-xl px-4 py-2.5 text-xs font-bold ${approved ? 'border border-emerald-300 bg-emerald-100 text-emerald-800' : 'bg-[#0F4C3A] text-white hover:bg-[#0B392B]'}`}>{approved ? <><CheckCircle2 className="h-3.5 w-3.5" />검토 요청 기록됨</> : <><Check className="h-3.5 w-3.5" />이 조정안 검토 요청</>}</button></div>
+            {/* Bottom Action Bar: Trigger Review Proposal Modal */}
+            <div className="flex flex-col items-start justify-between gap-3 rounded-2xl border border-[#0F4C3A]/20 bg-emerald-50/70 p-4 sm:flex-row sm:items-center">
+              <div>
+                <p className="text-xs font-bold text-[#0F4C3A]">조정안 담당자 협의 및 검토 요청</p>
+                <p className="mt-1 text-[11px] text-slate-600">
+                  Microsoft Teams 또는 Slack 채널을 선택하여 관련 MD 담당자에게 이 시뮬레이션 조정안 검토 요청을 전송합니다.
+                </p>
+              </div>
+              <button
+                onClick={() => setIsReviewModalOpen(true)}
+                className={`inline-flex shrink-0 items-center gap-1.5 rounded-xl px-5 py-2.5 text-xs font-bold transition-all shadow-xs cursor-pointer ${
+                  approved
+                    ? 'border border-emerald-300 bg-emerald-100 text-emerald-800'
+                    : 'bg-[#0F4C3A] text-white hover:bg-[#0B392B]'
+                }`}
+              >
+                {approved ? (
+                  <>
+                    <CheckCircle2 className="h-4 w-4 text-emerald-700" />
+                    <span>협의 검토 요청 전송 완료</span>
+                  </>
+                ) : (
+                  <>
+                    <Send className="h-4 w-4 text-[#9E7C3B]" />
+                    <span>이 조정안 검토 요청</span>
+                  </>
+                )}
+              </button>
+            </div>
           </main>
         </div>
+
+        {/* Review Proposal Modal (담당자 및 메시지 채널 선택) */}
+        {isReviewModalOpen && (
+          <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+            <div className="bg-white border border-slate-200 rounded-2xl shadow-2xl max-w-xl w-full p-6 space-y-5 animate-in fade-in zoom-in-95 duration-150 text-xs">
+              {/* Modal Header */}
+              <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-lg bg-[#0F4C3A] text-white flex items-center justify-center font-bold">
+                    <Send className="w-4 h-4 text-[#9E7C3B]" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-slate-900 text-sm">더현대 서울 재고 전략 협의 검토 요청</h3>
+                    <p className="text-[11px] text-slate-500">메시지 채널과 수신 담당자를 지정하여 조정안을 공유합니다.</p>
+                  </div>
+                </div>
+                <button onClick={() => setIsReviewModalOpen(false)} className="text-slate-400 hover:text-slate-600 p-1 cursor-pointer">
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              {/* 1. Messenger Channel Selection */}
+              <div className="space-y-2">
+                <label className="font-bold text-slate-900 block">1. 요청 메시지 연동 채널 선택</label>
+                <div className="grid grid-cols-2 gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setSelectedChannel('TEAMS')}
+                    className={`p-3 rounded-xl border flex items-center justify-center gap-2 font-bold transition-all cursor-pointer ${
+                      selectedChannel === 'TEAMS'
+                        ? 'border-[#0F4C3A] bg-emerald-50 text-[#0F4C3A] shadow-2xs'
+                        : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-50'
+                    }`}
+                  >
+                    <MessageSquare className="w-4 h-4 text-indigo-600" />
+                    <span>Microsoft Teams</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setSelectedChannel('SLACK')}
+                    className={`p-3 rounded-xl border flex items-center justify-center gap-2 font-bold transition-all cursor-pointer ${
+                      selectedChannel === 'SLACK'
+                        ? 'border-[#0F4C3A] bg-emerald-50 text-[#0F4C3A] shadow-2xs'
+                        : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-50'
+                    }`}
+                  >
+                    <Share2 className="w-4 h-4 text-amber-600" />
+                    <span>Slack</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* 2. Recipient Manager Selection */}
+              <div className="space-y-2">
+                <label className="font-bold text-slate-900 block flex items-center gap-1">
+                  <UserCheck className="w-3.5 h-3.5 text-[#0F4C3A]" />
+                  <span>2. 수신 담당자 선택</span>
+                </label>
+                <select
+                  value={selectedReviewer}
+                  onChange={(e) => setSelectedReviewer(e.target.value)}
+                  className="w-full p-2.5 border border-slate-300 rounded-xl bg-white text-slate-900 font-medium focus:outline-none focus:border-[#0F4C3A]"
+                >
+                  {REVIEWERS.map((r) => (
+                    <option key={r} value={r}>
+                      {r}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* 3. Review Due Date */}
+              <div className="space-y-2">
+                <label className="font-bold text-slate-900 block flex items-center gap-1">
+                  <Calendar className="w-3.5 h-3.5 text-[#0F4C3A]" />
+                  <span>3. 검토 마감일 설정</span>
+                </label>
+                <input
+                  type="date"
+                  value={dueDate}
+                  onChange={(e) => setDueDate(e.target.value)}
+                  className="w-full p-2 border border-slate-300 rounded-xl bg-white text-slate-900 font-mono font-bold focus:outline-none focus:border-[#0F4C3A]"
+                />
+              </div>
+
+              {/* 4. AI Pre-filled Draft Message Preview */}
+              <div className="space-y-2">
+                <label className="font-bold text-slate-900 block">4. 전송할 요청 문구 미리보기 (AI 자동 생성)</label>
+                <div className="p-3.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 space-y-1 font-mono text-[11px] leading-relaxed">
+                  <p className="font-bold text-[#0F4C3A]">[{selectedChannel === 'TEAMS' ? 'Microsoft Teams' : 'Slack'} 알림 전송 예시]</p>
+                  <p className="font-bold text-slate-900">[더현대 서울 AI 재고 최적화 전략 검토 요청]</p>
+                  <p>· 대상 케이스: {caseData.title}</p>
+                  <p>· 선택 대안: {activeOption.name} ({activeControls.discountRate}% 할인)</p>
+                  <p>· 예상 증분 기여이익: {formatMoney(activeResult.incrementalContribution)}</p>
+                  <p>· 예상 소진 기간: {activeResult.liquidationDays}일 완판</p>
+                  <p>· 회피 폐기손실: {formatWon(activeResult.avoidedDisposalCost)}</p>
+                  <p>· 검토 마감일: {dueDate}</p>
+                </div>
+              </div>
+
+              {/* Modal Footer Actions */}
+              <div className="flex items-center justify-end gap-3 border-t border-slate-100 pt-3">
+                <button
+                  type="button"
+                  onClick={() => setIsReviewModalOpen(false)}
+                  className="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-lg cursor-pointer"
+                >
+                  취소
+                </button>
+                <button
+                  type="button"
+                  onClick={handleSendProposal}
+                  className="px-5 py-2.5 text-xs font-bold bg-[#0F4C3A] hover:bg-[#0B392B] text-white rounded-xl shadow-xs flex items-center gap-1.5 cursor-pointer"
+                >
+                  <Send className="w-3.5 h-3.5 text-[#9E7C3B]" />
+                  <span>{selectedChannel === 'TEAMS' ? 'Teams' : 'Slack'} 채널로 전송하기</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </AppLayout>
   );

@@ -16,8 +16,21 @@ import {
   Package,
   BarChart3,
   ShieldAlert,
-  Info
+  Info,
+  TrendingDown
 } from 'lucide-react';
+import {
+  ResponsiveContainer,
+  ComposedChart,
+  Area,
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip,
+  CartesianGrid,
+  ReferenceLine,
+  ReferenceDot
+} from 'recharts';
 
 interface ProductDetailModalProps {
   item: InventoryItem | null;
@@ -67,6 +80,18 @@ export function ProductDetailModal({
   const forecast90Sales = Math.min(item.quantity, Math.round(dailyRateNum * 90));
   const forecast90Remain = item.quantity - forecast90Sales;
   const expectedDisposalLoss = (item.estimatedDisposalCost * forecast90Remain);
+
+  // 날짜별 현재 추이 방치 시 예상 시각화 데이터 (Do Nothing Trend Chart Data)
+  const baselineTrendData = [
+    { dayLabel: 'D-0 (현재)', stock: item.quantity, loss: 0 },
+    { dayLabel: 'D+10', stock: Math.max(0, Math.round(item.quantity - dailyRateNum * 10)), loss: Math.round((item.holdingCostPerDay * 10 * item.quantity) / 10000) },
+    { dayLabel: `D-${item.expiryDaysLeft} (시즌종료)`, stock: Math.max(0, Math.round(item.quantity - dailyRateNum * item.expiryDaysLeft)), loss: Math.round(expectedDisposalLoss / 10000) },
+    { dayLabel: 'D+30', stock: forecast30Remain, loss: Math.round((expectedDisposalLoss * 1.25) / 10000) },
+    { dayLabel: 'D+60', stock: Math.round(forecast90Remain * 1.3), loss: Math.round((expectedDisposalLoss * 1.7) / 10000) },
+    { dayLabel: 'D+90 (최종)', stock: forecast90Remain, loss: Math.round((expectedDisposalLoss * 2.1) / 10000) },
+  ];
+
+  const seasonEndDataPoint = baselineTrendData[2];
 
   const handleReanalyze = () => {
     setIsReanalyzing(true);
@@ -121,7 +146,7 @@ export function ProductDetailModal({
           </button>
         </div>
 
-        {/* Modal Main View Tabs (전체 재고 조회에서는 hideRiskTabs=true로 위험 탭 숨김) */}
+        {/* Modal Main View Tabs */}
         {!hideRiskTabs ? (
           <div className="flex items-center gap-2 border-b border-slate-200">
             <button
@@ -269,7 +294,7 @@ export function ProductDetailModal({
           </div>
         )}
 
-        {/* TAB 2: AI 위험 분석 및 기준선 (AI Risk Analysis & Baseline - 위험 재고 모달 전용) */}
+        {/* TAB 2: AI 위험 분석 및 기준선 (AI Risk Analysis & Baseline) */}
         {!hideRiskTabs && activeTab === 'RISK_ANALYSIS' && (
           <div className="space-y-4 text-xs">
             {/* Risk Sub-navigation Toggles */}
@@ -296,9 +321,9 @@ export function ProductDetailModal({
               </button>
             </div>
 
-            {/* Sub 1: 위험 분석 (결론 & 방치 시 기준선 비교) */}
+            {/* Sub 1: 위험 분석 (결론 & 방치 시 기준선 흐름 비교 차트) */}
             {riskSubSection === 'ANALYSIS' && (
-              <div className="space-y-3">
+              <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <h4 className="font-bold text-slate-900 flex items-center gap-1.5">
                     <AlertTriangle className="w-4 h-4 text-[#0F4C3A]" />
@@ -345,7 +370,54 @@ export function ProductDetailModal({
                     </div>
                   </div>
 
-                  <div className="text-xs text-slate-700 space-y-1">
+                  {/* 날짜별 현재 추세 방치 시 시각적 흐름 차트 (Visual Trend Chart) */}
+                  <div className="space-y-2 pt-1">
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="font-bold text-slate-800 flex items-center gap-1">
+                        <TrendingDown className="w-4 h-4 text-rose-600" />
+                        <span>날짜별 방치 시 잔여 재고 소진 추이 & 누적 손실액 시각화</span>
+                      </span>
+                      <span className="text-[10px] text-slate-500 font-mono">단위: 잔여재고 수량(개) / 누적손실(만원)</span>
+                    </div>
+
+                    <div className="h-56 w-full bg-white p-3 border border-slate-200 rounded-xl">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <ComposedChart data={baselineTrendData} margin={{ top: 15, right: 15, left: -10, bottom: 5 }}>
+                          <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+                          <XAxis dataKey="dayLabel" fontSize={10} stroke="#64748b" />
+                          <YAxis yAxisId="stock" fontSize={10} stroke="#be123c" unit="개" />
+                          <YAxis yAxisId="loss" orientation="right" fontSize={10} stroke="#d97706" unit="만" />
+                          <Tooltip
+                            contentStyle={{ borderRadius: 8, borderColor: '#cbd5e1', fontSize: 11 }}
+                            formatter={(val: number, name: string) => [
+                              name.includes('stock') ? `${val}개` : `₩${val}만원`,
+                              name.includes('stock') ? '현재 추세 잔여 재고' : '누적 보관/폐기 손실'
+                            ]}
+                          />
+                          <Area yAxisId="stock" type="monotone" dataKey="stock" fill="#ffe4e6" stroke="#e11d48" strokeWidth={2} name="stock" />
+                          <Line yAxisId="loss" type="monotone" dataKey="loss" stroke="#d97706" strokeWidth={2.5} strokeDasharray="4 4" name="loss" />
+                          
+                          <ReferenceLine
+                            yAxisId="stock"
+                            x={seasonEndDataPoint.dayLabel}
+                            stroke="#be123c"
+                            strokeDasharray="3 3"
+                            label={{ value: '시즌 종료 (악성전환)', fill: '#be123c', fontSize: 10, position: 'top' }}
+                          />
+                          <ReferenceDot
+                            yAxisId="stock"
+                            x={seasonEndDataPoint.dayLabel}
+                            y={seasonEndDataPoint.stock}
+                            r={5}
+                            fill="#be123c"
+                            stroke="#white"
+                          />
+                        </ComposedChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </div>
+
+                  <div className="text-xs text-slate-700 space-y-1 pt-1">
                     <p className="font-bold text-[#0F4C3A]">AI 파이프라인 판단 사유 결론:</p>
                     <p className="leading-relaxed bg-white p-3 rounded-lg border border-slate-200 text-slate-800">
                       {item.reason}
