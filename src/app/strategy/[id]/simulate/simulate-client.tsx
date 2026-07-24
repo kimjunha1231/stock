@@ -68,6 +68,7 @@ export default function StrategySimulationPage() {
   const [saved, setSaved] = useState(false);
   const [approved, setApproved] = useState(false);
   const [showAdvanced, setShowAdvanced] = useState(false);
+  const [chartMetric, setChartMetric] = useState<"profit" | "sales" | "both">("profit");
 
   const activeOption = selectedOptions.find((option) => option.id === activeOptionId) || selectedOptions[0];
   const activeControls = controlsByOption[activeOption.id] || getDefaultControls(activeOption);
