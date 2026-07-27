@@ -1,0 +1,1 @@
+import{r as e}from"./framework-CXnKph_e.js";var t=e();function n({children:e,className:n=``}){return(0,t.jsx)(`div`,{className:`reveal ${n}`,children:e})}function r({children:e,className:n=``}){return(0,t.jsx)(`div`,{className:`stagger ${n}`,children:e})}export{r as n,n as t};
