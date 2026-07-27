@@ -604,7 +604,7 @@ export default function FormulasPage() {
                   overflowX: 'auto',
                 }}
               >
-                M_inc = &Delta;R + S_disposal - C_cannibal - C_logistics - C_brand - C_return - C_AI_case
+                max<sub>s &isin; S_valid</sub> M_inc(s) = &Delta;R + S_disposal - C_cannibal - C_logistics - C_brand - C_return - C_AI_case
               </div>
 
               <div
@@ -620,7 +620,7 @@ export default function FormulasPage() {
                   최종 의사결정식 — 한글로 읽기
                 </strong>
                 <div style={{ fontSize: '1rem', fontWeight: 700, lineHeight: 1.7 }}>
-                  증분 기여현금이익 = 추가 매출액 + 피한 폐기비용 − 정상판매 잠식손실 − 물류·재포장비 − 브랜드 훼손비용 − 반품·CS 충당금 − AI 1건 처리원가
+                  최종 선택 = 조건을 모두 통과한 대안 중 [추가 매출액 + 피한 폐기비용 − 정상판매 잠식손실 − 물류·재포장비 − 브랜드 훼손비용 − 반품·CS 충당금 − AI 1건 처리원가]가 가장 큰 대안
                 </div>
                 <p style={{ margin: '8px 0 0', fontSize: '0.86rem', color: 'var(--color-text-muted)' }}>
                   이 값이 양수인 대안만 수익성 후보가 됩니다. 아래의 Q_sale(예상 판매량)은 이 최종식에 들어가는 ‘판매 수량’을 추정하는 보조 수식입니다.
