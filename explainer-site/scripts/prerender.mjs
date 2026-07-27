@@ -16,6 +16,7 @@ async function generateStaticPages() {
     '/product-tour',
     '/roles',
     '/sources',
+    '/tech-stack',
     '/workflow'
   ];
 
