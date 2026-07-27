@@ -607,6 +607,26 @@ export default function FormulasPage() {
                 M_inc = &Delta;R + S_disposal - C_cannibal - C_logistics - C_brand - C_return - C_AI_case
               </div>
 
+              <div
+                style={{
+                  background: 'rgba(15, 76, 58, 0.08)',
+                  border: '1px solid rgba(15, 76, 58, 0.28)',
+                  padding: '16px',
+                  borderRadius: '8px',
+                  marginBottom: '16px',
+                }}
+              >
+                <strong style={{ color: 'var(--color-brand-primary)', display: 'block', marginBottom: '8px' }}>
+                  최종 의사결정식 — 한글로 읽기
+                </strong>
+                <div style={{ fontSize: '1rem', fontWeight: 700, lineHeight: 1.7 }}>
+                  증분 기여현금이익 = 추가 매출액 + 피한 폐기비용 − 정상판매 잠식손실 − 물류·재포장비 − 브랜드 훼손비용 − 반품·CS 충당금 − AI 1건 처리원가
+                </div>
+                <p style={{ margin: '8px 0 0', fontSize: '0.86rem', color: 'var(--color-text-muted)' }}>
+                  이 값이 양수인 대안만 수익성 후보가 됩니다. 아래의 Q_sale(예상 판매량)은 이 최종식에 들어가는 ‘판매 수량’을 추정하는 보조 수식입니다.
+                </p>
+              </div>
+
               <div style={{ overflowX: 'auto' }}>
                 <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.92rem' }}>
                   <thead>
@@ -735,6 +755,41 @@ export default function FormulasPage() {
                 }}
               >
                 Q_sale(d, t) = Q_base_daily &times; (1 + &epsilon; &middot; d) &times; f_aging(t) &times; &gamma;_channel
+              </div>
+
+              <div
+                style={{
+                  background: 'rgba(42, 157, 143, 0.08)',
+                  border: '1px solid rgba(42, 157, 143, 0.35)',
+                  padding: '16px',
+                  borderRadius: '8px',
+                  marginBottom: '16px',
+                }}
+              >
+                <strong style={{ color: 'var(--color-brand-primary)', display: 'block', marginBottom: '8px' }}>
+                  같은 식을 한글로 쓰면
+                </strong>
+                <div style={{ fontSize: '1rem', fontWeight: 700, lineHeight: 1.7 }}>
+                  예상 판매량 = 기준 일판매량 × (1 + 가격 탄력성 × 할인율) × 남은 기간 보정값 × 판매 채널 보정값
+                </div>
+                <p style={{ margin: '8px 0 0', fontSize: '0.86rem', color: 'var(--color-text-muted)' }}>
+                  예: 최근 평균 10개 × (1 + 2.5 × 35%) × 0.85 × 1.3 ≈ 30.1개. 실제 서비스에서는 ML이 카테고리·요일·재고·채널 데이터를 학습해 각 보정값을 산출합니다.
+                </p>
+              </div>
+
+              <div
+                style={{
+                  background: 'rgba(233, 196, 106, 0.14)',
+                  border: '1px solid rgba(181, 131, 141, 0.38)',
+                  padding: '14px 16px',
+                  borderRadius: '8px',
+                  marginBottom: '16px',
+                }}
+              >
+                <strong style={{ display: 'block', marginBottom: '6px' }}>중요한 구분</strong>
+                <p style={{ margin: 0, fontSize: '0.88rem', color: 'var(--color-text-muted)', lineHeight: 1.6 }}>
+                  Q_sale은 최종 이윤을 직접 계산하는 식이 아닙니다. 할인율과 남은 기간을 넣어 ‘얼마나 팔릴지’를 예측하고, 그 결과를 증분 매출·폐기 회피액·물류비·반품비 등을 포함한 최종 목적함수에 전달합니다.
+                </p>
               </div>
 
               <div style={{ overflowX: 'auto' }}>
