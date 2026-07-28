@@ -208,6 +208,33 @@ def create_document():
         "Q_base_daily=기준 일판매량, ε=가격 탄력성, d=할인율, f_aging(t)=남은 기간 보정값, γ_channel=판매 채널 보정값입니다."
     )
 
+    doc.add_page_break()
+    h1 = doc.add_heading("5. 현대백화점 단독 범위와 P1/P2 운영 경계", level=1)
+    h1.runs[0].font.color.rgb = RGBColor(0, 95, 75)
+    doc.add_paragraph(
+        "이 프로젝트는 현대백화점 외 계열사를 포함하지 않습니다. 1차 검증은 더현대 서울 직매입 재고와 의류·신발 등 1~2개 상품군에 집중하고, 점포 간 비교·재고 이동은 후순위(P2)로 둡니다."
+    )
+    doc.add_heading("■ P0/P1 — 먼저 검증할 기능", level=2)
+    for text in [
+        "직매입 위험재고 탐지: 판매속도·현재고·보관일수·시즌/처리기한·사이즈 분포",
+        "할인·타임세일·아울렛·기부·폐기 전략 비교",
+        "순마진 극대화·빠른 소진·최대 매출 시나리오와 최대 3개 후보",
+        "할인율·적용수량·기간·쿠폰·포인트·배송비 조정 시 즉시 재계산",
+        "책임 MD 승인, 승인 후 변경 재승인, 실행 결과와 예측 오차 회수",
+        "Microsoft Teams는 승인된 실행 내용을 전달하는 알림 채널로만 사용",
+    ]:
+        p = doc.add_paragraph(style="List Bullet")
+        p.add_run(text)
+    doc.add_heading("■ P2 — 검증 후 추가할 기능", level=2)
+    for text in [
+        "다른 현대백화점 점포와 동일 상품 비교",
+        "점포 간 재고 이동 추천(이동수량·이동비용·수신 용량·이동 후 판매속도)",
+        "식품·가구·가전 등 추가 상품군과 특약·임대 등 계약 형태 확장",
+        "점포·채널 공동 프로모션",
+    ]:
+        p = doc.add_paragraph(style="List Bullet")
+        p.add_run(text)
+
     # Apply a Korean-capable font to every paragraph/table run after all
     # content has been authored. This is deliberately done at the end so new
     # formula text and the existing three-version content use one font system.

@@ -8,8 +8,8 @@ import { sources } from '@/lib/content';
 const painPoints = [
   ['◌', '보관', '장기보관 재고가 공간과 현금을 계속 묶습니다.'],
   ['⌁', '기한', '식품은 유통기한이 지나면 회수할 선택지가 급격히 줄어듭니다.'],
-  ['▱', '방송', '방송 후 잔량은 반품·정산 지연까지 함께 봐야 합니다.'],
-  ['⌂', '부피', '가구는 설치·회수·파손 용량까지 전략의 조건이 됩니다.'],
+  ['▱', '사이즈', '같은 상품도 색상·사이즈별 판매속도와 잔여수량이 다릅니다.'],
+  ['⌂', '브랜드', '큰 폭의 할인은 정상판매와 브랜드 가격 기준을 함께 흔들 수 있습니다.'],
 ];
 
 export default function HomePage() {
@@ -18,9 +18,9 @@ export default function HomePage() {
       <section className="hero">
         <div className="container hero-grid">
           <div className="hero-copy">
-            <Reveal><span className="hero-note"><i /> 현대백화점 전 점포 AI 재고 의사결정 플랫폼</span></Reveal>
+            <Reveal><span className="hero-note"><i /> 현대백화점 직매입 AI 재고 의사결정 플랫폼</span></Reveal>
             <Reveal><h1 className="display">재고를 없애는 게 아니라, <em>손실을 줄이는 판단</em>을 만듭니다.</h1></Reveal>
-            <Reveal><p className="lead">상품을 가장 잘 아는 현대백화점 점포/부서가 직접 판단하고, AI는 비용·위험·기한을 비교해 실행 가능한 다음 수를 설명합니다.</p></Reveal>
+            <Reveal><p className="lead">더현대 서울 직매입 재고부터 검증하고, AI는 비용·위험·기한을 비교해 담당 MD가 승인할 수 있는 다음 수를 설명합니다. 점포 간 이동은 검증 후 확장합니다.</p></Reveal>
             <Reveal><div className="actions"><Link className="button primary" href="/workflow">작동 방식 보기 <span>→</span></Link><Link className="button secondary" href="/product-tour">실제 화면 둘러보기</Link></div></Reveal>
             <div className="hero-proof"><div className="proof-item"><strong>4개</strong><span>서로 다른 현대백화점 점포/부서 맥락</span></div><div className="proof-item"><strong>6단계</strong><span>탐지에서 결과 회수까지</span></div><div className="proof-item"><strong>1개의 원칙</strong><span>사람이 최종 승인</span></div></div>
           </div>
@@ -30,7 +30,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <div className="logo-strip"><div className="container logo-strip-inner"><span>Built for different operating contexts</span><b>현대백화점</b><b>현대그린푸드</b><b>현대홈쇼핑</b><b>현대리바트</b></div></div>
+      <div className="logo-strip"><div className="container logo-strip-inner"><span>Built for Hyundai Department Store operations</span><b>현대백화점</b><b>더현대 서울</b><b>직매입 재고</b><b>책임 MD 승인</b></div></div>
 
       <section className="section"><div className="container"><div className="section-heading"><span className="eyebrow">The problem</span><h2>같은 재고라도,<br />손실이 생기는 이유는 다릅니다.</h2><p>모든 현대백화점 점포/부서에 하나의 할인율을 적용하면 실제 비용과 책임이 사라집니다. 이 서비스는 각자의 맥락을 인정하는 것에서 시작합니다.</p></div><Stagger className="pain-grid">{painPoints.map(([icon, title, body]) => <article className="pain-card" key={title}><div className="pain-icon">{icon}</div><h3>{title}</h3><p>{body}</p></article>)}</Stagger></div></section>
 

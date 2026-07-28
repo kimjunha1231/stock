@@ -39,7 +39,7 @@ function StrategyGenerateContent() {
         <p className="text-xs text-slate-500">
           {targetProducts.length > 0
             ? `선택된 ${targetProducts.length}개 위험 재고 품목에 대해 과거 3년 반응 데이터와 폐기 회피 비용을 시뮬레이션합니다.`
-            : '전 계열사 직매입 악성 재고에 대해 순이익 극대화 시나리오를 계산 중입니다.'}
+            : '현대백화점 직매입 위험재고에 대해 증분 기여현금이익 시나리오를 계산 중입니다.'}
         </p>
       </div>
 
@@ -73,7 +73,7 @@ function StrategyGenerateContent() {
         <div className={`p-4 rounded-xl border transition-all ${step >= 1 ? 'bg-white border-[#0F4C3A] shadow-md' : 'bg-slate-50 border-slate-200'}`}>
           <Database className="w-5 h-5 text-[#0F4C3A] mb-2" />
           <p className="text-xs font-bold text-slate-900">1단계: 데이터 파싱</p>
-          <p className="text-[11px] text-slate-500 mt-1">계열사 원가, 보관비, 유통기한 수집</p>
+          <p className="text-[11px] text-slate-500 mt-1">현대백화점 원가, 보관비, 처리기한 수집</p>
           {step === 1 && <Loader2 className="w-4 h-4 text-[#0F4C3A] animate-spin mt-2" />}
           {step > 1 && <CheckCircle2 className="w-4 h-4 text-emerald-600 mt-2" />}
         </div>

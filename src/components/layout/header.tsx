@@ -50,7 +50,7 @@ export function Header({ isSidebarOpen, onToggleSidebar }: HeaderProps) {
             <User className="w-4 h-4 text-[#0F4C3A]" />
           </div>
           <div className="text-left hidden sm:block">
-            <p className="text-xs font-semibold text-slate-800 leading-tight">이규원 수석 MD</p>
+            <p className="text-xs font-semibold text-slate-800 leading-tight">김영만 수석 MD</p>
             <p className="text-[10px] text-slate-500">더현대 서울 총괄 재고전략</p>
           </div>
         </div>

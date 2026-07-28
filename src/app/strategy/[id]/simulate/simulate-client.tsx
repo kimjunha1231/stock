@@ -78,7 +78,7 @@ export default function StrategySimulationPage() {
   // 검토 요청 모달 관련 상태
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [selectedChannel, setSelectedChannel] = useState<'TEAMS' | 'SLACK'>('TEAMS');
-  const [selectedReviewer, setSelectedReviewer] = useState<string>('이규원 수석 MD (그룹 본사 재고전략팀)');
+  const [selectedReviewer, setSelectedReviewer] = useState<string>('김영만 수석 MD (현대백화점 본사 재고전략팀)');
   const [dueDate, setDueDate] = useState<string>('2026-07-27');
   const [customNote, setCustomNote] = useState<string>('');
 
@@ -142,7 +142,7 @@ export default function StrategySimulationPage() {
   };
 
   const REVIEWERS = [
-    '이규원 수석 MD (그룹 본사 재고전략팀)',
+    '김영만 수석 MD (현대백화점 본사 재고전략팀)',
     '김민준 책임 MD (더현대 서울 2F 여성패션)',
     '박서연 수석 MD (더현대 서울 B1 식품관)',
     '최현우 팀장 (더현대 서울 3F 남성잡화)'

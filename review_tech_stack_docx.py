@@ -278,8 +278,20 @@ run = heading3.add_run("5.2 우선순위")
 set_run_font(run)
 for text in [
     "P0: React/Vite 화면, Spring API 계약, PostgreSQL 스키마, 수식·시뮬레이션 결정 테이블, 승인·감사 로그.",
-    "P1: FastAPI 최적화 서비스, 배치 스냅샷, 캐시, 모델 백테스트·모니터링.",
-    "P2: LLM 설명 자동화, 고급 State Machine, 다중 채널·다중 점포 확장.",
+    "P1: FastAPI 최적화 서비스, 배치 스냅샷, 캐시, 모델 백테스트·모니터링, Teams 전달 계약.",
+    "P2: LLM 설명 자동화, 고급 State Machine, 다른 현대백화점 점포 비교와 점포 간 이동 확장.",
+]:
+    bullet(text)
+
+heading4 = doc.add_paragraph()
+heading4.style = doc.styles["Heading 2"]
+run = heading4.add_run("5.3 범위 경계: 현대백화점 단독")
+set_run_font(run)
+for text in [
+    "현대백화점 외 계열사는 제품·권한·손익 계산에서 제외합니다.",
+    "1차 실증은 더현대 서울 직매입 재고와 의류·신발 등 1~2개 상품군에 집중합니다.",
+    "점포 간 재고 이동은 이동비·수신 용량·판매속도·권한을 검증한 뒤 P2로 추가합니다.",
+    "Microsoft Teams는 승인된 실행 내용을 전달하는 알림 채널이며, 최종 승인·변경은 서비스에서 수행합니다.",
 ]:
     bullet(text)
 

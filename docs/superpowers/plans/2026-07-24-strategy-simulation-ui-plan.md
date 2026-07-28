@@ -42,7 +42,7 @@
 
 - [ ] **Step 4: 문서 변경 내용을 검색해 범위 충돌이 없는지 확인한다.**
 
-  Run: `rg -n "전 계열사|본사 승인|시뮬레이션|조정 패널|가드레일" docs/frontend-ui-ux-plan.md`
+  Run: `rg -n "현대백화점|본사 승인|시뮬레이션|조정 패널|가드레일" docs/frontend-ui-ux-plan.md`
 
   Expected: 새 화면 흐름이 기존 전략 상세·시뮬레이션 설명과 모순 없이 함께 나타난다.
 
@@ -163,4 +163,3 @@
   Run: `rg -n "AI 추천값|사용자 조정|증분 기여|배송비|손실 방어|90–100|비교 시뮬레이션" src/app/strategy src/lib/simulation.ts docs/frontend-ui-ux-plan.md`
 
   Expected: 구현과 문서에 동일한 용어가 사용된다.
-

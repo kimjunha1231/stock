@@ -185,7 +185,7 @@ export default function StrategyExecutionPage() {
                     <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl text-[11px] space-y-0.5 text-right">
                       <p className="font-bold text-slate-800 flex items-center gap-1 justify-end">
                         <UserCheck className="w-3.5 h-3.5 text-[#0F4C3A]" />
-                        <span>승인자: {optCase.approverName || '이규원 수석 MD (더현대 서울 재고전략팀)'}</span>
+                        <span>승인자: {optCase.approverName || '김영만 수석 MD (더현대 서울 재고전략팀)'}</span>
                       </p>
                       <p className="text-slate-500 font-mono">승인 시각: {optCase.approvedAt || optCase.createdAt}</p>
                       <p className="text-[10px] text-emerald-700 font-medium">※ 승인 전에는 실제 가격·재고가 자동 변경되지 않았습니다.</p>

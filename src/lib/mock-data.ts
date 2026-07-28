@@ -412,7 +412,7 @@ export const MOCK_OPTIMIZATION_CASES: OptimizationCase[] = [
     actualNetContributionMargin: 26400000,
     actualRemainingQty: 42,
     varianceReason: '할인 반응 저조 (온라인 노출 부족 및 장마철 내방객 감소)',
-    approverName: '이규원 수석 MD (더현대 서울 재고전략팀)',
+    approverName: '김영만 수석 MD (더현대 서울 재고전략팀)',
     approvedAt: '2026-07-15 15:20',
     options: [
       {
