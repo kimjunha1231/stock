@@ -280,6 +280,7 @@ export const navItems = [
   { href: '/workflow', label: '작동 방식' },
   { href: '/ai-judgment', label: 'AI 판단' },
   { href: '/formulas', label: '수식 및 계산' },
+  { href: '/capabilities', label: '기능 명세' },
   { href: '/tech-stack', label: '기술 스택 & 아키텍처' },
   { href: '/product-tour', label: '제품 화면' },
   { href: '/glossary', label: '용어 사전' },

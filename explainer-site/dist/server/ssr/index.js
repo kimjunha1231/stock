@@ -11635,7 +11635,7 @@ var client_references_default = {
 		} };
 	},
 	"372050548a1b": async () => {
-		const m = await import("./assets/page-84U0KPpN.js");
+		const m = await import("./assets/page-B8fS_FH2.js");
 		return {
 			get "default"() {
 				return m["default"];
@@ -11679,6 +11679,12 @@ var client_references_default = {
 			}
 		};
 	},
+	"9cc0f627b052": async () => {
+		const m = await import("./assets/page-BUbLN0wR.js");
+		return { get "default"() {
+			return m["default"];
+		} };
+	},
 	"9fb86276be8f": async () => {
 		const m = await import("./assets/image-BkFuyx9_.js");
 		return { get "default"() {
@@ -11692,25 +11698,25 @@ var client_references_default = {
 		} };
 	},
 	"ca88aed2258a": async () => {
-		const m = await import("./assets/page-C9AaZs6X.js");
+		const m = await import("./assets/page-Cy7HCtfo.js");
 		return { get "default"() {
 			return m["default"];
 		} };
 	},
 	"e0b926a333ff": async () => {
-		const m = await import("./assets/site-shell-7jQrW2Wl.js");
+		const m = await import("./assets/site-shell-B69MUOEi.js");
 		return { get "SiteShell"() {
 			return m["SiteShell"];
 		} };
 	},
 	"f30fcd25c92f": async () => {
-		const m = await import("./assets/term-hint-u91IdZ4T.js");
+		const m = await import("./assets/term-hint-CMZA---C.js");
 		return { get "TermHint"() {
 			return m["TermHint"];
 		} };
 	},
 	"fa4438e99613": async () => {
-		const m = await import("./assets/glossary-browser-7nmj2OCa.js");
+		const m = await import("./assets/glossary-browser-HLlFrrJq.js");
 		return { get "GlossaryBrowser"() {
 			return m["GlossaryBrowser"];
 		} };

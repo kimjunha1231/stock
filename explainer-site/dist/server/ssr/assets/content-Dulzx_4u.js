@@ -543,6 +543,10 @@ var navItems = [
 		label: "수식 및 계산"
 	},
 	{
+		href: "/capabilities",
+		label: "기능 명세"
+	},
+	{
 		href: "/tech-stack",
 		label: "기술 스택 & 아키텍처"
 	},

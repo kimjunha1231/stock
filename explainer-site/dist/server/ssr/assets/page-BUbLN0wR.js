@@ -1,0 +1,839 @@
+import { t as require_jsx_runtime, w as __toESM, y as require_react } from "../index.js";
+import { n as Stagger, t as Reveal } from "./reveal-ASYv3BuO.js";
+//#region src/app/capabilities/page.tsx
+var import_react = /* @__PURE__ */ __toESM(require_react(), 1);
+var import_jsx_runtime = require_jsx_runtime();
+var tracks = [
+	{
+		id: "all",
+		label: "전체 기능",
+		hint: "공통 기능과 계열사별 확장"
+	},
+	{
+		id: "common",
+		label: "공통 서비스",
+		hint: "권한·데이터·전략·운영"
+	},
+	{
+		id: "wellness",
+		label: "현대웰니스",
+		hint: "로트·소비기한·표시"
+	},
+	{
+		id: "travel",
+		label: "더현대트래블",
+		hint: "예약·출발일·capacity"
+	},
+	{
+		id: "livart",
+		label: "현대리바트",
+		hint: "배송·설치·AS"
+	},
+	{
+		id: "greenfood",
+		label: "현대그린푸드",
+		hint: "식품·콜드체인·검사"
+	}
+];
+var capabilities = [
+	{
+		id: "F-01",
+		track: "common",
+		title: "사용자·권한·감사",
+		phase: "P0",
+		summary: "담당자가 자기 계열사 범위에서만 조회·수정·승인하도록 권한을 나누고 모든 작업을 기록합니다.",
+		inputs: [
+			"사용자·역할",
+			"계열사·법인·점포·채널 범위",
+			"JWT 세션"
+		],
+		outputs: [
+			"조회·수정·승인 가능 범위",
+			"권한 거부 사유",
+			"감사 로그"
+		],
+		rule: "원가·승인 권한과 일반 조회 권한을 분리하고, 승인 후 조건 변경은 재승인으로 전환"
+	},
+	{
+		id: "F-02",
+		track: "common",
+		title: "상품·카테고리·SKU 기준정보",
+		phase: "P0",
+		summary: "네 계열사의 서로 다른 상품키를 공통 상품·브랜드·카테고리·옵션·SKU 구조로 연결합니다.",
+		inputs: [
+			"원천 상품키",
+			"상품·브랜드·카테고리",
+			"옵션·판매 단위",
+			"법인·정산 주체"
+		],
+		outputs: [
+			"canonical product_id·sku_id",
+			"원천키 매핑 상태",
+			"중복·단위 오류"
+		],
+		rule: "브랜드명과 운영 법인을 같은 값으로 가정하지 않고 별도 식별자로 관리"
+	},
+	{
+		id: "F-03",
+		track: "common",
+		title: "재고·예약·판매 데이터 수집",
+		phase: "P0",
+		summary: "ERP·POS·WMS·예약·정산 원천에서 기준시각이 있는 스냅샷과 이력을 받아 계산에 사용합니다.",
+		inputs: [
+			"원천 시스템",
+			"배치·API·파일",
+			"상품키 매핑",
+			"수집 기준시각"
+		],
+		outputs: [
+			"재고·capacity snapshot",
+			"판매·예약 이벤트",
+			"재고 변동 이력",
+			"수집 실패·재시도 상태"
+		],
+		rule: "source_record_id와 snapshot_id로 중복을 막고 원천부터 결과까지 추적 가능해야 함"
+	},
+	{
+		id: "F-04",
+		track: "common",
+		title: "데이터 품질·신선도 관리",
+		phase: "P0",
+		summary: "누락·중복·단위 오류·기준시각 지연을 찾아 계산 가능 여부를 먼저 판정합니다.",
+		inputs: [
+			"필수 필드 규칙",
+			"갱신 주기",
+			"원천별 품질 기준"
+		],
+		outputs: [
+			"accepted / warning / quarantined / rejected",
+			"누락 필드",
+			"재검증 시각·담당자"
+		],
+		rule: "핵심값이 unknown이면 수익 순위와 AI 추천을 만들지 않고 입력 필요 상태로 표시"
+	},
+	{
+		id: "F-05",
+		track: "common",
+		title: "통합 재고 대시보드·검색",
+		phase: "P0",
+		summary: "계열사 전체 현황에서 위험 상품 상세까지 내려가며 처리 우선순위를 좁힙니다.",
+		inputs: [
+			"계열사·카테고리·채널",
+			"위험등급·기한·판매속도",
+			"기준시각"
+		],
+		outputs: [
+			"수량·capacity·재고금액",
+			"정상·주의·위험 비율",
+			"장기·판매부진 목록",
+			"CSV"
+		],
+		rule: "원가 권한이 없으면 원가를 숨기고 위험·수량·속도와 기준시각을 우선 표시"
+	},
+	{
+		id: "F-06",
+		track: "common",
+		title: "위험재고 탐지",
+		phase: "P0",
+		summary: "공통 위험점수 골격에 계열사별 신호·가중치·임계값을 적용해 먼저 처리할 대상을 찾습니다.",
+		inputs: [
+			"처리기한·출발일",
+			"판매속도·가용량",
+			"보관·폐기·위약금",
+			"데이터 품질"
+		],
+		outputs: [
+			"0–100 점수",
+			"정상·주의·위험 등급",
+			"기여 신호",
+			"하드 차단 사유"
+		],
+		rule: "점수보다 법규·소유권·capacity·데이터 품질 차단을 먼저 적용"
+	},
+	{
+		id: "F-07",
+		track: "common",
+		title: "정책·수식 프로필 관리",
+		phase: "P0",
+		summary: "계열사·카테고리별 비용 항목, 허용 범위, 위험 가중치와 계산식을 버전으로 관리합니다.",
+		inputs: [
+			"affiliate_id·category_id",
+			"정책 버전",
+			"가중치·임계값",
+			"할인·채널 제한"
+		],
+		outputs: [
+			"active formula profile",
+			"정책 비교 이력",
+			"계산 snapshot"
+		],
+		rule: "전략 결과에는 policy_version·formula_version·snapshot_id를 항상 저장"
+	},
+	{
+		id: "F-08",
+		track: "common",
+		title: "전략 후보 생성·AI 추천",
+		phase: "P1",
+		summary: "허용된 할인·기간·수량·채널 조합을 만들고 수식 엔진으로 순위를 정한 뒤 AI가 이유를 설명합니다.",
+		inputs: [
+			"목표: 순마진·빠른 소진·최대 매출",
+			"허용 action space",
+			"수요 예측",
+			"정책 profile"
+		],
+		outputs: [
+			"최대 3개 후보",
+			"예상 결과·신뢰도",
+			"하방 위험",
+			"추천 이유"
+		],
+		rule: "LLM은 숫자를 계산·수정하지 않고, 계산이 끝난 후보의 설명과 확인 질문만 생성"
+	},
+	{
+		id: "F-09",
+		track: "common",
+		title: "전략 시뮬레이션",
+		phase: "P0",
+		summary: "담당자가 조건을 바꾸면 기준선·추천안·조정안을 같은 기준으로 다시 계산합니다.",
+		inputs: [
+			"수량·할인율·기간",
+			"쿠폰·포인트·배송비",
+			"채널·번들",
+			"캠페인 비용"
+		],
+		outputs: [
+			"예상 판매·매출",
+			"변동비·이익·마진율",
+			"소진기간·잔량",
+			"회피비용·위험손실"
+		],
+		rule: "조건·정책·snapshot이 바뀌면 새 simulation_run으로 저장하고 기존 승인과 분리"
+	},
+	{
+		id: "F-10",
+		track: "common",
+		title: "검토·승인·Teams 전달",
+		phase: "P1",
+		summary: "담당자가 추천안을 수정해 검토를 요청하고, 승인 결과와 실행 조건을 Teams로 전달합니다.",
+		inputs: [
+			"전략 버전",
+			"승인자",
+			"적용 조건",
+			"Teams 채널 매핑"
+		],
+		outputs: [
+			"승인·거절·재승인 상태",
+			"전달 성공·실패·재시도",
+			"승인 감사 로그"
+		],
+		rule: "Teams 성공은 서비스 승인 성공과 별도 상태이며, 승인 기록은 서비스가 소유"
+	},
+	{
+		id: "F-11",
+		track: "common",
+		title: "실행 이력·예상 대비 실제 성과",
+		phase: "P1",
+		summary: "승인 전략의 실제 판매·매출·마진·잔량을 회수해 예측 오차와 원인을 기록합니다.",
+		inputs: [
+			"approved strategy revision",
+			"판매·예약·정산 결과",
+			"실행 기간",
+			"원인 코드"
+		],
+		outputs: [
+			"예상 vs 실제",
+			"달성률·오차",
+			"잔여·폐기·위약금 결과",
+			"모델 검증 데이터"
+		],
+		rule: "실제값이 없으면 임의 숫자를 표시하지 않고 미수집 상태로 표시"
+	},
+	{
+		id: "F-12",
+		track: "common",
+		title: "알림·운영·관제",
+		phase: "P1",
+		summary: "위험·데이터 차단·승인·배치·Teams·AI 오류를 담당자와 운영자가 추적합니다.",
+		inputs: [
+			"이벤트·임계값",
+			"수신자·채널",
+			"request_id·batch_id"
+		],
+		outputs: [
+			"앱 알림",
+			"Teams 알림",
+			"Sentry·ELK 로그",
+			"Prometheus/Grafana 지표"
+		],
+		rule: "재시도·멱등성·실패 원인·마지막 정상 시각을 함께 남김"
+	},
+	{
+		id: "F-13",
+		track: "common",
+		title: "교차 계열사 번들·재고 이동",
+		phase: "P2",
+		summary: "서로 다른 계열사의 상품을 묶거나 재고를 이동하는 확장 기능입니다.",
+		inputs: [
+			"구성 상품·수량",
+			"재고 예약",
+			"이동비·수신 capacity",
+			"매출 배분 규칙"
+		],
+		outputs: [
+			"번들 판매 가능 수량",
+			"배분 매출·마진",
+			"품절·판매 제한",
+			"승인 절차"
+		],
+		rule: "P0/P1에서는 실행하지 않고 계산·데이터 경계만 준비"
+	},
+	{
+		id: "F-14",
+		track: "common",
+		title: "고객용 읽기 전용 상품 조회",
+		phase: "P2",
+		summary: "위험재고 할인상품과 승인된 번들상품을 고객에게 보여주는 확장 화면입니다.",
+		inputs: [
+			"approved strategy",
+			"판매 가능 재고",
+			"공개 가격·혜택",
+			"법적 표시"
+		],
+		outputs: [
+			"상품 목록·상세",
+			"할인·번들 정보",
+			"재고 부족·판매 제한 상태"
+		],
+		rule: "초기에는 장바구니·결제 없이 조회 화면만 준비"
+	}
+];
+var affiliateProfiles = [
+	{
+		id: "wellness",
+		name: "현대웰니스",
+		unit: "SKU·lot",
+		color: "green",
+		focus: "소비기한과 표시·보관조건",
+		fields: "lot_id · expiry_at · storage_condition · function_claim_class · return_eligible",
+		costs: "배송·포장·수수료 · 쿠폰·포인트 · 반품 검수 · 회수·폐기",
+		stop: "기한·표시·보관·리콜·판매 권한이 확인되지 않으면 차단",
+		signal: "잔여기한 · 판매속도 · 예상 폐기비 · 표시정보 누락"
+	},
+	{
+		id: "travel",
+		name: "더현대트래블",
+		unit: "offer·좌석·객실·slot",
+		color: "blue",
+		focus: "출발일과 예약 capacity",
+		fields: "departure_at · booking_cutoff_at · capacity · supplier_id · cancellation_rule_id",
+		costs: "발권·상담 · 제휴수수료 · 환율 · 변경·재예약 · 공급사 위약금",
+		stop: "예약 마감·공급사 규정·환불조건·capacity가 없으면 차단",
+		signal: "출발 임박도 · fill rate · 취소비 · 규정 누락"
+	},
+	{
+		id: "livart",
+		name: "현대리바트",
+		unit: "제품·옵션·프로젝트",
+		color: "amber",
+		focus: "배송·설치·AS capacity",
+		fields: "dimension · weight · lead_time · install_slot · delivery_zone · as_cost",
+		costs: "보관·전시 · 배송·설치 · 파손·재배송·회수 · 반품·AS",
+		stop: "배송권역·설치 슬롯·주문제작·AS 조건이 없으면 차단",
+		signal: "부피×보관일 · 납기지연 · 설치 부족 · 파손·AS 비용"
+	},
+	{
+		id: "greenfood",
+		name: "현대그린푸드",
+		unit: "SKU·lot·센터",
+		color: "teal",
+		focus: "소비기한·콜드체인·검사",
+		fields: "expiry_at · temperature_class · traceability_id · delivery_window · inspection_status",
+		costs: "피킹·포장 · 냉장·냉동 · 보냉재·에너지 · 회수·폐기 · 채널 수수료",
+		stop: "기한·보관·HACCP·검사·콜드체인이 없으면 차단",
+		signal: "기한 압박 · 폐기량 · 온도 이탈 · 배송 capacity"
+	}
+];
+var architectureLayers = [
+	[
+		"01",
+		"원천 데이터",
+		"ERP·POS·WMS·예약·정산에서 기준시각이 있는 snapshot과 이력을 받습니다."
+	],
+	[
+		"02",
+		"정책·하드 차단",
+		"계열사·카테고리 profile로 판매 가능 여부와 필수값을 먼저 확인합니다."
+	],
+	[
+		"03",
+		"예측·수식 엔진",
+		"판매량·capacity·비용·기준선·위험을 결정론적으로 계산합니다."
+	],
+	[
+		"04",
+		"AI 설명·사람 승인",
+		"LLM은 계산 결과를 설명하고 담당 MD가 최종 조건을 승인합니다."
+	],
+	[
+		"05",
+		"실행·성과 회수",
+		"Teams로 전달하고 실제 결과를 받아 다음 정책과 모델을 검증합니다."
+	]
+];
+var formulaRows = [
+	[
+		"실행 가능 여부",
+		"모든 하드 차단 조건이 통과해야 1, 하나라도 모르면 0",
+		"unknown은 추천·승인 차단"
+	],
+	[
+		"예상 판매·예약량",
+		"min(가용량, 기준량 × 시간효과 × 가격효과 × 채널효과 × 번들효과)",
+		"confidence는 수량에 곱하지 않고 예측 구간·표본 상태로 표시"
+	],
+	[
+		"증분 기여현금이익",
+		"매출 − 변동비 + 회피비용 − 잠식 − 위험손실 − AI 원가 − 기준선",
+		"원가·수수료·반품 중복 차감 금지"
+	],
+	[
+		"위험점수",
+		"100 × Σ(신호별 가중치 × 상품별 위험값)",
+		"가중치·임계값은 계열사·카테고리별 버전 관리"
+	]
+];
+var stateRows = [
+	[
+		"데이터",
+		"received",
+		"validating",
+		"accepted / warning / quarantined / rejected"
+	],
+	[
+		"위험 진단",
+		"detected",
+		"acknowledged",
+		"in_review → strategy_requested → resolved / suppressed"
+	],
+	[
+		"전략",
+		"draft",
+		"generated / edited",
+		"submitted → approved / rejected → scheduled → executing → completed / failed"
+	],
+	[
+		"Teams",
+		"not_requested",
+		"requested",
+		"sent → delivered / failed → retrying / exhausted"
+	]
+];
+function PhaseBadge({ phase }) {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+		className: `capability-phase capability-phase-${phase.toLowerCase()}`,
+		children: phase
+	});
+}
+function CapabilitiesPage() {
+	const [activeTrack, setActiveTrack] = (0, import_react.useState)("all");
+	const [query, setQuery] = (0, import_react.useState)("");
+	const currentTrack = tracks.find((track) => track.id === activeTrack) ?? tracks[0];
+	const visibleCapabilities = (0, import_react.useMemo)(() => {
+		const normalizedQuery = query.trim().toLowerCase();
+		return capabilities.filter((capability) => {
+			const matchesTrack = activeTrack === "all" || capability.track === activeTrack || activeTrack === "common" && capability.track === "common";
+			const matchesQuery = !normalizedQuery || `${capability.id} ${capability.title} ${capability.summary} ${capability.inputs.join(" ")} ${capability.outputs.join(" ")}`.toLowerCase().includes(normalizedQuery);
+			return matchesTrack && matchesQuery;
+		});
+	}, [activeTrack, query]);
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
+		/* @__PURE__ */ (0, import_jsx_runtime.jsx)("section", {
+			className: "page-hero capability-hero",
+			children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				className: "container capability-hero-grid",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Reveal, { children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+						className: "eyebrow",
+						children: "06 · Capability specification"
+					}) }),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Reveal, { children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("h1", { children: [
+						"기획을 기능 단위로",
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("br", {}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("em", { children: "구현 가능한 화면" }),
+						"으로 펼칩니다."
+					] }) }),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Reveal, { children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "네 계열사의 데이터와 서비스 책임을 한 문서에 연결했습니다. 공통 기능은 함께 보고, 계열사별 필수 입력·하드 차단·비용은 분리해서 확인합니다." }) })
+				] }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Reveal, { children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					className: "capability-hero-card",
+					children: [
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+							className: "eyebrow",
+							children: "Read this page as"
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "기능 → 데이터 → 계산 → 승인" }),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "각 기능 카드를 누르지 않아도 입력값, 출력값, 운영 규칙을 한 번에 확인할 수 있습니다." }),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							className: "capability-mini-flow",
+							children: [
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "원천" }),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("i", { children: "→" }),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "정책" }),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("i", { children: "→" }),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "수식" }),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("i", { children: "→" }),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "승인" })
+							]
+						})
+					]
+				}) })]
+			})
+		}),
+		/* @__PURE__ */ (0, import_jsx_runtime.jsx)("section", {
+			className: "section capability-section",
+			children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				className: "container",
+				children: [
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						className: "capability-stats",
+						children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "14" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "기능 계약" })] }),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "4" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "계열사 프로필" })] }),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "5" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "서비스 레이어" })] }),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "P0 → P2" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "단계별 범위" })] })
+						]
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						className: "section-heading capability-heading",
+						children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+								className: "eyebrow",
+								children: "Capability map"
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("h2", { children: [
+								"필요한 기능을",
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("br", {}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("em", { children: "관심 범위별로" }),
+								" 살펴봅니다."
+							] }),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "공통 서비스에서 계열사별 계산 요소까지, 각 카드에 입력·출력·운영 규칙을 함께 적었습니다." })
+						]
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						className: "capability-toolbar",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+							className: "capability-tabs",
+							role: "tablist",
+							"aria-label": "기능 범위 필터",
+							children: tracks.map((track) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
+								type: "button",
+								role: "tab",
+								"aria-selected": activeTrack === track.id,
+								className: activeTrack === track.id ? "is-active" : "",
+								onClick: () => setActiveTrack(track.id),
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: track.label }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: track.hint })]
+							}, track.id))
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("label", {
+							className: "capability-search",
+							children: [
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+									className: "sr-only",
+									children: "기능 검색"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("input", {
+									value: query,
+									onChange: (event) => setQuery(event.target.value),
+									placeholder: "기능·입력·출력 검색"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+									"aria-hidden": "true",
+									children: "⌕"
+								})
+							]
+						})]
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
+						className: "capability-filter-note",
+						children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: currentTrack.label }),
+							" · ",
+							currentTrack.hint,
+							" · ",
+							visibleCapabilities.length,
+							"개 기능 표시"
+						]
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+						className: "capability-card-grid",
+						children: visibleCapabilities.map((capability) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("article", {
+							className: "capability-card",
+							children: [
+								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+									className: "capability-card-top",
+									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+										className: "capability-id",
+										children: capability.id
+									}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(PhaseBadge, { phase: capability.phase })]
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", { children: capability.title }),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+									className: "capability-summary",
+									children: capability.summary
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+									className: "capability-card-columns",
+									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+										className: "capability-label",
+										children: "필요 요소"
+									}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ul", { children: capability.inputs.map((input) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", { children: input }, input)) })] }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+										className: "capability-label",
+										children: "결과"
+									}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ul", { children: capability.outputs.map((output) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", { children: output }, output)) })] })]
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+									className: "capability-rule",
+									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "운영 규칙" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: capability.rule })]
+								})
+							]
+						}, capability.id))
+					}),
+					visibleCapabilities.length === 0 && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						className: "capability-empty",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "검색 결과가 없습니다." }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "다른 기능명이나 입력 요소로 검색해 보세요." })]
+					})
+				]
+			})
+		}),
+		/* @__PURE__ */ (0, import_jsx_runtime.jsx)("section", {
+			className: "section-tight band capability-section",
+			children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				className: "container",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					className: "section-heading",
+					children: [
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+							className: "eyebrow",
+							children: "Affiliate profiles"
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { children: "같은 화면, 다른 계산 기준" }),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "상품과 서비스는 한곳에서 관리하지만, 실제 전략을 계산하는 필수 요소는 계열사별로 달라집니다." })
+					]
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+					className: "affiliate-profile-grid",
+					children: affiliateProfiles.map((profile) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("article", {
+						className: `affiliate-profile affiliate-profile-${profile.color}`,
+						children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								className: "affiliate-profile-head",
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+									className: "capability-id",
+									children: profile.unit
+								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+									className: "affiliate-profile-dot",
+									"aria-hidden": "true"
+								})]
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", { children: profile.name }),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: profile.focus }),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("dl", { children: [
+								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("dt", { children: "필수 입력" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("dd", { children: profile.fields })] }),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("dt", { children: "주요 비용" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("dd", { children: profile.costs })] }),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("dt", { children: "차단 기준" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("dd", { children: profile.stop })] }),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("dt", { children: "위험 신호" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("dd", { children: profile.signal })] })
+							] })
+						]
+					}, profile.id))
+				})]
+			})
+		}),
+		/* @__PURE__ */ (0, import_jsx_runtime.jsx)("section", {
+			className: "section capability-section",
+			children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				className: "container",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					className: "section-heading",
+					children: [
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+							className: "eyebrow",
+							children: "Service architecture"
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("h2", { children: [
+							"기능은 이 순서로",
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("br", {}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("em", { children: "서로 연결됩니다." })
+						] }),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "AI 추천은 마지막에 놓입니다. 먼저 원천 데이터와 정책을 검증하고, 숫자 계산이 끝난 뒤 사람이 승인합니다." })
+					]
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+					className: "capability-layer-grid",
+					children: architectureLayers.map(([num, title, body]) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("article", { children: [
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: num }),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", { children: title }),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: body })
+					] }, num))
+				})]
+			})
+		}),
+		/* @__PURE__ */ (0, import_jsx_runtime.jsx)("section", {
+			className: "section-tight band capability-section",
+			children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				className: "container",
+				children: [
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						className: "section-heading",
+						children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+								className: "eyebrow",
+								children: "Formula contract"
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("h2", { children: [
+								"수식은 공통 골격,",
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("br", {}),
+								"변수는 계열사 프로필"
+							] }),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "수식의 이름과 계산 순서는 통일하지만, 처리기한·capacity·비용·위험 신호는 계열사와 카테고리별 profile에서 가져옵니다." })
+						]
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+						className: "formula-contract-grid",
+						children: formulaRows.map(([name, formula, rule]) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("article", {
+							className: "formula-contract-card",
+							children: [
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+									className: "capability-label",
+									children: name
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("code", { children: formula }),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: rule })
+							]
+						}, name))
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						className: "capability-callout",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "계산 결과의 필수 버전" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", { children: [
+							"모든 전략 결과에는 ",
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("code", { children: "snapshot_id · formula_version · policy_version · model_version" }),
+							"을 남겨 같은 입력으로 결과를 재현할 수 있어야 합니다."
+						] })]
+					})
+				]
+			})
+		}),
+		/* @__PURE__ */ (0, import_jsx_runtime.jsx)("section", {
+			className: "section capability-section",
+			children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				className: "container capability-two-column",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					className: "section-heading",
+					children: [
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+							className: "eyebrow",
+							children: "Lifecycle"
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("h2", { children: [
+							"데이터와 전략은",
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("br", {}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("em", { children: "상태로 추적" }),
+							"합니다."
+						] }),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "화면에 보이는 추천 하나가 어느 단계에서 막혔는지, 누가 다음 처리를 해야 하는지 상태로 확인합니다." })
+					]
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+					className: "state-list",
+					children: stateRows.map(([name, start, middle, end]) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						className: "state-row",
+						children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: name }),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: start }),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("i", { children: "→" }),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: middle }),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("i", { children: "→" }),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: end })
+						]
+					}, name))
+				})] }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					className: "capability-api-card",
+					children: [
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+							className: "eyebrow",
+							children: "Interface surface"
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("h3", { children: [
+							"서비스가 제공하는",
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("br", {}),
+							"주요 인터페이스"
+						] }),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("ul", { children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("li", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("code", { children: "GET" }), " 상품·재고·위험·이력 조회"] }),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("li", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("code", { children: "POST" }), " 전략 추천 요청·시뮬레이션"] }),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("li", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("code", { children: "POST" }), " 검토 요청·승인·거절"] }),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("li", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("code", { children: "POST" }), " 재고 갱신·위험 재분석 배치"] }),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("li", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("code", { children: "GET" }), " 예상 결과와 실제 성과 비교"] })
+						] }),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "모든 응답은 request_id, 기준시각, 권한 범위, 정책·수식 버전을 포함합니다." })
+					]
+				})]
+			})
+		}),
+		/* @__PURE__ */ (0, import_jsx_runtime.jsx)("section", {
+			className: "section-tight band capability-section",
+			children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				className: "container",
+				children: [
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						className: "section-heading",
+						children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+								className: "eyebrow",
+								children: "Delivery boundary"
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("h2", { children: [
+								"이번 프로젝트에서 먼저",
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("br", {}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("em", { children: "검증할 것" })
+							] }),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "전체 기능을 한 번에 운영 기능으로 만들지 않고, 대표 수직 슬라이스에서 데이터·계산·승인·성과 회수를 끝까지 검증합니다." })
+						]
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Stagger, {
+						className: "delivery-grid",
+						children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("article", { children: [
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(PhaseBadge, { phase: "P0" }),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", { children: "기반과 계산" }),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "권한, 공통 모델, 데이터 품질, 하드 차단, 결정론적 위험점수·시뮬레이션." })
+							] }),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("article", { children: [
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(PhaseBadge, { phase: "P1" }),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", { children: "추천과 승인" }),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "후보 생성, 담당자 수정, 승인·Teams 전달, 실제 결과 회수와 오차 비교." })
+							] }),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("article", { children: [
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(PhaseBadge, { phase: "P2" }),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", { children: "확장" }),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "교차 계열사 번들, 재고 이동, 고객용 카탈로그, 자동 재학습·모델 배포." })
+							] })
+						]
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						className: "capability-open",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "구현 전 확정할 질문" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "원천 시스템·데이터 소유자 · 대표 카테고리 · 기준선 · 수요 이력 기간 · 위험 가중치 · LLM 보존·비용 정책" })]
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						className: "actions",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("a", {
+							className: "button primary",
+							href: "/prd",
+							children: ["제품 범위 보기 ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "→" })]
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("a", {
+							className: "button secondary",
+							href: "/formulas",
+							children: "수식 및 계산 보기"
+						})]
+					})
+				]
+			})
+		})
+	] });
+}
+//#endregion
+export { CapabilitiesPage as default };
