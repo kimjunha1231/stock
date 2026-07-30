@@ -1,7 +1,7 @@
 import { t as require_jsx_runtime, w as __toESM, y as require_react } from "../index.js";
 import Link from "./link-BjpPdlMN.js";
 import { t as Reveal } from "./reveal-ASYv3BuO.js";
-import { i as sources } from "./content-CZACuqoX.js";
+import { i as sources } from "./content-DZpSpqS0.js";
 //#region src/components/source-note.tsx
 var import_react = /* @__PURE__ */ __toESM(require_react(), 1);
 var import_jsx_runtime = require_jsx_runtime();
@@ -159,7 +159,7 @@ var profiles = [
 		keyInputs: [
 			"SKU·로트·원산지·추적번호",
 			"소비기한·온도등급·보관조건",
-			"채널·점포·고객사 수요",
+			"채널·거점·고객사 수요",
 			"주문 마감·냉장/냉동 배송 capacity"
 		],
 		variableCosts: [

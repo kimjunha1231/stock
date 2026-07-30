@@ -1,5 +1,5 @@
 import { t as require_jsx_runtime, w as __toESM, y as require_react } from "../index.js";
-import { i as sources, n as glossary } from "./content-CZACuqoX.js";
+import { i as sources, n as glossary } from "./content-DZpSpqS0.js";
 //#region src/components/glossary-browser.tsx
 var import_react = /* @__PURE__ */ __toESM(require_react(), 1);
 var import_jsx_runtime = require_jsx_runtime();

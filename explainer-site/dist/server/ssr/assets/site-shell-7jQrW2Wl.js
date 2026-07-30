@@ -1,6 +1,6 @@
 import { t as require_jsx_runtime, w as __toESM, y as require_react } from "../index.js";
 import Link from "./link-BjpPdlMN.js";
-import { r as navItems } from "./content-CZACuqoX.js";
+import { r as navItems } from "./content-DZpSpqS0.js";
 //#region src/components/site-shell.tsx
 var import_react = /* @__PURE__ */ __toESM(require_react(), 1);
 var import_jsx_runtime = require_jsx_runtime();
@@ -18,7 +18,7 @@ function SiteShell({ children }) {
 						onClick: () => setMenuOpen(false),
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
 							className: "brand-mark",
-							children: "H"
+							children: "I"
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "InventoryOS" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: "Decision explainer" })] })]
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
@@ -55,9 +55,9 @@ function SiteShell({ children }) {
 				children: [
 					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
 						className: "brand-mark small",
-						children: "H"
+						children: "I"
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "InventoryOS" })] }),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "현대백화점 점포/부서가 스스로 판단하고, 그룹은 더 나은 결정을 확산합니다." }),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "네 계열사의 담당자가 스스로 판단하고, 통합 서비스는 더 나은 결정을 확산합니다." }),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link, {
 						href: "/glossary",
 						children: "용어 사전 열기 →"

@@ -49,70 +49,6 @@ var sources = [
 		url: "/product-tour"
 	},
 	{
-		id: "hds-esg",
-		kind: "현대백화점",
-		title: "현대백화점 지속가능경영보고서 2024",
-		location: "보고 범위·GRI/SASB·K-IFRS",
-		note: "전국 15개 백화점과 9개 아울렛 범위의 공개 보고서",
-		url: "https://kind.krx.co.kr/external/2025/06/30/000286/20250618000183/61979.htm"
-	},
-	{
-		id: "hds-service",
-		kind: "현대백화점",
-		title: "현대백화점 서비스 제도",
-		location: "식품안전 보증제·식품 감식관·냉장 보관·선물 배송",
-		note: "식품 전략에서 가격보다 먼저 확인할 운영 접점",
-		url: "https://www.ehyundai.com/newPortal/CS/CS000004_V.do"
-	},
-	{
-		id: "hds-return",
-		kind: "현대백화점",
-		title: "현대백화점 교환·환불 서비스",
-		location: "구매 후 7일·상품군별 신선식품 예외",
-		note: "반품률과 재판매 가능성을 상품군별로 나눠야 하는 근거",
-		url: "https://www.ehyundai.com/newPortal/CS/CS000003_V.do"
-	},
-	{
-		id: "hds-subscription",
-		kind: "현대백화점",
-		title: "현대식품관 식품 구독",
-		location: "배송일 2일 전 변경·중간 취소·매장/앱 결제",
-		note: "식품 예약·배송·취소 capacity를 전략 변수로 만드는 근거",
-		url: "https://www.ehyundai.com/newPortal/FS/FS000001_V.do"
-	},
-	{
-		id: "hds-vip",
-		kind: "현대백화점",
-		title: "현대백화점 2026 Club YP",
-		location: "할인 제외 상품군·임대매장·온라인몰 적용 조건",
-		note: "VIP를 만능 할인 수단으로 가정하지 않는 근거",
-		url: "https://www.ehyundai.com/HD/VIP/2025/yp/serp.do"
-	},
-	{
-		id: "hds-circular",
-		kind: "현대백화점",
-		title: "현대백화점 자원순환",
-		location: "폐비닐 화학적 재활용·Project100·365 리사이클",
-		note: "폐기 비용과 ESG 처리 증빙을 분리하는 근거",
-		url: "https://www.ehyundai.com/newPortal/RC/ENV00003_V.do"
-	},
-	{
-		id: "hds-hai",
-		kind: "현대백화점",
-		title: "현대백화점 생성형 AI 멘토 Hai",
-		location: "현대퓨처넷 협업·13개 직무·139명 전문가",
-		note: "생성형 AI는 설명과 업무 보조에 연결된다는 공개 사례",
-		url: "https://www.ehyundai.com/newPortal/group/GN/GNN000020_V.do?seq=434"
-	},
-	{
-		id: "hds-heydi",
-		kind: "현대백화점",
-		title: "쇼핑 AI Heydi",
-		location: "실시간 점포 정보·브랜드·팝업·프로모션 추천",
-		note: "실시간 운영 정보와 대화형 안내를 분리해 연결하는 공개 사례",
-		url: "https://www.ehyundai.com/newPortal/group/GN/GNN000010_V.do?seq=691"
-	},
-	{
 		id: "mfds-useby",
 		kind: "법·정책",
 		title: "식품 소비기한 정책브리핑",
@@ -335,7 +271,7 @@ var glossary = [
 		"term": "C_LLM (LLM API 토큰 비용)",
 		"category": "AI·운영",
 		"short": "AI가 재고 분석 및 전략 설명서를 작성할 때 발생하는 언어모델 토큰 원가",
-		"definition": "초거대 언어모델(GPT-5/Claude 등)에 입출력되는 프롬프트 및 전략 설명서 토큰 수량에 단위 단가를 곱해 계산하는 원가 요소입니다. [현대백화점 실무 데이터와 글로벌 학술 출처(OpenAI/McKinsey) 교차 검증]",
+		"definition": "초거대 언어모델에 입출력되는 프롬프트 및 전략 설명서 토큰 수량에 단위 단가를 곱해 계산하는 원가 요소입니다. 모델이 확정되기 전에는 실제 단가를 가정하지 않고 사용량 원장으로 관리합니다.",
 		"formula": "C_LLM = (Tokens_input × Price_input) + (Tokens_output × Price_output)",
 		"example": "입력 2,500 토큰 + 출력 800 토큰 발생 시 1건당 C_LLM은 약 8.5원입니다.",
 		"related": ["ai-decision-cost"],
@@ -346,7 +282,7 @@ var glossary = [
 		"term": "Cash_AI (AI 전략 순현금 손익)",
 		"category": "재무 기준",
 		"short": "AI 최적화 전략 실행 후 실제로 들어오고 나가는 순현금 흐름",
-		"definition": "할인 판매로 유입된 현금 매출에서 가변 물류·마케팅비를 빼고, 회피한 폐기·보관비를 더한 뒤 AI 결정원가(C_AI_case)를 차감한 최종 현금 이익입니다. [현대백화점 실무 데이터와 글로벌 학술 출처(McKinsey) 교차 검증]",
+		"definition": "할인 판매로 유입된 현금 매출에서 계열사별 가변 이행·마케팅비를 빼고, 회피한 보관·폐기·위약금 비용을 더한 뒤 AI 결정원가(C_AI_case)를 차감한 최종 현금 성과입니다.",
 		"formula": "Cash_AI = Revenue_ai − Cost_var + AvoidedCost − C_AI_case",
 		"example": "매출 4,680만원 − 변동비 24만원 + 회피폐기비 172만원 − AI원가 15원 = 순현금 손익 4,828만원.",
 		"related": [
@@ -361,7 +297,7 @@ var glossary = [
 		"term": "Lift% (수요 증대율)",
 		"category": "마케팅·고객",
 		"short": "프로모션이나 할인 적용 시 평시 대비 판매량이 증가하는 비율",
-		"definition": "가격 할인, H.Point 쿠폰, 앱 알림 등의 마케팅 자극으로 인해 기본 판매속도(ROS) 대비 판매량이 몇 % 상승했는지 나타냅니다. [현대백화점 실무 데이터와 글로벌 학술 출처(INFORMS) 교차 검증]",
+		"definition": "가격 할인, 쿠폰·포인트, 앱·제휴채널 노출 등의 마케팅 자극으로 기본 판매속도(ROS) 대비 판매량이 얼마나 상승했는지 나타냅니다.",
 		"formula": "Lift% = ((행사 판매량 − 평시 판매량) ÷ 평시 판매량) × 100%",
 		"example": "평소 하루 5개 팔리던 상품이 35% 타임세일 후 하루 25개 팔렸다면 Lift% = +400% 입니다.",
 		"related": ["ros", "scenario"],
@@ -372,19 +308,19 @@ var glossary = [
 		"term": "ROS (Rate of Sale / 판매속도)",
 		"category": "재고·물류",
 		"short": "일일 또는 주간 단위 평균 판매 수량",
-		"definition": "특정 기간 동안 하루 평균 몇 개가 판매되는지 측정하는 속도 지표입니다. [현대백화점 실무 데이터와 글로벌 학술 출처(Oracle Retail, INFORMS) 교차 검증]",
+		"definition": "특정 기간 동안 하루 평균 몇 개가 판매되거나, 서비스형 상품이면 하루 평균 몇 건이 예약되는지 측정하는 속도 지표입니다.",
 		"formula": "ROS = 총 판매 수량 ÷ 기간 일수 (또는 주수)",
-		"example": "최근 7일간 한우 세트 70개가 팔렸다면 ROS = 10개/일 입니다.",
+		"example": "최근 7일간 특정 SKU 70개가 팔렸다면 ROS = 10개/일입니다. 여행 상품은 예약 건/일로 같은 방식으로 계산합니다.",
 		"related": ["wos", "sell-through-rate"],
 		"sourceIds": ["oracle-retail", "informs-journal"]
 	},
 	{
 		id: "baseline",
-		term: "현대백화점 기준선",
+		term: "통합 서비스 기준선",
 		category: "재무 기준",
 		short: "프로모션을 하지 않아도 실행 가능한 최선의 대안",
-		definition: "전략의 효과를 비교하기 위한 출발점입니다. 해당 현대백화점 점포/부서가 프로모션을 하지 않고 선택할 수 있는 대안 중 가장 유리한 결과를 기준선으로 삼습니다.",
-		formula: "증분이익 = 전략 결과 − 현대백화점 기준선 결과",
+		definition: "전략의 효과를 비교하기 위한 출발점입니다. 해당 계열사·채널이 프로모션을 하지 않고 선택할 수 있는 대안 중 가장 유리한 결과를 기준선으로 삼습니다.",
+		formula: "증분이익 = 전략 결과 − 통합 서비스 기준선 결과",
 		example: "그대로 보관 후 폐기하는 것보다, 제한 할인으로 소진하는 결과가 좋은지 비교합니다.",
 		related: ["incremental-profit", "contribution-cash"],
 		sourceIds: ["project-policy"]
@@ -394,7 +330,7 @@ var glossary = [
 		term: "증분이익",
 		category: "재무 기준",
 		short: "기준선과 비교해 전략이 추가로 만든 이익",
-		definition: "전략을 실행한 결과에서 현대백화점 기준선의 결과를 뺀 값입니다. 장부상 매몰원가보다 실제로 변하는 현금 흐름과 회피비용을 중심으로 봅니다.",
+		definition: "전략을 실행한 결과에서 통합 서비스 기준선의 결과를 뺀 값입니다. 장부상 매몰원가보다 실제로 변하는 현금 흐름과 회피비용을 중심으로 봅니다.",
 		formula: "위험조정 기여현금이익 − 기준선 기여현금이익",
 		example: "할인으로 매출이 줄어도 폐기·보관비를 피했다면 기준선 대비 증분이익이 커질 수 있습니다.",
 		related: [
@@ -437,7 +373,7 @@ var glossary = [
 		definition: "재고를 더 빨리 처리해 피할 수 있는 보관비, 폐기비, 회수비 등입니다. 단순한 매출이나 마진만으로 보이지 않는 전략 효과를 설명합니다.",
 		example: "유통기한 전에 소진하면 폐기 운송·처리 비용을 줄일 수 있습니다.",
 		related: ["incremental-profit", "contribution-cash"],
-		sourceIds: ["project-policy", "hds-circular"]
+		sourceIds: ["project-policy", "allbaro"]
 	},
 	{
 		id: "risk-stock",
@@ -445,7 +381,7 @@ var glossary = [
 		category: "기본 개념",
 		short: "시간·비용·품질 조건 때문에 손실 가능성이 커진 재고",
 		definition: "장기보관, 유통기한 임박, 방송 후 잔량, 공간 점유, 반품·파손 가능성 등으로 처리 지연 시 손실이 커질 수 있는 재고입니다.",
-		example: "B1 식품관의 D-3 신선식품과 2F 시즌 경과 상품은 서로 다른 이유로 위험재고가 됩니다.",
+		example: "소비기한이 임박한 식품과 설치 슬롯이 부족한 리빙 상품은 서로 다른 이유로 위험재고가 됩니다.",
 		related: ["hard-stop"],
 		sourceIds: ["project-types", "project-simulation"]
 	},
@@ -459,8 +395,8 @@ var glossary = [
 		related: ["risk-stock"],
 		sourceIds: [
 			"project-policy",
-			"hds-service",
-			"mfds-useby"
+			"food-label-standards",
+			"mfds-storage"
 		]
 	},
 	{
@@ -469,47 +405,23 @@ var glossary = [
 		category: "재고·물류",
 		short: "판매·회수·기부·폐기 중 하나를 확정해야 하는 남은 시간",
 		definition: "식품의 소비기한, 패션의 시즌 종료, 캠페인의 종료일처럼 전략 선택을 바꾸는 시간 제약입니다. 단순한 비용이 아니라 먼저 지켜야 할 제약조건입니다.",
-		example: "D-3 대게는 전국 배송보다 당일 수령·근거리 예약을 먼저 비교합니다.",
+		example: "소비기한이 임박한 식품은 전국 배송보다 안전한 보관·배송 capacity가 있는 대안을 먼저 비교합니다.",
 		related: ["risk-stock", "hard-stop"],
 		sourceIds: [
 			"project-types",
-			"hds-service",
-			"mfds-useby"
+			"food-label-standards",
+			"mfds-storage"
 		]
 	},
 	{
-		id: "direct-purchase",
-		term: "직매입",
+		id: "ownership-model",
+		term: "재고 소유·정산 구조",
 		category: "재고·물류",
-		short: "백화점이 상품을 매입하고 재고 위험을 직접 부담하는 방식",
-		definition: "재고의 판매·보관·폐기 결과가 현대백화점 점포/부서의 손익에 직접 연결되는 구매 유형입니다. 프로젝트에서는 P0 우선순위입니다.",
-		example: "직매입 식품은 할인·배송·폐기비를 현대백화점 점포/부서 손익 기준으로 계산합니다.",
-		related: ["special-purchase", "leased-store"],
+		short: "상품 또는 서비스의 소유권·비용 부담·정산 권한을 정의하는 계약 정보",
+		definition: "계열사·공급사·채널마다 재고 소유권, 할인 승인권, 반품·회수·폐기 비용 부담, 수수료와 정산 방식이 달라질 수 있습니다. 공통 수식에 넣기 전에 계약별로 확인합니다.",
+		example: "소유권과 쿠폰 부담 주체가 확인되지 않은 상품은 이익 계산을 확정하지 않고 검토 대기 상태로 둡니다.",
+		related: ["hard-stop", "contribution-cash"],
 		sourceIds: ["project-types", "project-policy"]
-	},
-	{
-		id: "special-purchase",
-		term: "특약매입",
-		category: "재고·물류",
-		short: "판매·정산·반품 조건을 계약으로 나눠 부담하는 방식",
-		definition: "직매입과 달리 소유권·반품권·비용분담·정산 방식이 계약에 따라 달라질 수 있습니다. 직매입처럼 계산하면 이익이 왜곡됩니다.",
-		example: "특약매입은 할인 전에 벤더 부담률과 반품 가능 여부를 확인합니다.",
-		related: ["direct-purchase", "leased-store"],
-		sourceIds: ["project-types", "project-policy"]
-	},
-	{
-		id: "leased-store",
-		term: "임대매장",
-		category: "재고·물류",
-		short: "매장 운영자가 상품 소유와 가격 권한을 갖는 형태",
-		definition: "백화점이 임대료·수수료를 받는 구조로, 재고 소유권과 할인 승인권이 매장에 있을 수 있습니다. AI는 권한 확인 전 가격 전략을 실행하지 않습니다.",
-		example: "임대매장 상품은 벤더 공동행사나 별도 협의 후보로 둡니다.",
-		related: [
-			"direct-purchase",
-			"special-purchase",
-			"hard-stop"
-		],
-		sourceIds: ["project-types", "hds-vip"]
 	},
 	{
 		id: "sales-velocity",
@@ -540,11 +452,7 @@ var glossary = [
 		definition: "회계상 손상차손과 실제 현금성 처리비를 분리해야 합니다. 기부·벤더 회수·자원순환 비용도 무료라고 가정하지 않습니다.",
 		example: "폐기하지 않았다는 이유만으로 비용이 0원이 되지 않으며, 처리 증빙을 남깁니다.",
 		related: ["avoidable-cost", "hard-stop"],
-		sourceIds: [
-			"project-policy",
-			"hds-circular",
-			"allbaro"
-		]
+		sourceIds: ["project-policy", "allbaro"]
 	},
 	{
 		id: "return-rate",
@@ -553,9 +461,9 @@ var glossary = [
 		short: "판매 후 되돌아오는 비율",
 		definition: "온라인 비중이 늘면 매출만큼 반품·검수·재판매 가능성·환불 시점이 중요해집니다. 상품군과 채널별로 따로 계산합니다.",
 		formula: "반품률 = 반품 수량 ÷ 판매 수량",
-		example: "의류와 신선식품의 반품 조건을 같은 값으로 두지 않습니다.",
+		example: "여행 부가서비스, 건강기능식품, 가구, 식품의 반품·취소 조건을 같은 값으로 두지 않습니다.",
 		related: ["contribution-cash", "delivery-capacity"],
-		sourceIds: ["hds-return", "project-simulation"]
+		sourceIds: ["travel-cancel", "project-simulation"]
 	},
 	{
 		id: "delivery-capacity",
@@ -566,8 +474,8 @@ var glossary = [
 		example: "D-5 식품을 할인해도 당일 배송 capacity가 없으면 판매 전략이 아닙니다.",
 		related: ["dday", "return-rate"],
 		sourceIds: [
-			"hds-subscription",
-			"hds-service",
+			"affiliate-greenfood-reservation",
+			"mfds-storage",
 			"project-simulation"
 		]
 	},
@@ -611,14 +519,10 @@ var glossary = [
 		term: "Human-in-the-loop",
 		category: "AI·운영",
 		short: "AI가 제안하고 권한 있는 사람이 승인하는 구조",
-		definition: "AI는 가격·재고를 확정하지 않습니다. 현대백화점 재고 담당자가 데이터·조건·하방 결과를 확인한 뒤 실행을 승인하고 결과를 회수합니다.",
+		definition: "AI는 가격·재고를 확정하지 않습니다. 해당 계열사의 권한 있는 담당자가 데이터·조건·하방 결과를 확인한 뒤 실행을 승인하고 결과를 회수합니다.",
 		example: "식품 안전·소유권·브랜드 예외는 담당자 승인 없이는 실행하지 않습니다.",
 		related: ["hard-stop", "ai-decision-cost"],
-		sourceIds: [
-			"project-policy",
-			"hds-hai",
-			"hds-heydi"
-		]
+		sourceIds: ["project-policy", "pipc-genai"]
 	}
 ];
 var navItems = [

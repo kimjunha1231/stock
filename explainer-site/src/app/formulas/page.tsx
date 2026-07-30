@@ -73,7 +73,7 @@ const profiles: AffiliateProfile[] = [
     accent: '#0f766e',
     inventoryUnit: '로트·소비기한별 식품 수량',
     timeAxis: '소비기한·주문 마감·배송일',
-    keyInputs: ['SKU·로트·원산지·추적번호', '소비기한·온도등급·보관조건', '채널·점포·고객사 수요', '주문 마감·냉장/냉동 배송 capacity'],
+    keyInputs: ['SKU·로트·원산지·추적번호', '소비기한·온도등급·보관조건', '채널·거점·고객사 수요', '주문 마감·냉장/냉동 배송 capacity'],
     variableCosts: ['피킹·포장·냉장/냉동 배송', '보냉재·에너지·회수 비용', '폐기·음식물 처리·증빙', '채널 수수료·할인·반품'],
     hardStops: ['소비기한·보관조건 미확인', '검사·HACCP·추적 상태 이상', '냉장/냉동 배송 capacity 없음'],
     riskSignals: ['소비기한 압박', '예상 폐기량×처리단가', '콜드체인 capacity 부족', '사전예약 마감과 배송일 불일치'],

@@ -11,7 +11,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
     <div className="site-frame">
       <header className="site-header">
         <Link href="/" className="brand" onClick={() => setMenuOpen(false)}>
-          <span className="brand-mark">H</span>
+          <span className="brand-mark">I</span>
           <span><strong>InventoryOS</strong><small>Decision explainer</small></span>
         </Link>
         <button className="menu-toggle" type="button" aria-expanded={menuOpen} aria-label={menuOpen ? '메뉴 닫기' : '메뉴 열기'} onClick={() => setMenuOpen((value) => !value)}>
@@ -24,8 +24,8 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
       </header>
       <main>{children}</main>
       <footer className="site-footer">
-        <div><span className="brand-mark small">H</span><strong>InventoryOS</strong></div>
-        <p>현대백화점 점포/부서가 스스로 판단하고, 그룹은 더 나은 결정을 확산합니다.</p>
+        <div><span className="brand-mark small">I</span><strong>InventoryOS</strong></div>
+        <p>네 계열사의 담당자가 스스로 판단하고, 통합 서비스는 더 나은 결정을 확산합니다.</p>
         <Link href="/glossary">용어 사전 열기 →</Link>
       </footer>
     </div>

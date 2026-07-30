@@ -7,7 +7,7 @@ import { sources } from '@/lib/content';
 
 const painPoints = [
   ['◌', '보관', '장기보관 재고가 공간과 현금을 계속 묶습니다.'],
-  ['⌁', '기한', '식품은 유통기한이 지나면 회수할 선택지가 급격히 줄어듭니다.'],
+  ['⌁', '처리기한', '소비기한·출발일·납기처럼 상품마다 처리 가능한 시간이 다릅니다.'],
   ['▱', '사이즈', '같은 상품도 색상·사이즈별 판매속도와 잔여수량이 다릅니다.'],
   ['⌂', '브랜드', '큰 폭의 할인은 정상판매와 브랜드 가격 기준을 함께 흔들 수 있습니다.'],
 ];
@@ -18,11 +18,11 @@ export default function HomePage() {
       <section className="hero">
         <div className="container hero-grid">
           <div className="hero-copy">
-            <Reveal><span className="hero-note"><i /> 현대백화점 직매입 AI 재고 의사결정 플랫폼</span></Reveal>
+            <Reveal><span className="hero-note"><i /> 4개 계열사 통합 AI 재고·capacity 의사결정 플랫폼</span></Reveal>
             <Reveal><h1 className="display">재고를 없애는 게 아니라, <em>손실을 줄이는 판단</em>을 만듭니다.</h1></Reveal>
-            <Reveal><p className="lead">더현대 서울 직매입 재고부터 검증하고, AI는 비용·위험·기한을 비교해 담당 MD가 승인할 수 있는 다음 수를 설명합니다. 점포 간 이동은 검증 후 확장합니다.</p></Reveal>
+            <Reveal><p className="lead">현대웰니스·더현대트래블·현대리바트·현대그린푸드의 상품과 예약 capacity를 통합해, AI가 비용·위험·처리기한을 비교하고 계열사 담당자가 승인할 수 있는 다음 수를 설명합니다.</p></Reveal>
             <Reveal><div className="actions"><Link className="button primary" href="/workflow">작동 방식 보기 <span>→</span></Link><Link className="button secondary" href="/product-tour">실제 화면 둘러보기</Link></div></Reveal>
-            <div className="hero-proof"><div className="proof-item"><strong>4개</strong><span>서로 다른 현대백화점 점포/부서 맥락</span></div><div className="proof-item"><strong>6단계</strong><span>탐지에서 결과 회수까지</span></div><div className="proof-item"><strong>1개의 원칙</strong><span>사람이 최종 승인</span></div></div>
+            <div className="hero-proof"><div className="proof-item"><strong>4개</strong><span>서로 다른 계열사 상품·서비스 맥락</span></div><div className="proof-item"><strong>6단계</strong><span>탐지에서 결과 회수까지</span></div><div className="proof-item"><strong>1개의 원칙</strong><span>사람이 최종 승인</span></div></div>
           </div>
           <div className="hero-visual" aria-label="AI 재고 의사결정 흐름 그래픽">
             <div className="decision-orbit"><div className="orbit-ring"><div className="orbit-core"><div className="core-card"><strong>AI</strong><span>근거를 비교하고<br />다음 수를 제안합니다</span></div></div><div className="orbit-node node-one"><strong>위험재고</strong><span>기한·비용·공간</span></div><div className="orbit-node node-two"><strong>전략 후보</strong><span>할인 · 폐기 · 기부</span></div><div className="orbit-node node-three"><strong>담당자 승인</strong><span>책임 있는 실행</span></div><div className="orbit-node node-four"><strong>성과 회수</strong><span>예측을 다음 판단으로</span></div><i className="orbit-dot one" /><i className="orbit-dot two" /><i className="orbit-dot three" /></div></div>
@@ -30,11 +30,11 @@ export default function HomePage() {
         </div>
       </section>
 
-      <div className="logo-strip"><div className="container logo-strip-inner"><span>Built for Hyundai Department Store operations</span><b>현대백화점</b><b>더현대 서울</b><b>직매입 재고</b><b>책임 MD 승인</b></div></div>
+      <div className="logo-strip"><div className="container logo-strip-inner"><span>Built for integrated affiliate operations</span><b>현대웰니스</b><b>더현대트래블</b><b>현대리바트</b><b>현대그린푸드</b></div></div>
 
-      <section className="section"><div className="container"><div className="section-heading"><span className="eyebrow">The problem</span><h2>같은 재고라도,<br />손실이 생기는 이유는 다릅니다.</h2><p>모든 현대백화점 점포/부서에 하나의 할인율을 적용하면 실제 비용과 책임이 사라집니다. 이 서비스는 각자의 맥락을 인정하는 것에서 시작합니다.</p></div><Stagger className="pain-grid">{painPoints.map(([icon, title, body]) => <article className="pain-card" key={title}><div className="pain-icon">{icon}</div><h3>{title}</h3><p>{body}</p></article>)}</Stagger></div></section>
+      <section className="section"><div className="container"><div className="section-heading"><span className="eyebrow">The problem</span><h2>같은 재고라도,<br />손실이 생기는 이유는 다릅니다.</h2><p>모든 계열사 상품·서비스에 하나의 할인율과 처리 규칙을 적용하면 실제 비용과 책임이 사라집니다. 이 서비스는 상품의 맥락과 계약 조건을 함께 읽는 것에서 시작합니다.</p></div><Stagger className="pain-grid">{painPoints.map(([icon, title, body]) => <article className="pain-card" key={title}><div className="pain-icon">{icon}</div><h3>{title}</h3><p>{body}</p></article>)}</Stagger></div></section>
 
-      <section className="section band"><div className="container"><div className="section-heading"><span className="eyebrow">The decision loop</span><h2>추천보다 중요한 것은<br /><em>판단의 근거</em>입니다.</h2><p>AI는 가격을 바꾸지 않습니다. <TermHint id="risk-stock" />를 찾고, <TermHint id="baseline" /> 대비 어떤 전략이 유리한지 보여주고, 담당자가 승인할 수 있게 만듭니다.</p></div><div className="flow">{[['01','발견','위험 신호를 찾습니다'],['02','비교','실행 가능한 대안을 나눕니다'],['03','시뮬레이션','비용과 하방을 계산합니다'],['04','승인','현대백화점 재고 담당자가 결정합니다'],['05','실행','운영팀이 처리합니다'],['06','학습','결과를 다음 판단에 반영합니다']].map(([num,title,body]) => <div className="flow-step" key={num}><div className="flow-number">{num}</div><strong>{title}</strong><span>{body}</span></div>)}</div></div></section>
+      <section className="section band"><div className="container"><div className="section-heading"><span className="eyebrow">The decision loop</span><h2>추천보다 중요한 것은<br /><em>판단의 근거</em>입니다.</h2><p>AI는 가격과 재고를 확정하지 않습니다. <TermHint id="risk-stock" />를 찾고, <TermHint id="baseline" /> 대비 어떤 전략이 유리한지 보여주며, 계열사 담당자가 승인할 수 있게 만듭니다.</p></div><div className="flow">{[['01','발견','위험 신호를 찾습니다'],['02','비교','실행 가능한 대안을 나눕니다'],['03','시뮬레이션','비용과 하방을 계산합니다'],['04','승인','계열사 담당자가 결정합니다'],['05','실행','운영 담당자가 처리합니다'],['06','학습','결과를 다음 판단에 반영합니다']].map(([num,title,body]) => <div className="flow-step" key={num}><div className="flow-number">{num}</div><strong>{title}</strong><span>{body}</span></div>)}</div></div></section>
 
       <section className="section visual-section"><div className="container"><div className="visual-panel"><div className="visual-copy"><span className="eyebrow">Picture the loop</span><h2>네 컷으로 보는<br />한 번의 재고 판단</h2><p>이미지 안의 짧은 한글만 따라가도 흐름을 이해할 수 있습니다. 자세한 개념은 아래 용어 사전과 근거 위치에서 확인합니다.</p><div className="visual-caption-grid"><div><b>발견</b><span>기한·속도·소유권</span></div><div><b>비교</b><span>기준선 대비 순가치</span></div><div><b>승인·실행</b><span>사람 책임과 결과 회수</span></div></div><SourceNote source={sources.find((source) => source.id === 'project-policy')!} /></div><div className="visual-frame"><Image src="/visuals/comic-flow.png" alt="발견, 비교, 승인, 실행의 네 단계로 표현한 AI 재고 처리 도식" width={1750} height={855} priority /></div></div></div></section>
 
