@@ -241,6 +241,7 @@ main { position: relative; }
 .formula-help-close { display: grid; place-items: center; flex: 0 0 auto; width: 35px; height: 35px; color: #60738a; border: 1px solid var(--line); border-radius: 50%; background: #f7fafc; font-size: 24px; line-height: 1; cursor: pointer; }
 .formula-help-close:hover, .formula-help-close:focus-visible { color: var(--ink); border-color: #9db9d6; background: #eef5ff; outline: none; }
 .formula-help-intro { margin: 19px 0 21px; color: var(--muted); font-size: 13px; line-height: 1.75; }
+.formula-help-plain { margin: 0 0 21px; padding: 13px 16px; color: #254f7e; border-left: 3px solid var(--blue); border-radius: 8px; background: #eef5ff; font-size: 13px; font-weight: 750; line-height: 1.65; }
 .formula-help-layout { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; align-items: start; }
 .formula-help-formula-column, .formula-help-terms-column { min-width: 0; }
 .formula-help-section-label { display: block; margin-bottom: 9px; color: #7890ac; font-size: 10px; font-weight: 850; letter-spacing: .08em; text-transform: uppercase; }

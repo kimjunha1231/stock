@@ -39,7 +39,8 @@ var formulaHelps = {
 		id: "objective",
 		label: "공통 목적함수",
 		title: "이 전략이 기준선보다 실제로 나은가?",
-		intro: "M_inc는 전략을 실행했을 때 기준선보다 추가로 얻는 현금 성과입니다. 매출만 크게 만드는 안이 아니라, 비용·위험·회피되는 손실까지 합쳐 비교합니다.",
+		intro: "이 수식은 할인이나 묶음판매를 했을 때, 아무것도 하지 않는 것보다 실제로 더 나은지 확인합니다.",
+		easy: "쉽게 말하면: 판매해서 번 돈에서 추가 비용과 실패 위험을 빼고, 평소보다 얼마나 더 좋아지는지 계산합니다.",
 		formula: `M_inc(s) = feasible(s) × [
   Revenue_s - VariableCost_s
   + AvoidedCost_s
@@ -51,62 +52,63 @@ var formulaHelps = {
 		terms: [
 			{
 				symbol: "M_inc(s)",
-				meaning: "전략 s의 증분 기여현금이익",
-				detail: "기준선보다 추가로 좋아지는 금액입니다.",
+				meaning: "전략으로 새로 남는 돈",
+				detail: "이 전략을 실행했을 때 평소보다 추가로 생기는 금액입니다.",
 				glossaryId: "incremental-profit"
 			},
 			{
 				symbol: "feasible(s)",
-				meaning: "실행 가능 여부",
-				detail: "소유권·법규·신선도·capacity·데이터 품질이 모두 확인된 경우에만 1입니다.",
+				meaning: "실제로 실행해도 되는지",
+				detail: "법·재고·배송·데이터 조건이 모두 준비됐는지 확인합니다.",
 				glossaryId: "hard-stop"
 			},
 			{
 				symbol: "Revenue_s",
-				meaning: "전략 매출",
-				detail: "예상 판매량에 할인 후 가격을 적용하고 쿠폰·포인트 부담을 반영한 금액입니다."
+				meaning: "할인 후 매출",
+				detail: "예상 판매량에 할인된 가격을 곱해 계산한 판매 금액입니다."
 			},
 			{
 				symbol: "VariableCost_s",
-				meaning: "전략 때문에 변하는 비용",
-				detail: "수수료·결제·배송·설치·반품·캠페인 비용처럼 실행할 때 달라지는 비용입니다."
+				meaning: "이번 판매 때문에 더 드는 돈",
+				detail: "배송비, 수수료, 포장비, 반품비처럼 이 전략을 해서 추가로 생기는 비용입니다."
 			},
 			{
 				symbol: "AvoidedCost_s",
-				meaning: "실행해서 피한 비용",
-				detail: "보관·폐기·공급사 위약금·capacity 손실처럼 전략으로 줄어드는 비용입니다.",
+				meaning: "미리 처리해서 아낀 돈",
+				detail: "보관비, 폐기비, 위약금처럼 상품을 빨리 처리해서 줄어드는 비용입니다.",
 				glossaryId: "avoidable-cost"
 			},
 			{
 				symbol: "Cannibalization_s",
-				meaning: "정상 판매 잠식 손실",
-				detail: "할인 상품이 원래 판매되었을 상품이나 다른 상품의 판매를 빼앗는 효과입니다."
+				meaning: "다른 판매를 뺏어서 생긴 손해",
+				detail: "할인 상품이 원래 팔릴 상품의 판매를 대신하면서 생기는 손실입니다."
 			},
 			{
 				symbol: "RiskPenalty_s",
-				meaning: "예상 하방 손실",
-				detail: "반품·파손·취소·법규 위반 등 발생 가능성과 영향도를 곱한 값입니다."
+				meaning: "실패했을 때 예상되는 손해",
+				detail: "반품·파손·취소 같은 일이 생길 가능성과 그때의 손해를 함께 계산합니다."
 			},
 			{
 				symbol: "AI_CaseCost_s",
-				meaning: "AI 판단 원가",
-				detail: "데이터·모델·LLM·도구·사람 검토에 드는 비용입니다.",
+				meaning: "전략을 검토하는 비용",
+				detail: "AI 계산, 데이터 사용, 담당자 검토에 드는 비용입니다.",
 				glossaryId: "ai-decision-cost"
 			},
 			{
 				symbol: "M_baseline",
-				meaning: "전략을 하지 않을 때의 기준 결과",
-				detail: "현재 조건에서 선택 가능한 가장 나은 기본 대안입니다.",
+				meaning: "아무것도 바꾸지 않았을 때의 결과",
+				detail: "할인이나 프로모션을 하지 않고 현재 방식대로 운영했을 때의 결과입니다.",
 				glossaryId: "baseline"
 			}
 		],
-		takeaway: "가장 큰 매출이 아니라, 실행 가능하면서 기준선보다 증분 현금 성과가 큰 전략을 우선합니다."
+		takeaway: "매출이 가장 큰 전략보다, 실제로 실행할 수 있고 평소보다 돈을 더 남기는 전략을 고릅니다."
 	},
 	feasible: {
 		id: "feasible",
 		label: "하드 차단 조건",
 		title: "이익 계산 전에 실행할 수 있는지 확인합니다.",
-		intro: "아래 조건 중 하나라도 확인되지 않으면 수익성이 좋아 보여도 추천 후보에서 제외합니다. 비용 최적화보다 먼저 지키는 안전선입니다.",
+		intro: "돈이 될 것 같아도 먼저 실행해도 되는 상품인지 확인합니다.",
+		easy: "쉽게 말하면: 법적으로 판매할 수 있고, 재고·배송·데이터가 모두 준비된 경우에만 다음 계산으로 넘어갑니다.",
 		formula: `feasible(s) = 1
   ownership_ok
   ∧ legal_ok
@@ -117,40 +119,41 @@ else 0`,
 		terms: [
 			{
 				symbol: "ownership_ok",
-				meaning: "소유·정산 권한 확인",
-				detail: "누가 재고·capacity를 소유하고 할인·취소·폐기를 승인하는지 확인합니다.",
+				meaning: "누가 결정할 수 있는지",
+				detail: "재고 주인과 할인·취소·폐기를 승인할 사람이 정해져 있는지 확인합니다.",
 				glossaryId: "ownership-model"
 			},
 			{
 				symbol: "legal_ok",
-				meaning: "법규·상품 표시 확인",
-				detail: "식품 표시·여행 약관·상품별 제한 조건을 통과했는지 확인합니다.",
+				meaning: "팔아도 되는 상품인지",
+				detail: "필수 표시, 약관, 법적 제한을 지켰는지 확인합니다.",
 				glossaryId: "hard-stop"
 			},
 			{
 				symbol: "freshness_ok",
-				meaning: "데이터 신선도 확인",
-				detail: "재고·예약·가격·처리기한 데이터가 승인 가능한 기준시점 안에 있는지 확인합니다."
+				meaning: "데이터가 최신인지",
+				detail: "재고·예약·가격·소비기한 정보가 오래되지 않았는지 확인합니다."
 			},
 			{
 				symbol: "capacity_ok",
-				meaning: "처리 capacity 확인",
-				detail: "배송·설치·좌석·객실·냉장/냉동 처리 용량이 충분한지 확인합니다.",
+				meaning: "배송·처리할 여유가 있는지",
+				detail: "배송, 설치, 좌석, 객실, 냉장·냉동 공간이 부족하지 않은지 봅니다.",
 				glossaryId: "delivery-capacity"
 			},
 			{
 				symbol: "data_quality_ok",
-				meaning: "필수 데이터 품질 확인",
-				detail: "단위·중복·결측·원천 추적 정보가 계산에 사용할 수 있는 상태인지 확인합니다."
+				meaning: "데이터를 믿어도 되는지",
+				detail: "빠진 값, 중복, 단위 오류가 없는지 확인합니다."
 			}
 		],
-		takeaway: "하드 차단은 점수나 예상 이익으로 상쇄하지 않습니다. 확인되지 않은 값은 검토 대기로 보냅니다."
+		takeaway: "하나라도 확인되지 않으면 예상 이익이 커도 바로 실행하지 않고 담당자 확인으로 보냅니다."
 	},
 	demand: {
 		id: "demand",
 		label: "예상 판매량 / 예약량",
 		title: "얼마나 팔리거나 예약될 수 있는가?",
-		intro: "Q_s는 전략을 적용했을 때 예상되는 판매·예약량입니다. 실제로 가용한 재고 또는 서비스 capacity를 넘지 않도록 제한합니다.",
+		intro: "할인이나 새로운 판매 채널을 사용했을 때 얼마나 팔릴지 예상합니다.",
+		easy: "쉽게 말하면: 많이 팔릴 것처럼 보여도 실제 재고·좌석·객실·설치 가능 수량보다 크게 잡지 않습니다.",
 		formula: `Q_s = min(Q_available,
   max(0, Q_base
     × F_time × F_price
@@ -159,55 +162,56 @@ else 0`,
 		terms: [
 			{
 				symbol: "Q_s",
-				meaning: "전략 적용 후 예상 판매·예약량",
-				detail: "할인·기간·채널·번들 효과를 반영한 결과입니다."
+				meaning: "전략 후 팔릴 것으로 보는 수량",
+				detail: "할인이나 묶음판매를 적용했을 때 예상되는 판매·예약 수량입니다."
 			},
 			{
 				symbol: "Q_available",
-				meaning: "사용 가능한 수량 또는 capacity",
-				detail: "웰니스·그린푸드는 판매 가능 재고, 여행은 좌석·객실·슬롯, 리바트는 처리 가능한 제품·설치 capacity입니다."
+				meaning: "실제로 팔 수 있는 최대 수량",
+				detail: "판매 가능한 재고, 좌석, 객실, 설치 슬롯처럼 현재 제공할 수 있는 한도입니다."
 			},
 			{
 				symbol: "Q_base",
-				meaning: "기준 판매·예약량",
-				detail: "같은 상품·채널·기간의 과거 또는 현재 기준 속도입니다.",
+				meaning: "평소에 팔리던 수량",
+				detail: "같은 상품이 같은 기간에 보통 얼마나 팔렸는지를 기준으로 삼습니다.",
 				glossaryId: "sales-velocity"
 			},
 			{
 				symbol: "F_time",
-				meaning: "시간 효과",
-				detail: "남은 판매일·출발일·납기·소비기한이 수요에 미치는 영향입니다.",
+				meaning: "남은 시간의 영향",
+				detail: "소비기한, 출발일, 납기일까지 남은 시간이 판매량에 미치는 영향입니다.",
 				glossaryId: "dday"
 			},
 			{
 				symbol: "F_price",
-				meaning: "가격 반응 효과",
-				detail: "할인·쿠폰·포인트 변화에 따라 예상 수요가 얼마나 달라지는지 나타냅니다."
+				meaning: "가격을 바꿨을 때의 영향",
+				detail: "할인·쿠폰을 적용하면 판매량이 얼마나 달라지는지 반영합니다."
 			},
 			{
 				symbol: "F_channel",
-				meaning: "판매 채널 효과",
-				detail: "자사몰·매장·B2B·제휴채널의 노출과 수수료 차이를 반영합니다."
+				meaning: "어디서 파는지의 영향",
+				detail: "자사몰, 매장, 제휴채널에 따라 노출과 수수료가 어떻게 달라지는지 반영합니다."
 			},
 			{
 				symbol: "F_bundle",
-				meaning: "묶음·보완 효과",
-				detail: "현재 MVP에서는 계열사 내부 또는 가상 번들 효과만 설명하고 교차 계열사 실행은 P2입니다."
+				meaning: "묶어서 팔 때의 영향",
+				detail: "관련 상품을 함께 팔았을 때 판매량이 늘어나는 효과를 반영합니다."
 			},
 			{
 				symbol: "confidence",
-				meaning: "예측 신뢰도·보수 계수",
-				detail: "데이터가 부족하거나 불확실할수록 예상량을 보수적으로 낮춥니다.",
+				meaning: "예측을 얼마나 믿을 수 있는지",
+				detail: "데이터가 부족할수록 예상 판매량을 안전하게 낮춰 계산합니다.",
 				glossaryId: "scenario"
 			}
 		],
-		takeaway: "예상량은 희망 판매량이 아니라, 가용량·시간·가격 반응·데이터 신뢰도를 함께 반영한 상한입니다."
+		takeaway: "예상 판매량은 희망사항이 아니라, 실제로 팔 수 있는 수량 안에서 보수적으로 계산합니다."
 	},
 	revenue: {
 		id: "revenue",
 		label: "매출·변동비",
 		title: "판매한 뒤 실제로 남는 금액은 얼마인가?",
-		intro: "매출은 할인 후 고객 결제액에서 쿠폰·포인트·지원금 부담을 차감합니다. 변동비는 전략을 실행할 때 추가로 발생하는 비용만 넣습니다.",
+		intro: "상품을 팔아 들어오는 돈과, 그 판매 때문에 추가로 나가는 돈을 계산합니다.",
+		easy: "쉽게 말하면: 고객이 결제한 금액에서 할인·쿠폰·배송·수수료 등을 빼고 실제로 남는 돈을 봅니다.",
 		formula: `Revenue_s = Q_s × P_list × (1 - discount)
             - Q_s × (coupon + point + subsidy)
 
@@ -217,58 +221,59 @@ VariableCost_s = Q_s × (commission
 		terms: [
 			{
 				symbol: "P_list",
-				meaning: "정상 판매가",
-				detail: "전략을 적용하기 전 기준 가격입니다."
+				meaning: "원래 판매가",
+				detail: "할인하기 전 상품의 기본 가격입니다."
 			},
 			{
 				symbol: "discount",
 				meaning: "할인율",
-				detail: "정상 판매가에서 직접 차감되는 비율입니다."
+				detail: "원래 가격에서 몇 퍼센트를 깎는지 나타냅니다."
 			},
 			{
 				symbol: "coupon / point",
-				meaning: "쿠폰·포인트 부담액",
-				detail: "고객 혜택 중 계열사 또는 채널이 실제로 부담하는 금액입니다."
+				meaning: "쿠폰·포인트로 부담하는 금액",
+				detail: "고객이 사용한 혜택 중 계열사나 판매채널이 실제로 부담하는 금액입니다."
 			},
 			{
 				symbol: "subsidy",
-				meaning: "외부·공동 지원금",
-				detail: "공급사·채널·공동 프로모션이 부담하는 지원금입니다. 부담 주체를 확인해야 합니다."
+				meaning: "함께 지원하는 금액",
+				detail: "공급사나 채널이 프로모션을 위해 대신 부담하는 금액입니다."
 			},
 			{
 				symbol: "commission",
 				meaning: "판매 수수료",
-				detail: "채널·예약·제휴·공급사 계약에 따라 발생하는 수수료입니다."
+				detail: "판매채널이나 예약·제휴사에 지불하는 수수료입니다."
 			},
 			{
 				symbol: "payment",
-				meaning: "결제·발권 처리비",
-				detail: "결제·발권·예약 변경처럼 거래를 처리하는 비용입니다."
+				meaning: "결제·예약 처리비",
+				detail: "결제, 발권, 예약 변경을 처리할 때 드는 비용입니다."
 			},
 			{
 				symbol: "fulfillment",
-				meaning: "이행 비용",
-				detail: "포장·배송·설치·콜드체인·픽업 등 고객에게 전달하는 비용입니다."
+				meaning: "상품을 전달하는 비용",
+				detail: "포장, 배송, 설치, 냉장배송처럼 고객에게 보내는 데 드는 비용입니다."
 			},
 			{
 				symbol: "return_expected",
-				meaning: "예상 반품·취소 비용",
-				detail: "반품·환불·재배송·재예약 가능성을 확률로 반영한 비용입니다.",
+				meaning: "반품·취소로 예상되는 비용",
+				detail: "반품, 환불, 재배송이 일어날 가능성을 비용으로 계산합니다.",
 				glossaryId: "return-rate"
 			},
 			{
 				symbol: "campaign_fixed_cost",
-				meaning: "캠페인 고정비",
-				detail: "전략을 실행하기 위해 별도로 발생하는 광고·기획·세팅 비용입니다."
+				meaning: "행사 준비에 드는 고정비",
+				detail: "광고, 기획, 시스템 설정처럼 판매량과 관계없이 드는 비용입니다."
 			}
 		],
-		takeaway: "정상가나 매출 총액만 보지 않고, 누가 부담하는 비용인지까지 확인해야 실제 기여현금이익이 나옵니다."
+		takeaway: "매출이 커 보여도 할인·수수료·배송비를 빼고 실제로 남는 금액을 확인해야 합니다."
 	},
 	avoided: {
 		id: "avoided",
 		label: "회피비용·하방",
 		title: "처리해서 줄이는 비용과 실패 위험은 얼마인가?",
-		intro: "재고를 그대로 두었을 때 생길 비용과 전략을 실행했을 때의 하방 위험을 분리합니다. 여행처럼 폐기되지 않는 상품은 위약금·capacity 기회비용을 사용합니다.",
+		intro: "상품을 지금 처리하지 않으면 나중에 생길 손해와, 전략이 실패했을 때의 손해를 따로 계산합니다.",
+		easy: "쉽게 말하면: 지금 판매해서 보관비·폐기비·위약금을 줄일 수 있는지, 실패하면 얼마를 잃을지 함께 봅니다.",
 		formula: `AvoidedCost_s = holding_avoided
   + disposal_avoided
   + supplier_penalty_avoided
@@ -278,44 +283,45 @@ RiskPenalty_s = probability × impact`,
 		terms: [
 			{
 				symbol: "holding_avoided",
-				meaning: "회피 보관비",
-				detail: "재고를 빨리 처리해 줄어드는 창고·전시·냉장·공간 대체가치입니다.",
+				meaning: "보관비를 아낀 금액",
+				detail: "상품을 빨리 팔아서 창고·전시·냉장 공간을 덜 쓰게 된 금액입니다.",
 				glossaryId: "holding-cost"
 			},
 			{
 				symbol: "disposal_avoided",
-				meaning: "회피 폐기비",
-				detail: "소비기한·품질·계약 조건 때문에 발생할 폐기·운송·처리 비용을 줄인 금액입니다.",
+				meaning: "폐기비를 아낀 금액",
+				detail: "기한이 지나 버리거나 처리할 상품을 줄여서 절약한 금액입니다.",
 				glossaryId: "disposal-cost"
 			},
 			{
 				symbol: "supplier_penalty_avoided",
-				meaning: "회피 공급사 위약금",
-				detail: "여행 예약 취소나 납기 실패 등으로 공급사에 지급할 수 있는 비용을 피한 금액입니다."
+				meaning: "공급사 위약금을 아낀 금액",
+				detail: "예약 취소나 납기 실패 때 공급사에 낼 뻔한 돈을 줄인 금액입니다."
 			},
 			{
 				symbol: "capacity_loss_avoided",
-				meaning: "회피 capacity 손실",
-				detail: "좌석·객실·설치 슬롯·냉장 배송 용량을 놓쳐 생기는 기회비용을 줄인 금액입니다."
+				meaning: "기회를 놓치지 않아 아낀 금액",
+				detail: "좌석·객실·설치 슬롯·배송 공간을 비워 두지 않아 생긴 이익입니다."
 			},
 			{
 				symbol: "RiskPenalty_s",
-				meaning: "예상 하방 손실",
-				detail: "실패 확률과 실패했을 때의 금액·운영 영향을 곱합니다."
+				meaning: "실패했을 때 예상되는 손해",
+				detail: "전략이 실패할 가능성과 실패했을 때의 손해를 곱한 값입니다."
 			},
 			{
 				symbol: "probability × impact",
-				meaning: "위험의 기대값",
-				detail: "반품률·취소율·파손률·위약금 발생 확률처럼 불확실한 비용을 계산합니다."
+				meaning: "실패 가능성 × 실패 손해",
+				detail: "예를 들어 반품이 일어날 확률에 반품 처리비를 곱합니다."
 			}
 		],
-		takeaway: "회피비용은 실제 계약·처리 단가로만 계산하고, 절대 발생하지 않는 비용을 임의로 더하지 않습니다."
+		takeaway: "지금 처리해서 정말 줄어드는 비용만 넣고, 막연한 손실은 임의로 더하지 않습니다."
 	},
 	risk: {
 		id: "risk",
 		label: "위험점수",
 		title: "위험하다는 판단은 어떻게 점수로 바뀌는가?",
-		intro: "위험점수는 여러 신호를 0~100 범위로 정규화한 우선순위 점수입니다. 점수가 높아도 하드 차단을 통과하지 못하면 실행하지 않습니다.",
+		intro: "여러 위험 신호를 하나의 점수로 바꿔서 어떤 상품부터 처리할지 정합니다.",
+		easy: "쉽게 말하면: 소비기한이 얼마 남지 않았거나, 잘 안 팔리거나, 처리 비용이 큰 상품일수록 점수가 높아집니다.",
 		formula: `RiskScore_i = 100 × Σ(w_k × z_ik)
 Σw_k = 1
 
@@ -324,31 +330,31 @@ z_ik ∈ [0, 1]
 		terms: [
 			{
 				symbol: "RiskScore_i",
-				meaning: "상품·예약 항목 i의 위험점수",
-				detail: "처리기한·판매속도·가치·불확실성·capacity 신호를 합친 우선순위입니다."
+				meaning: "상품의 위험 점수",
+				detail: "기한, 판매속도, 처리비용 같은 위험 신호를 합친 점수입니다."
 			},
 			{
 				symbol: "w_k",
-				meaning: "신호별 가중치",
-				detail: "계열사·상품군별로 처리기한, 공간, 위약금 등 신호의 중요도를 정합니다."
+				meaning: "각 신호의 중요도",
+				detail: "소비기한, 보관공간, 위약금 중 무엇을 더 중요하게 볼지 정합니다."
 			},
 			{
 				symbol: "z_ik",
-				meaning: "정규화된 위험 신호",
-				detail: "각 신호를 0~1로 바꾼 값입니다. 예를 들어 소비기한 임박도나 설치 capacity 부족도를 넣습니다."
+				meaning: "상품이 얼마나 위험한지",
+				detail: "각 위험 신호를 0부터 1 사이의 숫자로 바꾼 값입니다."
 			},
 			{
 				symbol: "Σw_k = 1",
-				meaning: "가중치 합계",
-				detail: "모든 신호의 영향력을 합쳐 100점 안에서 비교할 수 있게 합니다."
+				meaning: "중요도의 합은 1",
+				detail: "모든 신호의 중요도를 합쳐서 상품끼리 공정하게 비교합니다."
 			},
 			{
 				symbol: "정상 / 주의 / 위험",
-				meaning: "운영 등급",
-				detail: "버전으로 관리하는 임계값에 따라 우선 처리 목록을 나눕니다."
+				meaning: "점수에 따른 안내",
+				detail: "점수 구간에 따라 지금 처리할 필요가 있는지 나눕니다."
 			}
 		],
-		takeaway: "위험점수는 처리 순서를 정하는 도구이고, 법규·소유권·데이터 신선도 같은 실행 가능성을 대신하지 않습니다."
+		takeaway: "위험점수는 먼저 볼 상품을 정하는 기준입니다. 법규나 판매 가능 여부를 대신 판단하지는 않습니다."
 	}
 };
 var profiles = [
@@ -580,6 +586,10 @@ function FormulaHelpModal({ help, onClose }) {
 				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
 					className: "formula-help-intro",
 					children: help.intro
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+					className: "formula-help-plain",
+					children: help.easy
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 					className: "formula-help-layout",
