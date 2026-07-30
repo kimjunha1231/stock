@@ -94,6 +94,7 @@ RiskScore_i = 100 × Σ(w_k × z_ik),  Σw_k = 1
 - [현대웰니스 공식몰](https://www.hyundaiwellness.com/)은 건강기능식품·영양제 중심으로 브랜드, 성분, 기능, 대상, 선물세트 등의 분류를 제공한다.
 - 공식 상품 목록에는 판매수량, 판매가, 소비기한이 보이고 `임박`·`타임세일` 같은 상태 표현이 함께 사용된다.
 - 현대백화점그룹 공개 페이지에서 현대웰니스가 현대바이오랜드의 공식몰로 연결된다. 법인·정산 주체는 실제 데이터 계약에서 확인해야 한다.
+- [식품안전나라 건강기능식품 안내](https://www.foodsafetykorea.go.kr/portal/board/boardDetail.do?bbs_no=bbs001&menu_grp=MENU_NEW01&menu_no=3120&ntctxt_no=21776)는 인정된 기능성·섭취방법·주의사항·유통기한 확인을 요구한다. [건강기능식품에 관한 법률](https://www.law.go.kr/LSW/lsInfoP.do?ancYnChk=0&lsId=009353)과 함께 표시·리콜·클레임 상태를 판매전략보다 먼저 검증한다.
 
 #### 상품·재고 입력
 
@@ -122,8 +123,10 @@ z_claim_or_storage_gap = 1 if required claim/storage data missing else 0
 #### 공개 자료에서 확인한 사실
 
 - [현대드림투어 더현대트래블 안내](https://home.hyundaidreamtour.com/jsp/web/sub03_01.jsp)는 항공, 호텔, 해외 패키지여행, 여행자보험, 와이파이 도시락, 렌터카 등을 상품·제휴 범위로 제시한다.
+- [더현대트래블 공식 기획전](https://www.thehyundaitravel.com/exhibition/all/index.do)은 항공·호텔·패키지와 쿠폰·H.Point·카드 혜택을 별도 운영한다. [항공 부가서비스 취소 안내](https://www.thehyundaitravel.com/customer-center/notify/view.do?detailsKey=2740)는 보험·좌석·수하물·기내식의 환불 가능 여부가 기본 항공권과 다를 수 있음을 보여준다.
 - 이 상품들은 물리 수량을 보관하는 재고가 아니라 출발일·예약 가능 좌석/객실·공급사 allotment가 소진되는 서비스 capacity다.
 - [공정거래위원회 소비자분쟁해결기준](https://www.law.go.kr/admRulInfoP.do?admRulSeq=2100000270136&chrClsCd=010202&urlMode=admRulRvsInfoR)은 여행업 취소·환급 기준을 별도로 다룬다. 개별 계약과 공급사 조건을 함께 저장해야 한다.
+- [법제처 해외여행자 안내](https://easylaw.go.kr/CSP/CnpClsMainBtr.laf?ccfNo=2&cciNo=3&cnpClsNo=2&csmSeq=894&popMenu=ov)를 통해 표준약관·안전정보·중요 계약내용을 버전 관리한다.
 
 #### 상품·capacity 입력
 
@@ -153,6 +156,7 @@ z_data_gap = 1 if supplier_rule_or_cutoff_missing else 0
 
 - [현대리바트 공식 상품 페이지](https://company.hyundailivart.co.kr/p/P200086559?buyNow=P200086559)는 설치 2일 전부터 설치 당일까지 기사 연락을 시도하며, 연락이 되지 않으면 배송이 연기될 수 있다고 안내한다.
 - [현대리바트 오피스 카탈로그](https://www.hyundailivart.co.kr/UserFiles/home/ko/brand/2020_OFFICE.pdf)는 제품군과 배송·설치·AS를 함께 설명한다.
+- [현대리바트 법인사업](https://company.hyundailivart.co.kr/ko/corporation)은 대량 납품·자체 배송·계약별 납기를, [스마트워크센터](https://company.hyundailivart.co.kr/ko/smartWorkCenter)는 생산·물류 capacity를 확인하는 보조 근거다.
 - 따라서 가구는 상품 수량만으로 처리 가능 여부를 판단하지 않고, 배송·설치 capacity와 반품/파손/AS를 함께 계산해야 한다.
 
 #### 상품·재고 입력
@@ -181,6 +185,7 @@ z_damage = normalized(expected_damage_and_return_cost)
 
 - [현대그린푸드 식자재 유통](https://www.hyundaigreenfood.com/po/fb/fdb/FBFDB01L.hgc)은 급식·외식·유통 사업장에 농·수·축산물과 가공식품 등을 공급한다고 설명한다.
 - [현대그린푸드 사전예약 서비스](https://www.hyundaigreenfood.com/po/pr/ntn/PRNTN02V.hg?bbsSqPk=193712)는 제철 농·수·축산물을 미리 예약받고 배송 전 수량을 확정하는 구조를 소개한다.
+- [현대그린푸드 리테일 사업](https://hyundaigreenfood.com/po/fb/rtb/FBRTB01L.hgc)은 오프라인·온라인·홈쇼핑·케어푸드 채널을 구분하고, [식품위생연구소](https://hyundaigreenfood.com/po/is/fdr/ISFDR02L.hgc)는 검사·보류·해제·리콜 상태를 별도 관리한다.
 - [식품 등의 표시·광고에 관한 법률](https://www.law.go.kr/lsLinkCommonInfo.do?chrClsCd=010202&lsJoLnkSeq=1030102807)은 식품의 소비기한·보관방법, 건강기능식품의 소비기한·보관방법·주의사항 표시를 요구한다.
 - [식약처 소비기한 보관방법 안내](https://www.mfds.go.kr/brd/m_1105/view.do?seq=33674)는 소비기한과 냉장·냉동 보관조건을 함께 취급하도록 안내한다.
 

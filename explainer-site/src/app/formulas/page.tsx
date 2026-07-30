@@ -35,7 +35,7 @@ const profiles: AffiliateProfile[] = [
     variableCosts: ['배송·포장·결제 수수료', '쿠폰·포인트 부담액', '반품 검수·재판매 비용', '회수·폐기 또는 공급사 회수 비용'],
     hardStops: ['소비기한·보관조건 미확인', '필수 상품 표시·주의사항 누락', '판매 권한·공급사 회수 조건 미확인'],
     riskSignals: ['잔여기한 압박', '느린 ROS·낮은 소진율', '임박 로트의 예상 폐기비', '건강 관련 설명의 근거 부족'],
-    sourceIds: ['affiliate-wellness', 'food-label-law'],
+    sourceIds: ['affiliate-wellness', 'wellness-foodsafety', 'wellness-law', 'food-label-standards'],
     note: '공식몰의 상품 분류·소비기한·임박 표시는 날짜와 상품 속성을 별도 입력해야 한다는 근거로 사용합니다. 실제 할인 한도와 정산 부담률은 내부 계약 데이터가 필요합니다.',
   },
   {
@@ -49,7 +49,7 @@ const profiles: AffiliateProfile[] = [
     variableCosts: ['발권·결제·상담 처리비', '공급사 취소·위약금', '제휴채널 수수료', '환율·변경·재예약 비용'],
     hardStops: ['출발일·예약 마감 누락', '공급사 규정·capacity 불일치', '환불/위약금 규정 미확인'],
     riskSignals: ['출발일까지 남은 일수', 'capacity 잔량 또는 과소/과대 예약', '취소위약금 노출', '환율·공급가 변동성'],
-    sourceIds: ['affiliate-travel', 'travel-dispute'],
+    sourceIds: ['affiliate-travel', 'travel-exhibition', 'travel-cancel', 'travel-easylaw'],
     note: '여행은 물리 재고가 아니므로 소비기한·폐기비를 그대로 적용하지 않습니다. 미판매 capacity와 임박 출발의 공급사 위약금·기회비용을 회피비용으로 계산합니다.',
   },
   {
@@ -63,7 +63,7 @@ const profiles: AffiliateProfile[] = [
     variableCosts: ['창고·전시 공간 대체가치', '라스트마일·설치 인건비', '파손·재배송·회수 비용', '반품·AS·주문제작 취소 비용'],
     hardStops: ['설치 슬롯·배송 가능 지역 없음', '주문제작 생산 착수 상태 불명', '소유권·반품·AS 조건 미확인'],
     riskSignals: ['부피×장기보관일', '납기 대비 생산 지연', '설치 capacity 부족', '파손·반품·AS 비용 상승'],
-    sourceIds: ['affiliate-livart-product', 'affiliate-livart-catalog'],
+    sourceIds: ['affiliate-livart-product', 'affiliate-livart-catalog', 'livart-corporation', 'livart-smart-factory'],
     note: '공식 상품 페이지의 설치 연락·배송 연기 안내와 카탈로그의 배송·설치·AS 범위를 반영합니다. 제품 수량만 늘리는 전략은 설치 capacity를 넘으면 차단합니다.',
   },
   {
@@ -77,7 +77,7 @@ const profiles: AffiliateProfile[] = [
     variableCosts: ['피킹·포장·냉장/냉동 배송', '보냉재·에너지·회수 비용', '폐기·음식물 처리·증빙', '채널 수수료·할인·반품'],
     hardStops: ['소비기한·보관조건 미확인', '검사·HACCP·추적 상태 이상', '냉장/냉동 배송 capacity 없음'],
     riskSignals: ['소비기한 압박', '예상 폐기량×처리단가', '콜드체인 capacity 부족', '사전예약 마감과 배송일 불일치'],
-    sourceIds: ['affiliate-greenfood', 'affiliate-greenfood-reservation', 'food-label-law', 'mfds-storage'],
+    sourceIds: ['affiliate-greenfood', 'affiliate-greenfood-reservation', 'greenfood-retail', 'greenfood-lab', 'food-label-standards', 'mfds-storage', 'food-expiry-setting'],
     note: '식자재 공급과 사전예약 서비스는 수량·마감일·배송일을 함께 관리해야 합니다. 소비기한과 보관조건은 비용보다 먼저 검증하는 법정 입력입니다.',
   },
 ];
