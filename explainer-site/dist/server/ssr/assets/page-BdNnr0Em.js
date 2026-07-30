@@ -34,6 +34,286 @@ function SourceNote({ source }) {
 }
 //#endregion
 //#region src/app/formulas/page.tsx
+var formulaHelps = {
+	objective: {
+		id: "objective",
+		label: "공통 목적함수",
+		title: "이 전략이 기준선보다 실제로 나은가?",
+		intro: "M_inc는 전략을 실행했을 때 기준선보다 추가로 얻는 현금 성과입니다. 매출만 크게 만드는 안이 아니라, 비용·위험·회피되는 손실까지 합쳐 비교합니다.",
+		terms: [
+			{
+				symbol: "M_inc(s)",
+				meaning: "전략 s의 증분 기여현금이익",
+				detail: "기준선보다 추가로 좋아지는 금액입니다.",
+				glossaryId: "incremental-profit"
+			},
+			{
+				symbol: "feasible(s)",
+				meaning: "실행 가능 여부",
+				detail: "소유권·법규·신선도·capacity·데이터 품질이 모두 확인된 경우에만 1입니다.",
+				glossaryId: "hard-stop"
+			},
+			{
+				symbol: "Revenue_s",
+				meaning: "전략 매출",
+				detail: "예상 판매량에 할인 후 가격을 적용하고 쿠폰·포인트 부담을 반영한 금액입니다."
+			},
+			{
+				symbol: "VariableCost_s",
+				meaning: "전략 때문에 변하는 비용",
+				detail: "수수료·결제·배송·설치·반품·캠페인 비용처럼 실행할 때 달라지는 비용입니다."
+			},
+			{
+				symbol: "AvoidedCost_s",
+				meaning: "실행해서 피한 비용",
+				detail: "보관·폐기·공급사 위약금·capacity 손실처럼 전략으로 줄어드는 비용입니다.",
+				glossaryId: "avoidable-cost"
+			},
+			{
+				symbol: "Cannibalization_s",
+				meaning: "정상 판매 잠식 손실",
+				detail: "할인 상품이 원래 판매되었을 상품이나 다른 상품의 판매를 빼앗는 효과입니다."
+			},
+			{
+				symbol: "RiskPenalty_s",
+				meaning: "예상 하방 손실",
+				detail: "반품·파손·취소·법규 위반 등 발생 가능성과 영향도를 곱한 값입니다."
+			},
+			{
+				symbol: "AI_CaseCost_s",
+				meaning: "AI 판단 원가",
+				detail: "데이터·모델·LLM·도구·사람 검토에 드는 비용입니다.",
+				glossaryId: "ai-decision-cost"
+			},
+			{
+				symbol: "M_baseline",
+				meaning: "전략을 하지 않을 때의 기준 결과",
+				detail: "현재 조건에서 선택 가능한 가장 나은 기본 대안입니다.",
+				glossaryId: "baseline"
+			}
+		],
+		takeaway: "가장 큰 매출이 아니라, 실행 가능하면서 기준선보다 증분 현금 성과가 큰 전략을 우선합니다."
+	},
+	feasible: {
+		id: "feasible",
+		label: "하드 차단 조건",
+		title: "이익 계산 전에 실행할 수 있는지 확인합니다.",
+		intro: "아래 조건 중 하나라도 확인되지 않으면 수익성이 좋아 보여도 추천 후보에서 제외합니다. 비용 최적화보다 먼저 지키는 안전선입니다.",
+		terms: [
+			{
+				symbol: "ownership_ok",
+				meaning: "소유·정산 권한 확인",
+				detail: "누가 재고·capacity를 소유하고 할인·취소·폐기를 승인하는지 확인합니다.",
+				glossaryId: "ownership-model"
+			},
+			{
+				symbol: "legal_ok",
+				meaning: "법규·상품 표시 확인",
+				detail: "식품 표시·여행 약관·상품별 제한 조건을 통과했는지 확인합니다.",
+				glossaryId: "hard-stop"
+			},
+			{
+				symbol: "freshness_ok",
+				meaning: "데이터 신선도 확인",
+				detail: "재고·예약·가격·처리기한 데이터가 승인 가능한 기준시점 안에 있는지 확인합니다."
+			},
+			{
+				symbol: "capacity_ok",
+				meaning: "처리 capacity 확인",
+				detail: "배송·설치·좌석·객실·냉장/냉동 처리 용량이 충분한지 확인합니다.",
+				glossaryId: "delivery-capacity"
+			},
+			{
+				symbol: "data_quality_ok",
+				meaning: "필수 데이터 품질 확인",
+				detail: "단위·중복·결측·원천 추적 정보가 계산에 사용할 수 있는 상태인지 확인합니다."
+			}
+		],
+		takeaway: "하드 차단은 점수나 예상 이익으로 상쇄하지 않습니다. 확인되지 않은 값은 검토 대기로 보냅니다."
+	},
+	demand: {
+		id: "demand",
+		label: "예상 판매량 / 예약량",
+		title: "얼마나 팔리거나 예약될 수 있는가?",
+		intro: "Q_s는 전략을 적용했을 때 예상되는 판매·예약량입니다. 실제로 가용한 재고 또는 서비스 capacity를 넘지 않도록 제한합니다.",
+		terms: [
+			{
+				symbol: "Q_s",
+				meaning: "전략 적용 후 예상 판매·예약량",
+				detail: "할인·기간·채널·번들 효과를 반영한 결과입니다."
+			},
+			{
+				symbol: "Q_available",
+				meaning: "사용 가능한 수량 또는 capacity",
+				detail: "웰니스·그린푸드는 판매 가능 재고, 여행은 좌석·객실·슬롯, 리바트는 처리 가능한 제품·설치 capacity입니다."
+			},
+			{
+				symbol: "Q_base",
+				meaning: "기준 판매·예약량",
+				detail: "같은 상품·채널·기간의 과거 또는 현재 기준 속도입니다.",
+				glossaryId: "sales-velocity"
+			},
+			{
+				symbol: "F_time",
+				meaning: "시간 효과",
+				detail: "남은 판매일·출발일·납기·소비기한이 수요에 미치는 영향입니다.",
+				glossaryId: "dday"
+			},
+			{
+				symbol: "F_price",
+				meaning: "가격 반응 효과",
+				detail: "할인·쿠폰·포인트 변화에 따라 예상 수요가 얼마나 달라지는지 나타냅니다."
+			},
+			{
+				symbol: "F_channel",
+				meaning: "판매 채널 효과",
+				detail: "자사몰·매장·B2B·제휴채널의 노출과 수수료 차이를 반영합니다."
+			},
+			{
+				symbol: "F_bundle",
+				meaning: "묶음·보완 효과",
+				detail: "현재 MVP에서는 계열사 내부 또는 가상 번들 효과만 설명하고 교차 계열사 실행은 P2입니다."
+			},
+			{
+				symbol: "confidence",
+				meaning: "예측 신뢰도·보수 계수",
+				detail: "데이터가 부족하거나 불확실할수록 예상량을 보수적으로 낮춥니다.",
+				glossaryId: "scenario"
+			}
+		],
+		takeaway: "예상량은 희망 판매량이 아니라, 가용량·시간·가격 반응·데이터 신뢰도를 함께 반영한 상한입니다."
+	},
+	revenue: {
+		id: "revenue",
+		label: "매출·변동비",
+		title: "판매한 뒤 실제로 남는 금액은 얼마인가?",
+		intro: "매출은 할인 후 고객 결제액에서 쿠폰·포인트·지원금 부담을 차감합니다. 변동비는 전략을 실행할 때 추가로 발생하는 비용만 넣습니다.",
+		terms: [
+			{
+				symbol: "P_list",
+				meaning: "정상 판매가",
+				detail: "전략을 적용하기 전 기준 가격입니다."
+			},
+			{
+				symbol: "discount",
+				meaning: "할인율",
+				detail: "정상 판매가에서 직접 차감되는 비율입니다."
+			},
+			{
+				symbol: "coupon / point",
+				meaning: "쿠폰·포인트 부담액",
+				detail: "고객 혜택 중 계열사 또는 채널이 실제로 부담하는 금액입니다."
+			},
+			{
+				symbol: "subsidy",
+				meaning: "외부·공동 지원금",
+				detail: "공급사·채널·공동 프로모션이 부담하는 지원금입니다. 부담 주체를 확인해야 합니다."
+			},
+			{
+				symbol: "commission",
+				meaning: "판매 수수료",
+				detail: "채널·예약·제휴·공급사 계약에 따라 발생하는 수수료입니다."
+			},
+			{
+				symbol: "payment",
+				meaning: "결제·발권 처리비",
+				detail: "결제·발권·예약 변경처럼 거래를 처리하는 비용입니다."
+			},
+			{
+				symbol: "fulfillment",
+				meaning: "이행 비용",
+				detail: "포장·배송·설치·콜드체인·픽업 등 고객에게 전달하는 비용입니다."
+			},
+			{
+				symbol: "return_expected",
+				meaning: "예상 반품·취소 비용",
+				detail: "반품·환불·재배송·재예약 가능성을 확률로 반영한 비용입니다.",
+				glossaryId: "return-rate"
+			},
+			{
+				symbol: "campaign_fixed_cost",
+				meaning: "캠페인 고정비",
+				detail: "전략을 실행하기 위해 별도로 발생하는 광고·기획·세팅 비용입니다."
+			}
+		],
+		takeaway: "정상가나 매출 총액만 보지 않고, 누가 부담하는 비용인지까지 확인해야 실제 기여현금이익이 나옵니다."
+	},
+	avoided: {
+		id: "avoided",
+		label: "회피비용·하방",
+		title: "처리해서 줄이는 비용과 실패 위험은 얼마인가?",
+		intro: "재고를 그대로 두었을 때 생길 비용과 전략을 실행했을 때의 하방 위험을 분리합니다. 여행처럼 폐기되지 않는 상품은 위약금·capacity 기회비용을 사용합니다.",
+		terms: [
+			{
+				symbol: "holding_avoided",
+				meaning: "회피 보관비",
+				detail: "재고를 빨리 처리해 줄어드는 창고·전시·냉장·공간 대체가치입니다.",
+				glossaryId: "holding-cost"
+			},
+			{
+				symbol: "disposal_avoided",
+				meaning: "회피 폐기비",
+				detail: "소비기한·품질·계약 조건 때문에 발생할 폐기·운송·처리 비용을 줄인 금액입니다.",
+				glossaryId: "disposal-cost"
+			},
+			{
+				symbol: "supplier_penalty_avoided",
+				meaning: "회피 공급사 위약금",
+				detail: "여행 예약 취소나 납기 실패 등으로 공급사에 지급할 수 있는 비용을 피한 금액입니다."
+			},
+			{
+				symbol: "capacity_loss_avoided",
+				meaning: "회피 capacity 손실",
+				detail: "좌석·객실·설치 슬롯·냉장 배송 용량을 놓쳐 생기는 기회비용을 줄인 금액입니다."
+			},
+			{
+				symbol: "RiskPenalty_s",
+				meaning: "예상 하방 손실",
+				detail: "실패 확률과 실패했을 때의 금액·운영 영향을 곱합니다."
+			},
+			{
+				symbol: "probability × impact",
+				meaning: "위험의 기대값",
+				detail: "반품률·취소율·파손률·위약금 발생 확률처럼 불확실한 비용을 계산합니다."
+			}
+		],
+		takeaway: "회피비용은 실제 계약·처리 단가로만 계산하고, 절대 발생하지 않는 비용을 임의로 더하지 않습니다."
+	},
+	risk: {
+		id: "risk",
+		label: "위험점수",
+		title: "위험하다는 판단은 어떻게 점수로 바뀌는가?",
+		intro: "위험점수는 여러 신호를 0~100 범위로 정규화한 우선순위 점수입니다. 점수가 높아도 하드 차단을 통과하지 못하면 실행하지 않습니다.",
+		terms: [
+			{
+				symbol: "RiskScore_i",
+				meaning: "상품·예약 항목 i의 위험점수",
+				detail: "처리기한·판매속도·가치·불확실성·capacity 신호를 합친 우선순위입니다."
+			},
+			{
+				symbol: "w_k",
+				meaning: "신호별 가중치",
+				detail: "계열사·상품군별로 처리기한, 공간, 위약금 등 신호의 중요도를 정합니다."
+			},
+			{
+				symbol: "z_ik",
+				meaning: "정규화된 위험 신호",
+				detail: "각 신호를 0~1로 바꾼 값입니다. 예를 들어 소비기한 임박도나 설치 capacity 부족도를 넣습니다."
+			},
+			{
+				symbol: "Σw_k = 1",
+				meaning: "가중치 합계",
+				detail: "모든 신호의 영향력을 합쳐 100점 안에서 비교할 수 있게 합니다."
+			},
+			{
+				symbol: "정상 / 주의 / 위험",
+				meaning: "운영 등급",
+				detail: "버전으로 관리하는 임계값에 따라 우선 처리 목록을 나눕니다."
+			}
+		],
+		takeaway: "위험점수는 처리 순서를 정하는 도구이고, 법규·소유권·데이터 신선도 같은 실행 가능성을 대신하지 않습니다."
+	}
+};
 var profiles = [
 	{
 		id: "wellness",
@@ -207,13 +487,97 @@ function SourceLinks({ ids }) {
 		})]
 	});
 }
+function FormulaHelpButton({ help, onOpen }) {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
+		type: "button",
+		className: "formula-help-button",
+		"aria-label": `${help.title} 설명 열기`,
+		title: "수식 용어 설명 열기",
+		onClick: () => onOpen(help.id),
+		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+			"aria-hidden": "true",
+			children: "?"
+		}), " 용어 설명"]
+	});
+}
+function FormulaHelpModal({ help, onClose }) {
+	(0, import_react.useEffect)(() => {
+		const onKeyDown = (event) => {
+			if (event.key === "Escape") onClose();
+		};
+		const previousOverflow = document.body.style.overflow;
+		document.body.style.overflow = "hidden";
+		window.addEventListener("keydown", onKeyDown);
+		return () => {
+			document.body.style.overflow = previousOverflow;
+			window.removeEventListener("keydown", onKeyDown);
+		};
+	}, [onClose]);
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+		className: "formula-help-overlay",
+		role: "presentation",
+		onClick: onClose,
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
+			className: "formula-help-modal",
+			role: "dialog",
+			"aria-modal": "true",
+			"aria-labelledby": `formula-help-title-${help.id}`,
+			onClick: (event) => event.stopPropagation(),
+			children: [
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					className: "formula-help-modal-header",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
+						className: "eyebrow",
+						children: ["Formula glossary · ", help.label]
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
+						id: `formula-help-title-${help.id}`,
+						children: help.title
+					})] }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
+						type: "button",
+						className: "formula-help-close",
+						"aria-label": "설명 닫기",
+						onClick: onClose,
+						children: "×"
+					})]
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+					className: "formula-help-intro",
+					children: help.intro
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+					className: "formula-help-terms",
+					children: help.terms.map((term) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("article", {
+						className: "formula-help-term",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("code", { children: term.symbol }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: term.meaning }),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: term.detail }),
+							term.glossaryId && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link, {
+								href: `/glossary#${term.glossaryId}`,
+								onClick: onClose,
+								children: "용어 사전에서 자세히 보기 →"
+							})
+						] })]
+					}, term.symbol))
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					className: "formula-help-takeaway",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "한 줄 요약" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: help.takeaway })]
+				})
+			]
+		})
+	});
+}
 var metadata = {
 	title: "계열사 통합 수식 | InventoryOS",
 	description: "현대웰니스·더현대트래블·현대리바트·현대그린푸드의 상품/서비스 특성을 공통 목적함수로 계산하는 AI 재고 처리 수식"
 };
 function FormulasPage() {
 	const [activeId, setActiveId] = (0, import_react.useState)("wellness");
+	const [openHelpId, setOpenHelpId] = (0, import_react.useState)(null);
 	const active = (0, import_react.useMemo)(() => profiles.find((profile) => profile.id === activeId) ?? profiles[0], [activeId]);
+	const openHelp = (helpId) => setOpenHelpId(helpId);
+	const closeHelp = () => setOpenHelpId(null);
+	const activeHelp = openHelpId ? formulaHelps[openHelpId] : null;
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
 		/* @__PURE__ */ (0, import_jsx_runtime.jsx)("section", {
 			className: "page-hero formula-hero",
@@ -253,13 +617,21 @@ function FormulasPage() {
 							children: "01 · One objective"
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { children: "공통 목적함수는 하나입니다." }),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "수량 상품과 예약 capacity 모두 “기준선보다 실제로 더 나아지는가”를 같은 방식으로 비교합니다." })
+						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", { children: [
+							"수량 상품과 예약 capacity 모두 “기준선보다 실제로 더 나아지는가”를 같은 방식으로 비교합니다. 각 카드 오른쪽 위의 ",
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "용어 설명" }),
+							" 버튼을 누르면 기호를 쉬운 말로 풀어볼 수 있습니다."
+						] })
 					]
 				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 					className: "formula-main-grid",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-						className: "formula-panel formula-panel-dark",
+						className: "formula-panel formula-panel-dark formula-panel-with-help",
 						children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FormulaHelpButton, {
+								help: formulaHelps.objective,
+								onOpen: openHelp
+							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
 								className: "formula-label",
 								children: "증분 기여현금이익"
@@ -281,8 +653,12 @@ function FormulasPage() {
 							] })
 						]
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-						className: "formula-panel",
+						className: "formula-panel formula-panel-with-help",
 						children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FormulaHelpButton, {
+								help: formulaHelps.feasible,
+								onOpen: openHelp
+							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
 								className: "formula-label",
 								children: "전략 실행 가능성"
@@ -321,8 +697,12 @@ else 0` }),
 						className: "formula-three-grid",
 						children: [
 							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("article", {
-								className: "formula-panel",
+								className: "formula-panel formula-panel-with-help",
 								children: [
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FormulaHelpButton, {
+										help: formulaHelps.demand,
+										onOpen: openHelp
+									}),
 									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
 										className: "formula-number",
 										children: "01"
@@ -337,8 +717,12 @@ else 0` }),
 								]
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("article", {
-								className: "formula-panel",
+								className: "formula-panel formula-panel-with-help",
 								children: [
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FormulaHelpButton, {
+										help: formulaHelps.revenue,
+										onOpen: openHelp
+									}),
 									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
 										className: "formula-number",
 										children: "02"
@@ -354,8 +738,12 @@ VariableCost_s = Q_s × (commission
 								]
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("article", {
-								className: "formula-panel",
+								className: "formula-panel formula-panel-with-help",
 								children: [
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FormulaHelpButton, {
+										help: formulaHelps.avoided,
+										onOpen: openHelp
+									}),
 									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
 										className: "formula-number",
 										children: "03"
@@ -475,8 +863,12 @@ RiskPenalty_s = probability × impact` }),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 						className: "risk-layout",
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-							className: "formula-panel formula-panel-dark",
+							className: "formula-panel formula-panel-dark formula-panel-with-help",
 							children: [
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FormulaHelpButton, {
+									help: formulaHelps.risk,
+									onOpen: openHelp
+								}),
 								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
 									className: "formula-label",
 									children: "0–100 위험점수"
@@ -641,6 +1033,10 @@ z_ik ∈ [0, 1]
 					})
 				]
 			})
+		}),
+		activeHelp && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(FormulaHelpModal, {
+			help: activeHelp,
+			onClose: closeHelp
 		})
 	] });
 }
