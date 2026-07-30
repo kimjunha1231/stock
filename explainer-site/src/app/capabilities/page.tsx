@@ -105,11 +105,11 @@ const capabilities: CapabilityCard[] = [
     rule: '실제값이 없으면 임의 숫자를 표시하지 않고 미수집 상태로 표시',
   },
   {
-    id: 'F-12', track: 'common', title: '알림·운영·관제', phase: 'P1',
-    summary: '위험·데이터 차단·승인·배치·Teams·AI 오류를 담당자와 운영자가 추적합니다.',
-    inputs: ['이벤트·임계값', '수신자·채널', 'request_id·batch_id'],
-    outputs: ['앱 알림', 'Teams 알림', 'Sentry·ELK 로그', 'Prometheus/Grafana 지표'],
-    rule: '재시도·멱등성·실패 원인·마지막 정상 시각을 함께 남김',
+    id: 'F-12', track: 'common', title: '운영·이력·관제', phase: 'P1',
+    summary: '데이터 동기화부터 위험분석·전략·Teams 전송까지의 이력을 남기고, 시스템 오류는 운영자가 확인합니다.',
+    inputs: ['배치·분석·전략 이벤트', 'request_id·batch_id', '모니터링 기준'],
+    outputs: ['기능별 실행 이력', 'Sentry·ELK 로그', 'Prometheus/Grafana 지표', '실패 원인·재시도 상태'],
+    rule: '업무 알림은 꼭 필요한 상태만 보여주고, 개발·배치 오류는 Grafana와 운영 로그로 확인',
   },
   {
     id: 'F-13', track: 'common', title: '교차 계열사 번들·재고 이동', phase: 'P2',
@@ -124,6 +124,13 @@ const capabilities: CapabilityCard[] = [
     inputs: ['approved strategy', '판매 가능 재고', '공개 가격·혜택', '법적 표시'],
     outputs: ['상품 목록·상세', '할인·번들 정보', '재고 부족·판매 제한 상태'],
     rule: '초기에는 장바구니·결제 없이 조회 화면만 준비',
+  },
+  {
+    id: 'F-15', track: 'common', title: '수요예측', phase: 'P0',
+    summary: '최근 판매 흐름을 바탕으로 앞으로 얼마나 팔릴지 계산해 위험재고 판단과 전략 시뮬레이션에 전달합니다.',
+    inputs: ['최근 판매이력', '품절·취소·반품 정보', '할인·프로모션·시즌 조건'],
+    outputs: ['기본 일일수요', '조건 반영 예상 판매량', '예상 소진일', '예측 기준·신뢰 상태'],
+    rule: '판매이력이 부족한 상품은 같은 카테고리 평균을 사용하거나 예측 부족 상태로 표시',
   },
 ];
 
@@ -190,9 +197,9 @@ const capabilityDetails: Record<string, CapabilityDetails> = {
     done: ['전략별 예상·실제 비교 가능', '오차 원인을 계열사별로 분류', '검증된 결과만 이후 예측 모델에 사용'],
   },
   'F-12': {
-    micro: ['위험·품질·승인 알림 규칙', '앱·Teams 수신자·채널 설정', '배치·API·AI 오류 모니터링', '재시도·멱등키·실패 원인 기록', '운영 대시보드·보존 정책'],
-    considerations: ['알림 폭주 방지를 위한 묶음·중복 제거', 'request_id·batch_id·strategy_id 상관관계', '민감 데이터가 로그와 Teams에 남지 않음'],
-    done: ['중요 이벤트가 담당자에게 전달', '실패 원인과 마지막 정상 상태 확인', '운영자가 재시도하고 결과 추적'],
+    micro: ['계열사 데이터 동기화 이력 저장', '위험재고 분석 이력 저장', '수요예측·AI 전략 생성 이력 저장', '전략 수정·Teams 전송 이력 저장', '배치·API·AI 오류 모니터링', '재시도·멱등키·실패 원인 기록'],
+    considerations: ['업무 알림을 과도하게 만들지 않고 필요한 상태만 표시', 'request_id·batch_id·strategy_id로 앞뒤 결과 연결', '민감한 원가·개인정보가 로그와 Teams에 남지 않음'],
+    done: ['각 기능의 실행 시각·결과·담당 범위가 남음', '실패 원인과 마지막 정상 상태 확인', '운영자가 실패 건을 재시도하고 결과 추적'],
   },
   'F-13': {
     micro: ['구성 상품 검색·번들 편집', '구성 수량·판매가·재고 예약', '품절·법적 제한 검증', '계열사별 매출·마진 배분', '번들 승인·판매 제한 상태'],
@@ -203,6 +210,11 @@ const capabilityDetails: Record<string, CapabilityDetails> = {
     micro: ['승인 상품 목록·상세 조회', '공개 가격·혜택·재고 상태 표시', '법적 표시·주의사항 노출', '재고 부족·판매 제한 표시', '장바구니·결제 없이 읽기 전용 제공'],
     considerations: ['승인되지 않은 상품·원가·내부 위험정보 노출 금지', '고객용 문구와 담당자용 계산 근거 분리', '실시간 재고 부족 시 표시 상태 갱신'],
     done: ['고객이 승인된 상품만 조회', '판매 제한 사유가 안전한 문구로 표시', 'P2 범위임을 운영 화면과 데이터에 표시'],
+  },
+  'F-15': {
+    micro: ['최근 28일 판매이력 조회', '취소·반품·품절일을 구분', '최근 기간별 평균 판매량 계산', '할인·프로모션·시즌·요일 보정', '판매기간별 예상량·소진일 계산', '예측에 사용한 기준 저장'],
+    considerations: ['품절일을 판매 부진으로 잘못 계산하지 않음', '신규 상품은 카테고리 평균 또는 예측 부족으로 표시', '예상량이 현재 가용 재고를 넘지 않도록 제한', '계열사별 단위와 예약 capacity를 구분'],
+    done: ['상품별 예상 판매량과 계산 기준이 표시', '판매이력이 부족하면 상태가 명확히 표시', '같은 입력과 버전으로 결과를 다시 계산 가능'],
   },
 };
 
@@ -227,8 +239,8 @@ function CapabilityDetailModal({ capability, onClose }: { capability: Capability
       <div className="capability-modal-header"><div><div className="capability-modal-meta"><span className="capability-id">{capability.id}</span><PhaseBadge phase={capability.phase} /></div><h2 id={`capability-modal-title-${capability.id}`}>{capability.title}</h2></div><button type="button" className="capability-modal-close" aria-label="기능 상세 닫기" onClick={onClose}>×</button></div>
       <p className="capability-modal-summary">{capability.summary}</p>
       <div className="capability-modal-contract"><div><span>필요 요소</span><strong>{capability.inputs.join(' · ')}</strong></div><div><span>결과</span><strong>{capability.outputs.join(' · ')}</strong></div></div>
-      <div className="capability-modal-grid"><div><span className="capability-label">작은 기능 단위</span><ol>{details.micro.map((item) => <li key={item}>{item}</li>)}</ol></div><div><span className="capability-label">고려할 요소</span><ul>{details.considerations.map((item) => <li key={item}>{item}</li>)}</ul></div></div>
-      <div className="capability-modal-done"><span className="capability-label">완료 기준</span><ul>{details.done.map((item) => <li key={item}>{item}</li>)}</ul></div>
+      <div className="capability-modal-section"><div className="capability-modal-section-title"><span className="capability-label">세부 기능</span><p>이 기능을 실제 화면과 서버에서 나눠 만들 때 필요한 작은 단위입니다.</p></div><div className="capability-detail-table-wrap"><table className="capability-detail-table"><caption className="sr-only">세부 기능과 고려 요소, 완료 기준</caption><thead><tr><th scope="col">번호</th><th scope="col">세부 기능</th><th scope="col">고려할 요소</th><th scope="col">완료 기준</th></tr></thead><tbody>{details.micro.map((item, index) => <tr key={item}><td>{String(index + 1).padStart(2, '0')}</td><td>{item}</td><td>{details.considerations[index] ?? '앞 단계의 데이터와 연결되는지 확인'}</td><td>{details.done[index] ?? '오류·빈 상태에서도 사용자가 다음 행동을 알 수 있음'}</td></tr>)}</tbody></table></div></div>
+      <div className="capability-modal-done"><span className="capability-label">범위 메모</span><ul><li>현재는 {capability.phase === 'P2' ? '화면과 데이터 구조를 우선 준비하는 후순위 범위' : '핵심 시연과 검증을 위해 구현하는 범위'}입니다.</li><li>실제 외부 시스템 연동이나 운영 정책이 확정되면 해당 세부 기준을 다시 확인합니다.</li></ul></div>
       <div className="capability-modal-rule"><span>핵심 운영 규칙</span><p>{capability.rule}</p></div>
     </section>
   </div>;
@@ -298,7 +310,7 @@ export default function CapabilitiesPage() {
       <section className="section capability-section">
         <div className="container">
           <div className="capability-stats">
-            <div><strong>14</strong><span>기능 계약</span></div>
+            <div><strong>15</strong><span>기능 계약</span></div>
             <div><strong>4</strong><span>계열사 프로필</span></div>
             <div><strong>5</strong><span>서비스 레이어</span></div>
             <div><strong>P0 → P2</strong><span>단계별 범위</span></div>
@@ -311,14 +323,26 @@ export default function CapabilitiesPage() {
             <label className="capability-search"><span className="sr-only">기능 검색</span><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="기능·입력·출력 검색" /><span aria-hidden="true">⌕</span></label>
           </div>
           <p className="capability-filter-note"><strong>{currentTrack.label}</strong> · {currentTrack.hint} · {visibleCapabilities.length}개 기능 표시</p>
-          <div className="capability-card-grid">
-            {visibleCapabilities.map((capability) => <article className="capability-card capability-card-clickable" key={capability.id} role="button" tabIndex={0} aria-label={`${capability.id} ${capability.title} 상세 보기`} onClick={() => setOpenCapabilityId(capability.id)} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); setOpenCapabilityId(capability.id); } }}>
-              <div className="capability-card-top"><span className="capability-id">{capability.id}</span><PhaseBadge phase={capability.phase} /></div>
-              <h3>{capability.title}</h3><p className="capability-summary">{capability.summary}</p>
-              <div className="capability-card-columns"><div><span className="capability-label">필요 요소</span><ul>{capability.inputs.map((input) => <li key={input}>{input}</li>)}</ul></div><div><span className="capability-label">결과</span><ul>{capability.outputs.map((output) => <li key={output}>{output}</li>)}</ul></div></div>
-              <div className="capability-rule"><span>운영 규칙</span><p>{capability.rule}</p></div>
-              <span className="capability-card-open">작은 기능과 고려 요소 보기 <b aria-hidden="true">↗</b></span>
-            </article>)}
+          <div className="capability-table-wrap">
+            <table className="capability-table">
+              <caption className="sr-only">기능별 상세 명세 표. 상세 보기를 누르면 고려 요소와 완료 기준을 확인할 수 있습니다.</caption>
+              <thead><tr><th scope="col">ID</th><th scope="col">기능명</th><th scope="col">적용 범위</th><th scope="col">단계</th><th scope="col">작은 기능 단위</th><th scope="col">핵심 입력 · 결과</th><th scope="col">상세</th></tr></thead>
+              <tbody>
+                {visibleCapabilities.map((capability) => {
+                  const details = capabilityDetails[capability.id];
+                  const trackLabel = tracks.find((track) => track.id === capability.track)?.label ?? '공통 서비스';
+                  return <tr key={capability.id}>
+                    <td><span className="capability-id">{capability.id}</span></td>
+                    <td><button type="button" className="capability-table-title" onClick={() => setOpenCapabilityId(capability.id)}><strong>{capability.title}</strong><span>{capability.summary}</span></button></td>
+                    <td><span className={`capability-table-scope capability-table-scope-${capability.track}`}>{trackLabel}</span></td>
+                    <td><PhaseBadge phase={capability.phase} /></td>
+                    <td><ul className="capability-table-list">{details.micro.map((item) => <li key={item}>{item}</li>)}</ul></td>
+                    <td><div className="capability-table-contract"><span><b>입력</b>{capability.inputs.join(' · ')}</span><span><b>결과</b>{capability.outputs.join(' · ')}</span></div></td>
+                    <td><button type="button" className="capability-table-detail" onClick={() => setOpenCapabilityId(capability.id)}>상세 보기 <b aria-hidden="true">↗</b></button></td>
+                  </tr>;
+                })}
+              </tbody>
+            </table>
           </div>
           {visibleCapabilities.length === 0 && <div className="capability-empty"><strong>검색 결과가 없습니다.</strong><p>다른 기능명이나 입력 요소로 검색해 보세요.</p></div>}
         </div>

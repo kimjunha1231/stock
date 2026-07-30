@@ -170,6 +170,25 @@ var capabilities = [
 		rule: "전략 결과에는 policy_version·formula_version·snapshot_id를 항상 저장"
 	},
 	{
+		id: "F-15",
+		track: "common",
+		title: "수요예측",
+		phase: "P0",
+		summary: "최근 판매 흐름을 바탕으로 앞으로 얼마나 팔릴지 계산해 위험재고 판단과 전략 시뮬레이션에 전달합니다.",
+		inputs: [
+			"최근 판매이력",
+			"품절·취소·반품 정보",
+			"할인·프로모션·시즌 조건"
+		],
+		outputs: [
+			"기본 일일수요",
+			"조건 반영 예상 판매량",
+			"예상 소진일",
+			"예측 기준·신뢰 상태"
+		],
+		rule: "판매이력이 부족한 상품은 같은 카테고리 평균을 사용하거나 예측 부족 상태로 표시"
+	},
+	{
 		id: "F-08",
 		track: "common",
 		title: "전략 후보 생성·AI 추천",
@@ -251,21 +270,21 @@ var capabilities = [
 	{
 		id: "F-12",
 		track: "common",
-		title: "알림·운영·관제",
+		title: "운영·이력·관제",
 		phase: "P1",
-		summary: "위험·데이터 차단·승인·배치·Teams·AI 오류를 담당자와 운영자가 추적합니다.",
+		summary: "데이터 동기화부터 위험분석·전략·Teams 전송까지의 이력을 남기고, 시스템 오류는 운영자가 확인합니다.",
 		inputs: [
-			"이벤트·임계값",
-			"수신자·채널",
-			"request_id·batch_id"
+			"배치·분석·전략 이벤트",
+			"request_id·batch_id",
+			"모니터링 기준"
 		],
 		outputs: [
-			"앱 알림",
-			"Teams 알림",
+			"기능별 실행 이력",
 			"Sentry·ELK 로그",
-			"Prometheus/Grafana 지표"
+			"Prometheus/Grafana 지표",
+			"실패 원인·재시도 상태"
 		],
-		rule: "재시도·멱등성·실패 원인·마지막 정상 시각을 함께 남김"
+		rule: "업무 알림은 꼭 필요한 상태만 보여주고, 개발·배치 오류는 Grafana와 운영 로그로 확인"
 	},
 	{
 		id: "F-13",
@@ -519,21 +538,22 @@ var capabilityDetails = {
 	},
 	"F-12": {
 		micro: [
-			"위험·품질·승인 알림 규칙",
-			"앱·Teams 수신자·채널 설정",
+			"계열사 데이터 동기화 이력 저장",
+			"위험재고 분석 이력 저장",
+			"수요예측·AI 전략 생성 이력 저장",
+			"전략 수정·Teams 전송 이력 저장",
 			"배치·API·AI 오류 모니터링",
-			"재시도·멱등키·실패 원인 기록",
-			"운영 대시보드·보존 정책"
+			"재시도·멱등키·실패 원인 기록"
 		],
 		considerations: [
-			"알림 폭주 방지를 위한 묶음·중복 제거",
-			"request_id·batch_id·strategy_id 상관관계",
-			"민감 데이터가 로그와 Teams에 남지 않음"
+			"업무 알림을 과도하게 만들지 않고 필요한 상태만 표시",
+			"request_id·batch_id·strategy_id로 앞뒤 결과 연결",
+			"민감한 원가·개인정보가 로그와 Teams에 남지 않음"
 		],
 		done: [
-			"중요 이벤트가 담당자에게 전달",
+			"각 기능의 실행 시각·결과·담당 범위가 남음",
 			"실패 원인과 마지막 정상 상태 확인",
-			"운영자가 재시도하고 결과 추적"
+			"운영자가 실패 건을 재시도하고 결과 추적"
 		]
 	},
 	"F-13": {
@@ -572,6 +592,27 @@ var capabilityDetails = {
 			"고객이 승인된 상품만 조회",
 			"판매 제한 사유가 안전한 문구로 표시",
 			"P2 범위임을 운영 화면과 데이터에 표시"
+		]
+	},
+	"F-15": {
+		micro: [
+			"최근 28일 판매이력 조회",
+			"취소·반품·품절일을 구분",
+			"최근 기간별 평균 판매량 계산",
+			"할인·프로모션·시즌·요일 보정",
+			"판매기간별 예상량·소진일 계산",
+			"예측에 사용한 기준 저장"
+		],
+		considerations: [
+			"품절일을 판매 부진으로 잘못 계산하지 않음",
+			"신규 상품은 카테고리 평균 또는 예측 부족으로 표시",
+			"예상량이 현재 가용 재고를 넘지 않도록 제한",
+			"계열사별 단위와 예약 capacity를 구분"
+		],
+		done: [
+			"상품별 예상 판매량과 계산 기준이 표시",
+			"판매이력이 부족하면 상태가 명확히 표시",
+			"같은 입력과 버전으로 결과를 다시 계산 가능"
 		]
 	}
 };
@@ -628,21 +669,60 @@ function CapabilityDetailModal({ capability, onClose }) {
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "필요 요소" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: capability.inputs.join(" · ") })] }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "결과" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: capability.outputs.join(" · ") })] })]
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-					className: "capability-modal-grid",
-					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-						className: "capability-label",
-						children: "작은 기능 단위"
-					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ol", { children: details.micro.map((item) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", { children: item }, item)) })] }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-						className: "capability-label",
-						children: "고려할 요소"
-					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ul", { children: details.considerations.map((item) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", { children: item }, item)) })] })]
+					className: "capability-modal-section",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						className: "capability-modal-section-title",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+							className: "capability-label",
+							children: "세부 기능"
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "이 기능을 실제 화면과 서버에서 나눠 만들 때 필요한 작은 단위입니다." })]
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+						className: "capability-detail-table-wrap",
+						children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("table", {
+							className: "capability-detail-table",
+							children: [
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("caption", {
+									className: "sr-only",
+									children: "세부 기능과 고려 요소, 완료 기준"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("thead", { children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("tr", { children: [
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", {
+										scope: "col",
+										children: "번호"
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", {
+										scope: "col",
+										children: "세부 기능"
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", {
+										scope: "col",
+										children: "고려할 요소"
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", {
+										scope: "col",
+										children: "완료 기준"
+									})
+								] }) }),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("tbody", { children: details.micro.map((item, index) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("tr", { children: [
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", { children: String(index + 1).padStart(2, "0") }),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", { children: item }),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", { children: details.considerations[index] ?? "앞 단계의 데이터와 연결되는지 확인" }),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", { children: details.done[index] ?? "오류·빈 상태에서도 사용자가 다음 행동을 알 수 있음" })
+								] }, item)) })
+							]
+						})
+					})]
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 					className: "capability-modal-done",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
 						className: "capability-label",
-						children: "완료 기준"
-					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ul", { children: details.done.map((item) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", { children: item }, item)) })]
+						children: "범위 메모"
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("ul", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("li", { children: [
+						"현재는 ",
+						capability.phase === "P2" ? "화면과 데이터 구조를 우선 준비하는 후순위 범위" : "핵심 시연과 검증을 위해 구현하는 범위",
+						"입니다."
+					] }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", { children: "실제 외부 시스템 연동이나 운영 정책이 확정되면 해당 세부 기준을 다시 확인합니다." })] })]
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 					className: "capability-modal-rule",
@@ -843,7 +923,7 @@ function CapabilitiesPage() {
 					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 						className: "capability-stats",
 						children: [
-							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "14" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "기능 계약" })] }),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "15" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "기능 계약" })] }),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "4" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "계열사 프로필" })] }),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "5" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "서비스 레이어" })] }),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "P0 → P2" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "단계별 범위" })] })
@@ -910,55 +990,84 @@ function CapabilitiesPage() {
 						]
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-						className: "capability-card-grid",
-						children: visibleCapabilities.map((capability) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("article", {
-							className: "capability-card capability-card-clickable",
-							role: "button",
-							tabIndex: 0,
-							"aria-label": `${capability.id} ${capability.title} 상세 보기`,
-							onClick: () => setOpenCapabilityId(capability.id),
-							onKeyDown: (event) => {
-								if (event.key === "Enter" || event.key === " ") {
-									event.preventDefault();
-									setOpenCapabilityId(capability.id);
-								}
-							},
+						className: "capability-table-wrap",
+						children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("table", {
+							className: "capability-table",
 							children: [
-								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-									className: "capability-card-top",
-									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-										className: "capability-id",
-										children: capability.id
-									}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(PhaseBadge, { phase: capability.phase })]
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("caption", {
+									className: "sr-only",
+									children: "기능별 상세 명세 표. 상세 보기를 누르면 고려 요소와 완료 기준을 확인할 수 있습니다."
 								}),
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", { children: capability.title }),
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-									className: "capability-summary",
-									children: capability.summary
-								}),
-								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-									className: "capability-card-columns",
-									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-										className: "capability-label",
-										children: "필요 요소"
-									}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ul", { children: capability.inputs.map((input) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", { children: input }, input)) })] }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-										className: "capability-label",
-										children: "결과"
-									}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ul", { children: capability.outputs.map((output) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", { children: output }, output)) })] })]
-								}),
-								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-									className: "capability-rule",
-									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "운영 규칙" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: capability.rule })]
-								}),
-								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
-									className: "capability-card-open",
-									children: ["작은 기능과 고려 요소 보기 ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", {
-										"aria-hidden": "true",
-										children: "↗"
-									})]
-								})
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("thead", { children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("tr", { children: [
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", {
+										scope: "col",
+										children: "ID"
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", {
+										scope: "col",
+										children: "기능명"
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", {
+										scope: "col",
+										children: "적용 범위"
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", {
+										scope: "col",
+										children: "단계"
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", {
+										scope: "col",
+										children: "작은 기능 단위"
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", {
+										scope: "col",
+										children: "핵심 입력 · 결과"
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", {
+										scope: "col",
+										children: "상세"
+									})
+								] }) }),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("tbody", { children: visibleCapabilities.map((capability) => {
+									const details = capabilityDetails[capability.id];
+									const trackLabel = tracks.find((track) => track.id === capability.track)?.label ?? "공통 서비스";
+									return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("tr", { children: [
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", { children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+											className: "capability-id",
+											children: capability.id
+										}) }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", { children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
+											type: "button",
+											className: "capability-table-title",
+											onClick: () => setOpenCapabilityId(capability.id),
+											children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: capability.title }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: capability.summary })]
+										}) }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", { children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+											className: `capability-table-scope capability-table-scope-${capability.track}`,
+											children: trackLabel
+										}) }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", { children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(PhaseBadge, { phase: capability.phase }) }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", { children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ul", {
+											className: "capability-table-list",
+											children: details.micro.map((item) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", { children: item }, item))
+										}) }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", { children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+											className: "capability-table-contract",
+											children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: "입력" }), capability.inputs.join(" · ")] }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: "결과" }), capability.outputs.join(" · ")] })]
+										}) }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", { children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
+											type: "button",
+											className: "capability-table-detail",
+											onClick: () => setOpenCapabilityId(capability.id),
+											children: ["상세 보기 ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", {
+												"aria-hidden": "true",
+												children: "↗"
+											})]
+										}) })
+									] }, capability.id);
+								}) })
 							]
-						}, capability.id))
+						})
 					}),
 					visibleCapabilities.length === 0 && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 						className: "capability-empty",
