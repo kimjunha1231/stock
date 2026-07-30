@@ -298,20 +298,28 @@ function FormulaHelpModal({ help, onClose }: { help: FormulaHelp; onClose: () =>
           <button type="button" className="formula-help-close" aria-label="설명 닫기" onClick={onClose}>×</button>
         </div>
         <p className="formula-help-intro">{help.intro}</p>
-        <pre className="formula-help-formula"><code>{help.formula}</code></pre>
-        <div className="formula-help-terms">
-          {help.terms.map((term) => (
-            <article key={term.symbol} className="formula-help-term">
-              <code>{term.symbol}</code>
-              <div>
-                <strong>{term.meaning}</strong>
-                <p>{term.detail}</p>
-                {term.glossaryId && <Link href={`/glossary#${term.glossaryId}`} onClick={onClose}>용어 사전에서 자세히 보기 →</Link>}
-              </div>
-            </article>
-          ))}
+        <div className="formula-help-layout">
+          <div className="formula-help-formula-column">
+            <span className="formula-help-section-label">핵심 수식</span>
+            <pre className="formula-help-formula"><code>{help.formula}</code></pre>
+            <div className="formula-help-takeaway"><strong>한 줄 요약</strong><p>{help.takeaway}</p></div>
+          </div>
+          <div className="formula-help-terms-column">
+            <span className="formula-help-section-label">용어를 쉽게 풀면</span>
+            <div className="formula-help-terms">
+              {help.terms.map((term) => (
+                <article key={term.symbol} className="formula-help-term">
+                  <code>{term.symbol}</code>
+                  <div>
+                    <strong>{term.meaning}</strong>
+                    <p>{term.detail}</p>
+                    {term.glossaryId && <Link href={`/glossary#${term.glossaryId}`} onClick={onClose}>용어 사전에서 자세히 보기 →</Link>}
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
         </div>
-        <div className="formula-help-takeaway"><strong>한 줄 요약</strong><p>{help.takeaway}</p></div>
       </section>
     </div>
   );

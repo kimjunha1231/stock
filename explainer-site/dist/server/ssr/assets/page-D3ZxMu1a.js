@@ -581,28 +581,45 @@ function FormulaHelpModal({ help, onClose }) {
 					className: "formula-help-intro",
 					children: help.intro
 				}),
-				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("pre", {
-					className: "formula-help-formula",
-					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("code", { children: help.formula })
-				}),
-				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-					className: "formula-help-terms",
-					children: help.terms.map((term) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("article", {
-						className: "formula-help-term",
-						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("code", { children: term.symbol }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: term.meaning }),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: term.detail }),
-							term.glossaryId && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link, {
-								href: `/glossary#${term.glossaryId}`,
-								onClick: onClose,
-								children: "용어 사전에서 자세히 보기 →"
-							})
-						] })]
-					}, term.symbol))
-				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-					className: "formula-help-takeaway",
-					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "한 줄 요약" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: help.takeaway })]
+					className: "formula-help-layout",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						className: "formula-help-formula-column",
+						children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+								className: "formula-help-section-label",
+								children: "핵심 수식"
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("pre", {
+								className: "formula-help-formula",
+								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("code", { children: help.formula })
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								className: "formula-help-takeaway",
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "한 줄 요약" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: help.takeaway })]
+							})
+						]
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						className: "formula-help-terms-column",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+							className: "formula-help-section-label",
+							children: "용어를 쉽게 풀면"
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+							className: "formula-help-terms",
+							children: help.terms.map((term) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("article", {
+								className: "formula-help-term",
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("code", { children: term.symbol }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: term.meaning }),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: term.detail }),
+									term.glossaryId && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link, {
+										href: `/glossary#${term.glossaryId}`,
+										onClick: onClose,
+										children: "용어 사전에서 자세히 보기 →"
+									})
+								] })]
+							}, term.symbol))
+						})]
+					})]
 				})
 			]
 		})
