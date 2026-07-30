@@ -11635,10 +11635,15 @@ var client_references_default = {
 		} };
 	},
 	"372050548a1b": async () => {
-		const m = await import("./assets/page-CxMsmOmf.js");
-		return { get "default"() {
-			return m["default"];
-		} };
+		const m = await import("./assets/page-C-PEiNJ6.js");
+		return {
+			get "default"() {
+				return m["default"];
+			},
+			get "metadata"() {
+				return m["metadata"];
+			}
+		};
 	},
 	"593f344dc510": async () => {
 		const m = await import("./assets/error-boundary-D9y4ADuu.js");
@@ -11687,25 +11692,25 @@ var client_references_default = {
 		} };
 	},
 	"ca88aed2258a": async () => {
-		const m = await import("./assets/page-DzweKXMH.js");
+		const m = await import("./assets/page-DQuZStnK.js");
 		return { get "default"() {
 			return m["default"];
 		} };
 	},
 	"e0b926a333ff": async () => {
-		const m = await import("./assets/site-shell-3RKimKvj.js");
+		const m = await import("./assets/site-shell-V-vNWgZg.js");
 		return { get "SiteShell"() {
 			return m["SiteShell"];
 		} };
 	},
 	"f30fcd25c92f": async () => {
-		const m = await import("./assets/term-hint-BLi0NEeA.js");
+		const m = await import("./assets/term-hint-DYJmn91y.js");
 		return { get "TermHint"() {
 			return m["TermHint"];
 		} };
 	},
 	"fa4438e99613": async () => {
-		const m = await import("./assets/glossary-browser-BNOdYQg_.js");
+		const m = await import("./assets/glossary-browser-C0LOD8lb.js");
 		return { get "GlossaryBrowser"() {
 			return m["GlossaryBrowser"];
 		} };

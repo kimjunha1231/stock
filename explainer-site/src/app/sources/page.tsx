@@ -4,7 +4,7 @@ import { sources } from '@/lib/content';
 
 export const metadata = {
   title: '출처 및 학술 근거 | InventoryOS',
-  description: '현대백화점 실무 데이터와 글로벌 학술 출처(Oracle Retail, INFORMS, McKinsey, Smith & Agrawal 2017)의 교차 검증 근거',
+  description: '4개 계열사 공식 자료와 법·정책·학술 근거를 연결한 통합 재고 수식 출처',
 };
 
 export default function SourcesPage() {
@@ -17,14 +17,14 @@ export default function SourcesPage() {
           </Reveal>
           <Reveal>
             <h1>
-              모든 설명과 수식에는<br />
+              모든 설명에는<br />
               <em>명확한 출처 및 근거</em>가 있습니다.
             </h1>
           </Reveal>
           <Reveal>
             <p>
-              현대백화점 실무 데이터와 글로벌 학술 표준(Oracle Retail, INFORMS, McKinsey, Smith &amp; Agrawal 2017)에서 
-              교차 검증된 수식과 원가 기준의 명확한 문헌 및 시스템 출처를 기록했습니다.
+              현대웰니스·더현대트래블·현대리바트·현대그린푸드의 공식 자료, 법·정책, 재고 최적화 학술 논문을
+              수식의 입력 요소와 하드 차단 근거로 연결했습니다.
             </p>
           </Reveal>
 
@@ -44,9 +44,9 @@ export default function SourcesPage() {
               🔗 교차 출처 표기 (Cross-Validated Source Standard)
             </strong>
             <p style={{ margin: '6px 0 0 0', opacity: 0.95 }}>
-              본 웹사이트와 수식 체계(/formulas)에 수록된 공통 핵심 수식(ROS, WOS, ST%, 매몰원가 제외, 회피비용 이익화, RAG 0원 수식)은
-              <strong> '현대백화점 실무 데이터와 글로벌 학술 출처(Oracle Retail, INFORMS, McKinsey, Smith &amp; Agrawal 2017)에서 교차 검증된 공통 출처 수식'</strong>
-              으로 엄격하게 검증하여 반영되었습니다.
+              /formulas의 목적함수와 수요식은 공개 학술 연구를 바탕으로 한 공통 구조이고,
+              계열사별 상품·서비스 입력값과 법적 차단은 각 공식 자료·공공 규정으로 따로 검증합니다.
+              공개 자료로 확정할 수 없는 원가·수수료·capacity는 화면에서 “내부 계약 필요”로 구분합니다.
             </p>
           </div>
         </div>
@@ -60,8 +60,8 @@ export default function SourcesPage() {
               <h2>출처 및 학술 문헌 목록</h2>
             </div>
             <p>
-              프로젝트 내부 손익 정책, 현대백화점 공개 보고서 및 서비스 제도, 올바로/식약처 법·정책 기준, 
-              그리고 글로벌 리테일 학술 저널 출처를 투명하게 구분하여 표기합니다.
+              프로젝트 내부 손익 정책, 네 계열사 공개 자료, 식약처·법제처·공정위 법·정책,
+              그리고 INFORMS 리테일 최적화 논문을 투명하게 구분하여 표기합니다.
             </p>
           </div>
 

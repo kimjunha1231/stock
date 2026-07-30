@@ -12,7 +12,7 @@ export type GlossaryTerm = {
 
 export type SourceItem = {
   id: string;
-  kind: '프로젝트' | '현대백화점' | '법·정책' | '기술';
+  kind: '프로젝트' | '현대백화점' | '계열사' | '법·정책' | '기술';
   title: string;
   location: string;
   note: string;
@@ -59,6 +59,29 @@ export const sources: SourceItem[] = [
   { id: 'allbaro', kind: '법·정책', title: '올바로시스템', location: '사업장폐기물 전자관리', note: '폐기 실행과 증빙을 별도 기록해야 하는 근거', url: 'https://www3.allbaro.or.kr/01_wsi/wsi_system_intro.vm' },
   { id: 'pipc-genai', kind: '법·정책', title: '개인정보위 생성형 AI 개인정보 처리 기준', location: '생성형 AI 전 과정의 적법성·안전성·내부관리', note: '고객 데이터를 최소화하고 로그·권한을 분리하는 근거', url: 'https://www.korea.kr/news/policyNewsView.do?newsId=148947194' },
   { id: 'openai-pricing', kind: '기술', title: 'OpenAI API 가격 안내', location: '입력·출력·캐시·Batch 사용량', note: '공급자 가격 자체보다 usage 원장을 남기는 방식의 참고', url: 'https://openai.com/index/introducing-gpt-5-for-developers/' },
+  { id: 'affiliate-wellness', kind: '계열사', title: '현대웰니스 공식몰', location: '건강기능식품·영양제·브랜드·성분·기능·대상별 상품 분류', note: '상품 페이지에서 수량, 판매가, 소비기한, 임박 태그를 분리해 입력해야 하는 근거', url: 'https://www.hyundaiwellness.com/' },
+  { id: 'affiliate-travel', kind: '계열사', title: '현대드림투어 더현대트래블', location: '항공·호텔·해외 패키지·여행자보험·렌터카·와이파이', note: '물리 재고가 아닌 출발일·예약 좌석/객실·취소 규정·공급사 비용을 capacity로 계산해야 하는 근거', url: 'https://home.hyundaidreamtour.com/jsp/web/sub03_01.jsp' },
+  { id: 'affiliate-livart-product', kind: '계열사', title: '현대리바트 공식 상품 페이지', location: '배송·설치 예정일, 설치기사 연락, 배송 연기 조건', note: '가구 전략에 제품 수량뿐 아니라 설치 슬롯·배송·반품·AS 비용을 넣어야 하는 근거', url: 'https://company.hyundailivart.co.kr/p/P200086559?buyNow=P200086559' },
+  { id: 'affiliate-livart-catalog', kind: '계열사', title: '현대리바트 오피스 카탈로그', location: '제품군·배송·설치·AS', note: '가구가 배송과 설치가 결합된 서비스 상품이라는 공식 카탈로그 근거', url: 'https://www.hyundailivart.co.kr/UserFiles/home/ko/brand/2020_OFFICE.pdf' },
+  { id: 'affiliate-greenfood', kind: '계열사', title: '현대그린푸드 식자재 유통', location: '급식·외식·유통 고객 대상 식재료 공급', note: '식품 전략의 대상이 리테일 상품뿐 아니라 B2B 식자재·서비스 수요일 수 있음을 확인하는 공식 자료', url: 'https://www.hyundaigreenfood.com/po/fb/fdb/FBFDB01L.hgc' },
+  { id: 'affiliate-greenfood-reservation', kind: '계열사', title: '현대그린푸드 사전예약 서비스', location: '제철 농·수·축산물 사전예약·배송', note: '식품의 주문 마감일, 배송일, 소비기한과 남은 물량을 연결해 계산해야 하는 근거', url: 'https://www.hyundaigreenfood.com/po/pr/ntn/PRNTN02V.hg?bbsSqPk=193712' },
+  { id: 'food-label-law', kind: '법·정책', title: '식품 등의 표시·광고에 관한 법률', location: '소비기한·보관방법·건강기능식품 주의사항', note: '식품·건강기능식품은 날짜와 보관조건을 하드 차단 입력으로 관리해야 하는 법적 근거', url: 'https://www.law.go.kr/lsLinkCommonInfo.do?chrClsCd=010202&lsJoLnkSeq=1030102807' },
+  { id: 'mfds-storage', kind: '법·정책', title: '식약처 소비기한 보관방법 안내', location: '냉장·냉동 식품 취급요령', note: '소비기한 숫자만이 아니라 보관조건을 함께 검증해야 하는 공공 안내', url: 'https://www.mfds.go.kr/brd/m_1105/view.do?seq=33674' },
+  { id: 'travel-dispute', kind: '법·정책', title: '공정거래위원회 소비자분쟁해결기준', location: '여행업 취소·환급 기준', note: '여행상품은 출발일까지 남은 기간과 계약별 환불·위약금 조건을 손익 계산에 넣어야 하는 근거', url: 'https://www.law.go.kr/admRulInfoP.do?admRulSeq=2100000270136&chrClsCd=010202&urlMode=admRulRvsInfoR' },
+  { id: 'markdown-paper', kind: '기술', title: 'Smith & Agrawal (2017), INFORMS', location: 'Inventory-dependent markdown pricing and allocation', note: '재고 수준·가격·점포 배분을 함께 최적화하는 수식의 학술 근거', url: 'https://pubsonline.informs.org/doi/abs/10.1287/msom.2016.0609' },
+  { id: 'markdown-perishable', kind: '기술', title: 'Chen, Pang & Pan (2014), INFORMS', location: 'Pricing, inventory and disposition for perishable products', note: '부패성 상품의 가격·재고·처분과 보관비·처분비를 함께 최적화하는 근거', url: 'https://pubsonline.informs.org/doi/10.1287/opre.2014.1261' },
+  { id: 'markdown-cannibalization', kind: '기술', title: 'Hu, Shum & Yu (2016), INFORMS', location: 'Markdown, strategic consumers and residual inventory', note: '할인이 정상판매를 잠식할 수 있어 잠식손실을 별도 항목으로 둬야 하는 근거', url: 'https://pubsonline.informs.org/doi/10.1287/opre.2015.1439' },
+  { id: 'wellness-foodsafety', kind: '법·정책', title: '식품안전나라 건강기능식품 안내', location: '기능성 표시·섭취방법·주의사항·유통기한', note: '현대웰니스 건강기능식품의 표시·클레임 하드 차단 입력 근거', url: 'https://www.foodsafetykorea.go.kr/portal/board/boardDetail.do?bbs_no=bbs001&menu_grp=MENU_NEW01&menu_no=3120&ntctxt_no=21776' },
+  { id: 'wellness-law', kind: '법·정책', title: '건강기능식품에 관한 법률', location: '안전성·품질·건전한 유통·소비자 보호', note: '현대웰니스 상품의 승인·리콜·표시 검토 상태를 판매전략보다 먼저 확인하는 근거', url: 'https://www.law.go.kr/LSW/lsInfoP.do?ancYnChk=0&lsId=009353' },
+  { id: 'travel-exhibition', kind: '계열사', title: '더현대트래블 공식 기획전', location: '항공·호텔·패키지·쿠폰·H.Point·제휴 혜택', note: '예약형 상품의 고객 조건·부가서비스·쿠폰 변수를 분리해야 하는 근거', url: 'https://www.thehyundaitravel.com/exhibition/all/index.do' },
+  { id: 'travel-cancel', kind: '계열사', title: '더현대트래블 고객센터 안내', location: '항공 부가서비스 취소·환불', note: '보험·좌석·수하물·기내식 등 ancillary SKU의 환불 가능 여부를 별도 계산해야 하는 근거', url: 'https://www.thehyundaitravel.com/customer-center/notify/view.do?detailsKey=2740' },
+  { id: 'travel-easylaw', kind: '법·정책', title: '법제처 해외여행자 안내', location: '국외여행 표준약관·안전정보·중요 계약내용', note: '출발일·특별약관·목적지 안전정보·변경 동의 상태를 버전으로 저장하는 근거', url: 'https://easylaw.go.kr/CSP/CnpClsMainBtr.laf?ccfNo=2&cciNo=3&cnpClsNo=2&csmSeq=894&popMenu=ov' },
+  { id: 'livart-corporation', kind: '계열사', title: '현대리바트 법인사업', location: '대량 납품·자체 배송·계약별 납기', note: 'B2B/프로젝트 주문은 MOQ·계약가격·납기·배송 capacity를 별도 입력해야 하는 근거', url: 'https://company.hyundailivart.co.kr/ko/corporation' },
+  { id: 'livart-smart-factory', kind: '계열사', title: '현대리바트 스마트워크센터', location: '스마트팩토리·자동화 공정·물류센터', note: '원자재·WIP·공정 capacity·출고 상태를 가구 전략 입력으로 고려하는 근거', url: 'https://company.hyundailivart.co.kr/ko/smartWorkCenter' },
+  { id: 'greenfood-retail', kind: '계열사', title: '현대그린푸드 리테일 사업', location: '오프라인·온라인·홈쇼핑·케어푸드 채널', note: '식품의 채널·점포·상품군별 재고와 수수료를 구분하는 근거', url: 'https://hyundaigreenfood.com/po/fb/rtb/FBRTB01L.hgc' },
+  { id: 'greenfood-lab', kind: '계열사', title: '현대그린푸드 식품위생연구소', location: '미생물·잔류농약·중금속·HACCP 검사', note: '검사·보류·해제·리콜 상태를 판매전략보다 먼저 검증하는 근거', url: 'https://hyundaigreenfood.com/po/is/fdr/ISFDR02L.hgc' },
+  { id: 'food-label-standards', kind: '법·정책', title: '식약처 「식품등의 표시기준」', location: '소비기한·보관방법·안전 주의사항', note: '표시기준은 판매 허가가 아니며, 누락·불일치·리콜은 하드 차단해야 한다는 공공 근거', url: 'https://www.law.go.kr/LSW/admRulInfoP.do?admRulSeq=2100000263350' },
+  { id: 'food-expiry-setting', kind: '법·정책', title: '식품·건강기능식품 소비기한 설정기준', location: '표시된 보관방법과 안전한계기간', note: 'SKU별 로트·보관온도·포장 데이터로 처리기한을 계산해야 하는 보조 근거', url: 'https://www.law.go.kr/LSW/admRulInfoP.do?admRulSeq=2100000210351' },
 ];
 
 export const glossary: GlossaryTerm[] = [
