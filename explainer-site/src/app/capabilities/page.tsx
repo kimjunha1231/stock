@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { Reveal, Stagger } from '@/components/reveal';
+import { mvpMenu } from '@/lib/content';
 
 type Track = 'all' | 'common' | 'wellness' | 'travel' | 'livart' | 'greenfood';
 type Phase = 'P0' | 'P1' | 'P2';
@@ -345,6 +346,14 @@ export default function CapabilitiesPage() {
             </table>
           </div>
           {visibleCapabilities.length === 0 && <div className="capability-empty"><strong>검색 결과가 없습니다.</strong><p>다른 기능명이나 입력 요소로 검색해 보세요.</p></div>}
+        </div>
+      </section>
+
+      <section className="section capability-section mvp-menu-section">
+        <div className="container">
+          <div className="section-heading"><span className="eyebrow">MVP screen map</span><h2>메뉴는 역할별로 나누고,<br /><em>대시보드와 재고표는 분리합니다.</em></h2><p>대시보드는 처음 들어왔을 때 핵심 지표와 우선 처리 대상을 보여줍니다. 통합 재고는 상품과 SKU를 찾아보고 필터링하는 작업 화면입니다.</p></div>
+          <div className="mvp-menu-table-wrap"><table className="mvp-menu-table"><caption className="sr-only">MVP 메뉴별 역할과 세부 기능</caption><thead><tr><th scope="col">메뉴</th><th scope="col">화면 역할</th><th scope="col">이 메뉴에서 하는 일</th></tr></thead><tbody>{mvpMenu.map((menu) => <tr key={menu.id} className={menu.id === '01' || menu.id === '02' ? 'mvp-menu-emphasis' : undefined}><td><span className="mvp-menu-number">{menu.id}</span><strong>{menu.label}</strong><small>{menu.kind}</small></td><td><p>{menu.purpose}</p></td><td><ul>{menu.features.map((feature) => <li key={feature}>{feature}</li>)}</ul></td></tr>)}</tbody></table></div>
+          <div className="mvp-menu-note"><strong>화면을 나누는 기준</strong><span><b>대시보드</b>는 숫자를 요약해 “무엇을 볼지” 결정하고, <b>통합 재고</b>는 표·검색·필터로 “어떤 상품을 처리할지” 찾습니다.</span></div>
         </div>
       </section>
 

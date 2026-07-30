@@ -1,6 +1,6 @@
 {
-  "_content-CvZRrcHJ.js": {
-    "file": "assets/content-CvZRrcHJ.js",
+  "_content-Bws_h17l.js": {
+    "file": "assets/content-Bws_h17l.js",
     "name": "content"
   },
   "_framework-CXnKph_e.js": {
@@ -32,7 +32,7 @@
     ]
   },
   "node_modules/vinext/dist/shims/layout-segment-context.js": {
-    "file": "assets/layout-segment-context-DA0zfzVd.js",
+    "file": "assets/layout-segment-context-DMsrieTJ.js",
     "name": "layout-segment-context",
     "src": "node_modules/vinext/dist/shims/layout-segment-context.js",
     "isDynamicEntry": true,
@@ -43,7 +43,7 @@
     ]
   },
   "node_modules/vinext/dist/shims/link.js": {
-    "file": "assets/link-tLV-dVUB.js",
+    "file": "assets/link-Bx-rl3x4.js",
     "name": "link",
     "src": "node_modules/vinext/dist/shims/link.js",
     "isDynamicEntry": true,
@@ -57,7 +57,7 @@
     ]
   },
   "node_modules/vinext/dist/shims/router.js": {
-    "file": "assets/router-Dl2kWIKC.js",
+    "file": "assets/router-B9ehJ7Oq.js",
     "name": "router",
     "src": "node_modules/vinext/dist/shims/router.js",
     "isDynamicEntry": true,
@@ -72,18 +72,19 @@
     ]
   },
   "src/app/capabilities/page.tsx": {
-    "file": "assets/page-Pu2W1qbv.js",
+    "file": "assets/page-CF7caTGX.js",
     "name": "page",
     "src": "src/app/capabilities/page.tsx",
     "isDynamicEntry": true,
     "imports": [
       "_rolldown-runtime-S-ySWqyJ.js",
       "_framework-CXnKph_e.js",
-      "_reveal-YOJmgnTk.js"
+      "_reveal-YOJmgnTk.js",
+      "_content-Bws_h17l.js"
     ]
   },
   "src/app/formulas/page.tsx": {
-    "file": "assets/page-CnY3O1qT.js",
+    "file": "assets/page-_TRvNcyp.js",
     "name": "page",
     "src": "src/app/formulas/page.tsx",
     "isDynamicEntry": true,
@@ -92,7 +93,7 @@
       "_framework-CXnKph_e.js",
       "node_modules/vinext/dist/shims/link.js",
       "_reveal-YOJmgnTk.js",
-      "_content-CvZRrcHJ.js"
+      "_content-Bws_h17l.js"
     ]
   },
   "src/app/tech-stack/page.tsx": {
@@ -107,18 +108,18 @@
     ]
   },
   "src/components/glossary-browser.tsx": {
-    "file": "assets/glossary-browser-Ca0vnpJz.js",
+    "file": "assets/glossary-browser-lR1ATw03.js",
     "name": "glossary-browser",
     "src": "src/components/glossary-browser.tsx",
     "isDynamicEntry": true,
     "imports": [
       "_rolldown-runtime-S-ySWqyJ.js",
       "_framework-CXnKph_e.js",
-      "_content-CvZRrcHJ.js"
+      "_content-Bws_h17l.js"
     ]
   },
   "src/components/site-shell.tsx": {
-    "file": "assets/site-shell-geWQ7EHv.js",
+    "file": "assets/site-shell-obUzBLMT.js",
     "name": "site-shell",
     "src": "src/components/site-shell.tsx",
     "isDynamicEntry": true,
@@ -126,11 +127,11 @@
       "_rolldown-runtime-S-ySWqyJ.js",
       "_framework-CXnKph_e.js",
       "node_modules/vinext/dist/shims/link.js",
-      "_content-CvZRrcHJ.js"
+      "_content-Bws_h17l.js"
     ]
   },
   "src/components/term-hint.tsx": {
-    "file": "assets/term-hint-CfvrgkQ2.js",
+    "file": "assets/term-hint-BePQQ5dg.js",
     "name": "term-hint",
     "src": "src/components/term-hint.tsx",
     "isDynamicEntry": true,
@@ -138,11 +139,11 @@
       "_rolldown-runtime-S-ySWqyJ.js",
       "_framework-CXnKph_e.js",
       "node_modules/vinext/dist/shims/link.js",
-      "_content-CvZRrcHJ.js"
+      "_content-Bws_h17l.js"
     ]
   },
   "virtual:vinext-app-browser-entry": {
-    "file": "assets/index-ByZkSsLk.js",
+    "file": "assets/index-DizyUIFs.js",
     "name": "index",
     "src": "virtual:vinext-app-browser-entry",
     "isEntry": true,

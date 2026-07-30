@@ -1,5 +1,6 @@
 import { t as require_jsx_runtime, w as __toESM, y as require_react } from "../index.js";
 import { n as Stagger, t as Reveal } from "./reveal-ASYv3BuO.js";
+import { r as mvpMenu } from "./content-CP3VqNSw.js";
 //#region src/app/capabilities/page.tsx
 var import_react = /* @__PURE__ */ __toESM(require_react(), 1);
 var import_jsx_runtime = require_jsx_runtime();
@@ -170,25 +171,6 @@ var capabilities = [
 		rule: "전략 결과에는 policy_version·formula_version·snapshot_id를 항상 저장"
 	},
 	{
-		id: "F-15",
-		track: "common",
-		title: "수요예측",
-		phase: "P0",
-		summary: "최근 판매 흐름을 바탕으로 앞으로 얼마나 팔릴지 계산해 위험재고 판단과 전략 시뮬레이션에 전달합니다.",
-		inputs: [
-			"최근 판매이력",
-			"품절·취소·반품 정보",
-			"할인·프로모션·시즌 조건"
-		],
-		outputs: [
-			"기본 일일수요",
-			"조건 반영 예상 판매량",
-			"예상 소진일",
-			"예측 기준·신뢰 상태"
-		],
-		rule: "판매이력이 부족한 상품은 같은 카테고리 평균을 사용하거나 예측 부족 상태로 표시"
-	},
-	{
 		id: "F-08",
 		track: "common",
 		title: "전략 후보 생성·AI 추천",
@@ -324,6 +306,25 @@ var capabilities = [
 			"재고 부족·판매 제한 상태"
 		],
 		rule: "초기에는 장바구니·결제 없이 조회 화면만 준비"
+	},
+	{
+		id: "F-15",
+		track: "common",
+		title: "수요예측",
+		phase: "P0",
+		summary: "최근 판매 흐름을 바탕으로 앞으로 얼마나 팔릴지 계산해 위험재고 판단과 전략 시뮬레이션에 전달합니다.",
+		inputs: [
+			"최근 판매이력",
+			"품절·취소·반품 정보",
+			"할인·프로모션·시즌 조건"
+		],
+		outputs: [
+			"기본 일일수요",
+			"조건 반영 예상 판매량",
+			"예상 소진일",
+			"예측 기준·신뢰 상태"
+		],
+		rule: "판매이력이 부족한 상품은 같은 카테고리 평균을 사용하거나 예측 부족 상태로 표시"
 	}
 ];
 var capabilityDetails = {
@@ -1072,6 +1073,79 @@ function CapabilitiesPage() {
 					visibleCapabilities.length === 0 && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 						className: "capability-empty",
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "검색 결과가 없습니다." }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "다른 기능명이나 입력 요소로 검색해 보세요." })]
+					})
+				]
+			})
+		}),
+		/* @__PURE__ */ (0, import_jsx_runtime.jsx)("section", {
+			className: "section capability-section mvp-menu-section",
+			children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				className: "container",
+				children: [
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						className: "section-heading",
+						children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+								className: "eyebrow",
+								children: "MVP screen map"
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("h2", { children: [
+								"메뉴는 역할별로 나누고,",
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("br", {}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("em", { children: "대시보드와 재고표는 분리합니다." })
+							] }),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "대시보드는 처음 들어왔을 때 핵심 지표와 우선 처리 대상을 보여줍니다. 통합 재고는 상품과 SKU를 찾아보고 필터링하는 작업 화면입니다." })
+						]
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+						className: "mvp-menu-table-wrap",
+						children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("table", {
+							className: "mvp-menu-table",
+							children: [
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("caption", {
+									className: "sr-only",
+									children: "MVP 메뉴별 역할과 세부 기능"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("thead", { children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("tr", { children: [
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", {
+										scope: "col",
+										children: "메뉴"
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", {
+										scope: "col",
+										children: "화면 역할"
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", {
+										scope: "col",
+										children: "이 메뉴에서 하는 일"
+									})
+								] }) }),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("tbody", { children: mvpMenu.map((menu) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("tr", {
+									className: menu.id === "01" || menu.id === "02" ? "mvp-menu-emphasis" : void 0,
+									children: [
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("td", { children: [
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+												className: "mvp-menu-number",
+												children: menu.id
+											}),
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: menu.label }),
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: menu.kind })
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", { children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: menu.purpose }) }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", { children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ul", { children: menu.features.map((feature) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", { children: feature }, feature)) }) })
+									]
+								}, menu.id)) })
+							]
+						})
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						className: "mvp-menu-note",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "화면을 나누는 기준" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", { children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: "대시보드" }),
+							"는 숫자를 요약해 “무엇을 볼지” 결정하고, ",
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: "통합 재고" }),
+							"는 표·검색·필터로 “어떤 상품을 처리할지” 찾습니다."
+						] })]
 					})
 				]
 			})
