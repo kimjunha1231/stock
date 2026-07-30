@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Reveal, Stagger } from '@/components/reveal';
 
 type Track = 'all' | 'common' | 'wellness' | 'travel' | 'livart' | 'greenfood';
@@ -127,6 +127,113 @@ const capabilities: CapabilityCard[] = [
   },
 ];
 
+type CapabilityDetails = {
+  micro: string[];
+  considerations: string[];
+  done: string[];
+};
+
+const capabilityDetails: Record<string, CapabilityDetails> = {
+  'F-01': {
+    micro: ['로그인·로그아웃·토큰 갱신', '역할·계열사·점포 범위 조회', '페이지·API 권한 가드', '원가·승인 권한 분리', '로그인·권한 변경 감사 기록'],
+    considerations: ['세션 만료·강제 로그아웃 처리', '다른 계열사 데이터와 민감 비용의 교차 노출 방지', '권한 없는 요청의 사유와 request_id 기록'],
+    done: ['담당 MD가 자기 범위만 조회', '승인자만 승인 API 호출', '권한 변경과 거부 요청이 감사 로그에 남음'],
+  },
+  'F-02': {
+    micro: ['계열사·법인·브랜드·카테고리 등록', '원천 상품키와 canonical ID 매핑', '상품·옵션·SKU 생성·수정·비활성화', '중복 SKU·단위·가격 순서 검증', '기준정보 변경 이력 조회'],
+    considerations: ['브랜드명과 정산·운영 법인을 분리', '같은 상품의 계열사별 원천키를 잃지 않음', '비활성 SKU의 과거 이력과 전략 결과를 보존'],
+    done: ['네 계열사의 상품을 공통 검색', '원천키로 원본을 추적', '중복·단위 오류를 저장 전에 차단'],
+  },
+  'F-03': {
+    micro: ['원천별 API·파일·배치 수집', '수집 batch와 기준 snapshot 생성', '중복 레코드 멱등 처리', '부분 성공·실패 건 격리', '재시도·마지막 정상 수집 시각 표시'],
+    considerations: ['ERP/POS/WMS/예약의 갱신 주기 차이', '타임존·통화·수량 단위 변환', '원천 장애 중 이전 snapshot을 잘못 최신값으로 사용하지 않음'],
+    done: ['같은 원천 데이터를 두 번 받아도 중복되지 않음', '실패한 원천만 재시도', '계산 결과에서 원천 레코드까지 추적'],
+  },
+  'F-04': {
+    micro: ['필수 필드·형식·범위 검사', '중복·음수 수량·가격 역전 검사', '기한·예약 마감·기준시각 검사', '품질 결과와 누락 필드 표시', '격리 데이터 재검증·승인'],
+    considerations: ['unknown과 실제 0을 구분', '품질 경고와 실행 차단을 구분', '누가 언제 재검증해야 하는지 담당자 지정'],
+    done: ['필수값 누락 상품은 추천 불가', '품질 상태가 대시보드에 표시', '격리 데이터가 정상 데이터에 섞이지 않음'],
+  },
+  'F-05': {
+    micro: ['전체 KPI·정상/위험 비율', '계열사·카테고리·채널 필터', '위험 목록에서 상품 상세 drill-down', '판매·재고·capacity 추이 차트', '권한별 CSV 내보내기'],
+    considerations: ['모든 KPI의 기준시각과 데이터 지연 표시', '물리 재고와 예약 capacity를 같은 숫자로 오해하지 않음', '원가 권한에 따른 금액 마스킹'],
+    done: ['홈에서 위험 규모를 확인', '필터 결과와 상세 목록 수가 일치', '데이터가 오래되면 지연 배지 표시'],
+  },
+  'F-06': {
+    micro: ['계열사별 위험 신호 정규화', '가중치·임계값 적용', '위험 등급 산출', '점수에 기여한 신호 설명', '일괄·수동 위험 재분석'],
+    considerations: ['점수보다 하드 차단을 먼저 적용', '식품·여행·가구의 위험 의미를 동일하게 취급하지 않음', '가중치·임계값 변경 시 이전 결과 재현'],
+    done: ['상품별 점수·등급·근거가 표시', '차단 상품은 점수와 별도로 실행 불가', '배치 실패와 마지막 성공 시각 확인'],
+  },
+  'F-07': {
+    micro: ['계열사·카테고리 formula profile 생성', '비용 항목·허용 할인·채널 설정', '가중치·임계값 버전 관리', '정책 검토·승인·활성화', '이전 버전 비교·회귀'],
+    considerations: ['활성 profile을 임의 수정하지 않고 새 버전 생성', '정책 소유자와 승인자를 지정', '계산 결과에 사용한 profile snapshot 보존'],
+    done: ['계열사·카테고리별 다른 계산 정책 적용', '승인 전 draft가 운영 계산에 사용되지 않음', '과거 전략을 당시 profile로 재현'],
+  },
+  'F-08': {
+    micro: ['목표별 허용 action space 정의', '할인·기간·수량·채널 조합 생성', '하드 차단 후보 제거', '결정론적 손익 순위 정렬', '상위 3개 후보 설명·질문 생성'],
+    considerations: ['LLM이 숫자를 만들거나 수정하지 않음', '후보가 하나도 없을 때 차단 이유 표시', '예측 모델·LLM 실패 시 계산 결과만 제공'],
+    done: ['같은 snapshot에서 같은 후보가 재현', '추천 후보에 사용 데이터·버전이 표시', '최종 실행은 담당자 승인 전 불가'],
+  },
+  'F-09': {
+    micro: ['추천값과 사용자 조정값 분리', '수량·할인·기간·비용 입력 검증', '조건 변경 즉시 재계산', '기준선·추천안·조정안 비교', '시뮬레이션 저장·공유'],
+    considerations: ['소비기한·출발일·설치 capacity를 넘는 조건 차단', '반품·수수료·배송·회피비용 중복 차감 금지', '입력 조건과 결과 버전을 함께 저장'],
+    done: ['조건을 바꿨을 때 결과가 즉시 변경', '차단 조건은 계산 결과와 구분', '승인 대상은 저장된 simulation_run으로 재현'],
+  },
+  'F-10': {
+    micro: ['담당자 전략 수정·버전 생성', '승인자 지정·검토 요청', '승인·거절·재승인·사유 입력', 'Teams 메시지 생성·전송', '전송 실패·재시도·결과 조회'],
+    considerations: ['Teams 성공을 서비스 승인으로 간주하지 않음', '승인 후 조건 변경 시 재승인', '승인자 권한과 계열사 범위 확인'],
+    done: ['승인 상태가 서비스에 남음', 'Teams 메시지에 조건·예상값·상세 링크 포함', '실패한 전송을 운영자가 재시도'],
+  },
+  'F-11': {
+    micro: ['승인 전략과 실제 거래 매칭', '판매·예약·매출·마진 회수', '실제 잔량·폐기·위약금 기록', '예상 대비 오차·달성률 계산', '오차 원인 코드와 검증 데이터 저장'],
+    considerations: ['실제값이 없으면 임의 대체 숫자 금지', '전략 버전·실행 기간·원천 거래를 연결', '결과 데이터의 정산 확정 여부 표시'],
+    done: ['전략별 예상·실제 비교 가능', '오차 원인을 계열사별로 분류', '검증된 결과만 이후 예측 모델에 사용'],
+  },
+  'F-12': {
+    micro: ['위험·품질·승인 알림 규칙', '앱·Teams 수신자·채널 설정', '배치·API·AI 오류 모니터링', '재시도·멱등키·실패 원인 기록', '운영 대시보드·보존 정책'],
+    considerations: ['알림 폭주 방지를 위한 묶음·중복 제거', 'request_id·batch_id·strategy_id 상관관계', '민감 데이터가 로그와 Teams에 남지 않음'],
+    done: ['중요 이벤트가 담당자에게 전달', '실패 원인과 마지막 정상 상태 확인', '운영자가 재시도하고 결과 추적'],
+  },
+  'F-13': {
+    micro: ['구성 상품 검색·번들 편집', '구성 수량·판매가·재고 예약', '품절·법적 제한 검증', '계열사별 매출·마진 배분', '번들 승인·판매 제한 상태'],
+    considerations: ['P0/P1 실행과 P2 확장을 화면에서 명확히 구분', '구성품 하나의 품절·차단이 전체 판매에 미치는 영향', '교차 계열사 정산·책임 주체'],
+    done: ['판매 가능 수량이 구성품 기준으로 계산', '배분 규칙과 승인 이력 보존', 'P2 실행 버튼이 초기에는 비활성화'],
+  },
+  'F-14': {
+    micro: ['승인 상품 목록·상세 조회', '공개 가격·혜택·재고 상태 표시', '법적 표시·주의사항 노출', '재고 부족·판매 제한 표시', '장바구니·결제 없이 읽기 전용 제공'],
+    considerations: ['승인되지 않은 상품·원가·내부 위험정보 노출 금지', '고객용 문구와 담당자용 계산 근거 분리', '실시간 재고 부족 시 표시 상태 갱신'],
+    done: ['고객이 승인된 상품만 조회', '판매 제한 사유가 안전한 문구로 표시', 'P2 범위임을 운영 화면과 데이터에 표시'],
+  },
+};
+
+function CapabilityDetailModal({ capability, onClose }: { capability: CapabilityCard; onClose: () => void }) {
+  const details = capabilityDetails[capability.id];
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') onClose();
+    };
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [onClose]);
+
+  return <div className="capability-modal-overlay" role="presentation" onClick={onClose}>
+    <section className="capability-modal" role="dialog" aria-modal="true" aria-labelledby={`capability-modal-title-${capability.id}`} onClick={(event) => event.stopPropagation()}>
+      <div className="capability-modal-header"><div><div className="capability-modal-meta"><span className="capability-id">{capability.id}</span><PhaseBadge phase={capability.phase} /></div><h2 id={`capability-modal-title-${capability.id}`}>{capability.title}</h2></div><button type="button" className="capability-modal-close" aria-label="기능 상세 닫기" onClick={onClose}>×</button></div>
+      <p className="capability-modal-summary">{capability.summary}</p>
+      <div className="capability-modal-contract"><div><span>필요 요소</span><strong>{capability.inputs.join(' · ')}</strong></div><div><span>결과</span><strong>{capability.outputs.join(' · ')}</strong></div></div>
+      <div className="capability-modal-grid"><div><span className="capability-label">작은 기능 단위</span><ol>{details.micro.map((item) => <li key={item}>{item}</li>)}</ol></div><div><span className="capability-label">고려할 요소</span><ul>{details.considerations.map((item) => <li key={item}>{item}</li>)}</ul></div></div>
+      <div className="capability-modal-done"><span className="capability-label">완료 기준</span><ul>{details.done.map((item) => <li key={item}>{item}</li>)}</ul></div>
+      <div className="capability-modal-rule"><span>핵심 운영 규칙</span><p>{capability.rule}</p></div>
+    </section>
+  </div>;
+}
+
 const affiliateProfiles = [
   { id: 'wellness', name: '현대웰니스', unit: 'SKU·lot', color: 'green', focus: '소비기한과 표시·보관조건', fields: 'lot_id · expiry_at · storage_condition · function_claim_class · return_eligible', costs: '배송·포장·수수료 · 쿠폰·포인트 · 반품 검수 · 회수·폐기', stop: '기한·표시·보관·리콜·판매 권한이 확인되지 않으면 차단', signal: '잔여기한 · 판매속도 · 예상 폐기비 · 표시정보 누락' },
   { id: 'travel', name: '더현대트래블', unit: 'offer·좌석·객실·slot', color: 'blue', focus: '출발일과 예약 capacity', fields: 'departure_at · booking_cutoff_at · capacity · supplier_id · cancellation_rule_id', costs: '발권·상담 · 제휴수수료 · 환율 · 변경·재예약 · 공급사 위약금', stop: '예약 마감·공급사 규정·환불조건·capacity가 없으면 차단', signal: '출발 임박도 · fill rate · 취소비 · 규정 누락' },
@@ -163,7 +270,9 @@ function PhaseBadge({ phase }: { phase: Phase }) {
 export default function CapabilitiesPage() {
   const [activeTrack, setActiveTrack] = useState<Track>('all');
   const [query, setQuery] = useState('');
+  const [openCapabilityId, setOpenCapabilityId] = useState<string | null>(null);
   const currentTrack = tracks.find((track) => track.id === activeTrack) ?? tracks[0];
+  const selectedCapability = openCapabilityId ? capabilities.find((capability) => capability.id === openCapabilityId) ?? null : null;
   const visibleCapabilities = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
     return capabilities.filter((capability) => {
@@ -203,11 +312,12 @@ export default function CapabilitiesPage() {
           </div>
           <p className="capability-filter-note"><strong>{currentTrack.label}</strong> · {currentTrack.hint} · {visibleCapabilities.length}개 기능 표시</p>
           <div className="capability-card-grid">
-            {visibleCapabilities.map((capability) => <article className="capability-card" key={capability.id}>
+            {visibleCapabilities.map((capability) => <article className="capability-card capability-card-clickable" key={capability.id} role="button" tabIndex={0} aria-label={`${capability.id} ${capability.title} 상세 보기`} onClick={() => setOpenCapabilityId(capability.id)} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); setOpenCapabilityId(capability.id); } }}>
               <div className="capability-card-top"><span className="capability-id">{capability.id}</span><PhaseBadge phase={capability.phase} /></div>
               <h3>{capability.title}</h3><p className="capability-summary">{capability.summary}</p>
               <div className="capability-card-columns"><div><span className="capability-label">필요 요소</span><ul>{capability.inputs.map((input) => <li key={input}>{input}</li>)}</ul></div><div><span className="capability-label">결과</span><ul>{capability.outputs.map((output) => <li key={output}>{output}</li>)}</ul></div></div>
               <div className="capability-rule"><span>운영 규칙</span><p>{capability.rule}</p></div>
+              <span className="capability-card-open">작은 기능과 고려 요소 보기 <b aria-hidden="true">↗</b></span>
             </article>)}
           </div>
           {visibleCapabilities.length === 0 && <div className="capability-empty"><strong>검색 결과가 없습니다.</strong><p>다른 기능명이나 입력 요소로 검색해 보세요.</p></div>}
@@ -233,6 +343,7 @@ export default function CapabilitiesPage() {
       <section className="section-tight band capability-section">
         <div className="container"><div className="section-heading"><span className="eyebrow">Delivery boundary</span><h2>이번 프로젝트에서 먼저<br /><em>검증할 것</em></h2><p>전체 기능을 한 번에 운영 기능으로 만들지 않고, 대표 수직 슬라이스에서 데이터·계산·승인·성과 회수를 끝까지 검증합니다.</p></div><Stagger className="delivery-grid"><article><PhaseBadge phase="P0" /><h3>기반과 계산</h3><p>권한, 공통 모델, 데이터 품질, 하드 차단, 결정론적 위험점수·시뮬레이션.</p></article><article><PhaseBadge phase="P1" /><h3>추천과 승인</h3><p>후보 생성, 담당자 수정, 승인·Teams 전달, 실제 결과 회수와 오차 비교.</p></article><article><PhaseBadge phase="P2" /><h3>확장</h3><p>교차 계열사 번들, 재고 이동, 고객용 카탈로그, 자동 재학습·모델 배포.</p></article></Stagger><div className="capability-open"><strong>구현 전 확정할 질문</strong><span>원천 시스템·데이터 소유자 · 대표 카테고리 · 기준선 · 수요 이력 기간 · 위험 가중치 · LLM 보존·비용 정책</span></div><div className="actions"><a className="button primary" href="/prd">제품 범위 보기 <span>→</span></a><a className="button secondary" href="/formulas">수식 및 계산 보기</a></div></div>
       </section>
+      {selectedCapability && <CapabilityDetailModal capability={selectedCapability} onClose={() => setOpenCapabilityId(null)} />}
     </>
   );
 }
