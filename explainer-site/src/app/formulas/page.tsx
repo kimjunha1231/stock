@@ -37,6 +37,7 @@ type FormulaHelp = {
   intro: string;
   easy: string;
   formula: string;
+  formulaKo: string;
   terms: FormulaHelpTerm[];
   takeaway: string;
 };
@@ -55,6 +56,14 @@ const formulaHelps: Record<string, FormulaHelp> = {
   - RiskPenalty_s
   - AI_CaseCost_s
   - M_baseline
+]`,
+    formulaKo: `전략으로 새로 남는 돈 = 실행 가능 여부 × [
+  할인 후 매출 - 이번 판매 때문에 더 드는 돈
+  + 미리 처리해서 아낀 돈
+  - 다른 판매를 뺏어서 생긴 손해
+  - 실패했을 때 예상되는 손해
+  - 전략을 검토하는 비용
+  - 아무것도 바꾸지 않았을 때의 결과
 ]`,
     terms: [
       { symbol: 'M_inc(s)', meaning: '전략으로 새로 남는 돈', detail: '이 전략을 실행했을 때 평소보다 추가로 생기는 금액입니다.', glossaryId: 'incremental-profit' },
@@ -82,6 +91,13 @@ const formulaHelps: Record<string, FormulaHelp> = {
   ∧ capacity_ok
   ∧ data_quality_ok
 else 0`,
+    formulaKo: `실행 가능 여부 = 1
+  누가 결정할 수 있는지 확인
+  ∧ 팔아도 되는 상품인지 확인
+  ∧ 데이터가 최신인지 확인
+  ∧ 배송·처리할 여유가 있는지 확인
+  ∧ 데이터를 믿어도 되는지 확인
+그 외에는 0`,
     terms: [
       { symbol: 'ownership_ok', meaning: '누가 결정할 수 있는지', detail: '재고 주인과 할인·취소·폐기를 승인할 사람이 정해져 있는지 확인합니다.', glossaryId: 'ownership-model' },
       { symbol: 'legal_ok', meaning: '팔아도 되는 상품인지', detail: '필수 표시, 약관, 법적 제한을 지켰는지 확인합니다.', glossaryId: 'hard-stop' },
@@ -102,6 +118,11 @@ else 0`,
     × F_time × F_price
     × F_channel × F_bundle
     × confidence))`,
+    formulaKo: `전략 후 예상 판매량 = min(실제로 팔 수 있는 최대 수량,
+  max(0, 평소에 팔리던 수량
+    × 남은 시간의 영향 × 가격 변화의 영향
+    × 판매 장소의 영향 × 묶음판매의 영향
+    × 예측을 얼마나 믿을 수 있는지))`,
     terms: [
       { symbol: 'Q_s', meaning: '전략 후 팔릴 것으로 보는 수량', detail: '할인이나 묶음판매를 적용했을 때 예상되는 판매·예약 수량입니다.' },
       { symbol: 'Q_available', meaning: '실제로 팔 수 있는 최대 수량', detail: '판매 가능한 재고, 좌석, 객실, 설치 슬롯처럼 현재 제공할 수 있는 한도입니다.' },
@@ -126,6 +147,12 @@ else 0`,
 VariableCost_s = Q_s × (commission
   + payment + fulfillment + return_expected)
   + campaign_fixed_cost`,
+    formulaKo: `할인 후 매출 = 예상 판매량 × 원래 판매가 × (1 - 할인율)
+            - 예상 판매량 × (쿠폰 부담 + 포인트 부담 + 지원금)
+
+이번 판매 때문에 더 드는 돈 = 예상 판매량 × (판매 수수료
+  + 결제·예약 처리비 + 상품 전달 비용 + 예상 반품비)
+  + 행사 준비에 드는 고정비`,
     terms: [
       { symbol: 'P_list', meaning: '원래 판매가', detail: '할인하기 전 상품의 기본 가격입니다.' },
       { symbol: 'discount', meaning: '할인율', detail: '원래 가격에서 몇 퍼센트를 깎는지 나타냅니다.' },
@@ -151,6 +178,12 @@ VariableCost_s = Q_s × (commission
   + capacity_loss_avoided
 
 RiskPenalty_s = probability × impact`,
+    formulaKo: `미리 처리해서 아낀 돈 = 보관비를 아낀 금액
+  + 폐기비를 아낀 금액
+  + 공급사 위약금을 아낀 금액
+  + 기회를 놓치지 않아 아낀 금액
+
+실패했을 때 예상되는 손해 = 실패 가능성 × 실패 손해`,
     terms: [
       { symbol: 'holding_avoided', meaning: '보관비를 아낀 금액', detail: '상품을 빨리 팔아서 창고·전시·냉장 공간을 덜 쓰게 된 금액입니다.', glossaryId: 'holding-cost' },
       { symbol: 'disposal_avoided', meaning: '폐기비를 아낀 금액', detail: '기한이 지나 버리거나 처리할 상품을 줄여서 절약한 금액입니다.', glossaryId: 'disposal-cost' },
@@ -171,6 +204,11 @@ RiskPenalty_s = probability × impact`,
 Σw_k = 1
 
 z_ik ∈ [0, 1]
+등급 = 정상 / 주의 / 위험`,
+    formulaKo: `상품의 위험 점수 = 100 × Σ(각 신호의 중요도 × 상품의 위험 정도)
+각 신호의 중요도 합 = 1
+
+상품의 위험 정도는 0~1 사이
 등급 = 정상 / 주의 / 위험`,
     terms: [
       { symbol: 'RiskScore_i', meaning: '상품의 위험 점수', detail: '기한, 판매속도, 처리비용 같은 위험 신호를 합친 점수입니다.' },
@@ -308,8 +346,10 @@ function FormulaHelpModal({ help, onClose }: { help: FormulaHelp; onClose: () =>
         <p className="formula-help-plain">{help.easy}</p>
         <div className="formula-help-layout">
           <div className="formula-help-formula-column">
-            <span className="formula-help-section-label">핵심 수식</span>
+            <span className="formula-help-section-label">기호로 표시한 수식</span>
             <pre className="formula-help-formula"><code>{help.formula}</code></pre>
+            <span className="formula-help-section-label formula-help-section-label-ko">한글로 읽는 수식</span>
+            <pre className="formula-help-formula formula-help-formula-ko"><code>{help.formulaKo}</code></pre>
             <div className="formula-help-takeaway"><strong>한 줄 요약</strong><p>{help.takeaway}</p></div>
           </div>
           <div className="formula-help-terms-column">
@@ -319,7 +359,7 @@ function FormulaHelpModal({ help, onClose }: { help: FormulaHelp; onClose: () =>
                 <article key={term.symbol} className="formula-help-term">
                   <code>{term.symbol}</code>
                   <div>
-                    <strong>{term.meaning}</strong>
+                    <strong><span className="formula-help-term-label">쉬운 뜻</span>{term.meaning}</strong>
                     <p>{term.detail}</p>
                     {term.glossaryId && <Link href={`/glossary#${term.glossaryId}`} onClick={onClose}>용어 사전에서 자세히 보기 →</Link>}
                   </div>

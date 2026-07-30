@@ -49,6 +49,14 @@ var formulaHelps = {
   - AI_CaseCost_s
   - M_baseline
 ]`,
+		formulaKo: `전략으로 새로 남는 돈 = 실행 가능 여부 × [
+  할인 후 매출 - 이번 판매 때문에 더 드는 돈
+  + 미리 처리해서 아낀 돈
+  - 다른 판매를 뺏어서 생긴 손해
+  - 실패했을 때 예상되는 손해
+  - 전략을 검토하는 비용
+  - 아무것도 바꾸지 않았을 때의 결과
+]`,
 		terms: [
 			{
 				symbol: "M_inc(s)",
@@ -116,6 +124,13 @@ var formulaHelps = {
   ∧ capacity_ok
   ∧ data_quality_ok
 else 0`,
+		formulaKo: `실행 가능 여부 = 1
+  누가 결정할 수 있는지 확인
+  ∧ 팔아도 되는 상품인지 확인
+  ∧ 데이터가 최신인지 확인
+  ∧ 배송·처리할 여유가 있는지 확인
+  ∧ 데이터를 믿어도 되는지 확인
+그 외에는 0`,
 		terms: [
 			{
 				symbol: "ownership_ok",
@@ -159,6 +174,11 @@ else 0`,
     × F_time × F_price
     × F_channel × F_bundle
     × confidence))`,
+		formulaKo: `전략 후 예상 판매량 = min(실제로 팔 수 있는 최대 수량,
+  max(0, 평소에 팔리던 수량
+    × 남은 시간의 영향 × 가격 변화의 영향
+    × 판매 장소의 영향 × 묶음판매의 영향
+    × 예측을 얼마나 믿을 수 있는지))`,
 		terms: [
 			{
 				symbol: "Q_s",
@@ -218,6 +238,12 @@ else 0`,
 VariableCost_s = Q_s × (commission
   + payment + fulfillment + return_expected)
   + campaign_fixed_cost`,
+		formulaKo: `할인 후 매출 = 예상 판매량 × 원래 판매가 × (1 - 할인율)
+            - 예상 판매량 × (쿠폰 부담 + 포인트 부담 + 지원금)
+
+이번 판매 때문에 더 드는 돈 = 예상 판매량 × (판매 수수료
+  + 결제·예약 처리비 + 상품 전달 비용 + 예상 반품비)
+  + 행사 준비에 드는 고정비`,
 		terms: [
 			{
 				symbol: "P_list",
@@ -280,6 +306,12 @@ VariableCost_s = Q_s × (commission
   + capacity_loss_avoided
 
 RiskPenalty_s = probability × impact`,
+		formulaKo: `미리 처리해서 아낀 돈 = 보관비를 아낀 금액
+  + 폐기비를 아낀 금액
+  + 공급사 위약금을 아낀 금액
+  + 기회를 놓치지 않아 아낀 금액
+
+실패했을 때 예상되는 손해 = 실패 가능성 × 실패 손해`,
 		terms: [
 			{
 				symbol: "holding_avoided",
@@ -326,6 +358,11 @@ RiskPenalty_s = probability × impact`,
 Σw_k = 1
 
 z_ik ∈ [0, 1]
+등급 = 정상 / 주의 / 위험`,
+		formulaKo: `상품의 위험 점수 = 100 × Σ(각 신호의 중요도 × 상품의 위험 정도)
+각 신호의 중요도 합 = 1
+
+상품의 위험 정도는 0~1 사이
 등급 = 정상 / 주의 / 위험`,
 		terms: [
 			{
@@ -598,11 +635,19 @@ function FormulaHelpModal({ help, onClose }) {
 						children: [
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
 								className: "formula-help-section-label",
-								children: "핵심 수식"
+								children: "기호로 표시한 수식"
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("pre", {
 								className: "formula-help-formula",
 								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("code", { children: help.formula })
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+								className: "formula-help-section-label formula-help-section-label-ko",
+								children: "한글로 읽는 수식"
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("pre", {
+								className: "formula-help-formula formula-help-formula-ko",
+								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("code", { children: help.formulaKo })
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 								className: "formula-help-takeaway",
@@ -619,7 +664,10 @@ function FormulaHelpModal({ help, onClose }) {
 							children: help.terms.map((term) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("article", {
 								className: "formula-help-term",
 								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("code", { children: term.symbol }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
-									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: term.meaning }),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("strong", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+										className: "formula-help-term-label",
+										children: "쉬운 뜻"
+									}), term.meaning] }),
 									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: term.detail }),
 									term.glossaryId && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link, {
 										href: `/glossary#${term.glossaryId}`,
