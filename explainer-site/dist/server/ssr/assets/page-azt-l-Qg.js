@@ -34,6 +34,43 @@ function SourceNote({ source }) {
 }
 //#endregion
 //#region src/app/formulas/page.tsx
+var strategyGoalRows = [
+	{
+		goal: "최대 마진",
+		easy: "팔고 나서 실제로 가장 많이 남는 안",
+		focus: "증분 기여현금이익·마진율",
+		inputs: "판매가·할인율·수수료·배송비·반품비·회피비용",
+		guardrail: "최소 판매량과 최소 마진 기준을 통과해야 함"
+	},
+	{
+		goal: "빠른 완판",
+		easy: "정해진 기한 안에 재고를 가장 빨리 줄이는 안",
+		focus: "예상 판매량·판매속도·소진기간",
+		inputs: "현재 수량·판매기간·할인율·수요 보정계수·처리기한",
+		guardrail: "기한 안에 처리 가능하고 손실이 허용 범위여야 함"
+	},
+	{
+		goal: "최대 매출",
+		easy: "전체 판매 금액이 가장 커지는 안",
+		focus: "예상 판매수량 × 판매가격",
+		inputs: "가격·수량·판매기간·채널 노출·프로모션 효과",
+		guardrail: "법적 제한을 지키고 마진이 지나치게 낮지 않아야 함"
+	},
+	{
+		goal: "위험 최소화",
+		easy: "폐기·보관·위약금 같은 손실을 가장 많이 줄이는 안",
+		focus: "회피비용·위험손실·처리기한",
+		inputs: "소비기한·출발일·보관기간·폐기비·위약금·실패확률",
+		guardrail: "판매 가능한 상품이고 실제로 줄어드는 비용만 반영"
+	},
+	{
+		goal: "균형 전략",
+		easy: "이익·속도·위험 감소를 함께 고려하는 안",
+		focus: "목표별 점수를 가중 합산한 종합점수",
+		inputs: "담당자가 정한 목표 우선순위와 공통 계산 결과",
+		guardrail: "하드 차단 조건은 어떤 목표에서도 가장 먼저 적용"
+	}
+];
 var formulaHelps = {
 	objective: {
 		id: "objective",
@@ -795,6 +832,77 @@ else 0` }),
 						]
 					})]
 				})]
+			})
+		}),
+		/* @__PURE__ */ (0, import_jsx_runtime.jsx)("section", {
+			className: "section-tight band formula-section strategy-goals-section",
+			children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				className: "container",
+				children: [
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						className: "section-heading",
+						children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+								className: "eyebrow",
+								children: "01-B · Strategy goals"
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("h2", { children: [
+								"목표에 따라",
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("br", {}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("em", { children: "전략 순위가 달라집니다." })
+							] }),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "담당자가 먼저 목표를 고르면 시스템이 그 목표에 맞는 값을 중심으로 후보를 비교합니다. 법규·기한·capacity 같은 하드 차단은 어떤 목표보다 먼저 적용합니다." })
+						]
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+						className: "strategy-goal-table-wrap",
+						children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("table", {
+							className: "strategy-goal-table",
+							children: [
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("caption", {
+									className: "sr-only",
+									children: "전략 목표별 판단 기준"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("thead", { children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("tr", { children: [
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", {
+										scope: "col",
+										children: "전략 목표"
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", {
+										scope: "col",
+										children: "쉽게 말하면"
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", {
+										scope: "col",
+										children: "가장 중요하게 보는 값"
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", {
+										scope: "col",
+										children: "주요 입력 요소"
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", {
+										scope: "col",
+										children: "반드시 지킬 조건"
+									})
+								] }) }),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("tbody", { children: strategyGoalRows.map((row) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("tr", { children: [
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", { children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: row.goal }) }),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", { children: row.easy }),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", {
+										className: "strategy-goal-focus",
+										children: row.focus
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", { children: row.inputs }),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", { children: row.guardrail })
+								] }, row.goal)) })
+							]
+						})
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						className: "strategy-goal-note",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "전략 선택 순서" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "목표 선택 → 실행 가능 여부 확인 → 수요·매출·비용 계산 → 기준선과 비교 → 목표에 맞춰 순위화 → AI가 추천 이유 설명" })]
+					})
+				]
 			})
 		}),
 		/* @__PURE__ */ (0, import_jsx_runtime.jsx)("section", {
