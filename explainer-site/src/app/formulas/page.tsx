@@ -35,6 +35,7 @@ type FormulaHelp = {
   label: string;
   title: string;
   intro: string;
+  formula: string;
   terms: FormulaHelpTerm[];
   takeaway: string;
 };
@@ -45,6 +46,14 @@ const formulaHelps: Record<string, FormulaHelp> = {
     label: '공통 목적함수',
     title: '이 전략이 기준선보다 실제로 나은가?',
     intro: 'M_inc는 전략을 실행했을 때 기준선보다 추가로 얻는 현금 성과입니다. 매출만 크게 만드는 안이 아니라, 비용·위험·회피되는 손실까지 합쳐 비교합니다.',
+    formula: `M_inc(s) = feasible(s) × [
+  Revenue_s - VariableCost_s
+  + AvoidedCost_s
+  - Cannibalization_s
+  - RiskPenalty_s
+  - AI_CaseCost_s
+  - M_baseline
+]`,
     terms: [
       { symbol: 'M_inc(s)', meaning: '전략 s의 증분 기여현금이익', detail: '기준선보다 추가로 좋아지는 금액입니다.', glossaryId: 'incremental-profit' },
       { symbol: 'feasible(s)', meaning: '실행 가능 여부', detail: '소유권·법규·신선도·capacity·데이터 품질이 모두 확인된 경우에만 1입니다.', glossaryId: 'hard-stop' },
@@ -63,6 +72,13 @@ const formulaHelps: Record<string, FormulaHelp> = {
     label: '하드 차단 조건',
     title: '이익 계산 전에 실행할 수 있는지 확인합니다.',
     intro: '아래 조건 중 하나라도 확인되지 않으면 수익성이 좋아 보여도 추천 후보에서 제외합니다. 비용 최적화보다 먼저 지키는 안전선입니다.',
+    formula: `feasible(s) = 1
+  ownership_ok
+  ∧ legal_ok
+  ∧ freshness_ok
+  ∧ capacity_ok
+  ∧ data_quality_ok
+else 0`,
     terms: [
       { symbol: 'ownership_ok', meaning: '소유·정산 권한 확인', detail: '누가 재고·capacity를 소유하고 할인·취소·폐기를 승인하는지 확인합니다.', glossaryId: 'ownership-model' },
       { symbol: 'legal_ok', meaning: '법규·상품 표시 확인', detail: '식품 표시·여행 약관·상품별 제한 조건을 통과했는지 확인합니다.', glossaryId: 'hard-stop' },
@@ -77,6 +93,11 @@ const formulaHelps: Record<string, FormulaHelp> = {
     label: '예상 판매량 / 예약량',
     title: '얼마나 팔리거나 예약될 수 있는가?',
     intro: 'Q_s는 전략을 적용했을 때 예상되는 판매·예약량입니다. 실제로 가용한 재고 또는 서비스 capacity를 넘지 않도록 제한합니다.',
+    formula: `Q_s = min(Q_available,
+  max(0, Q_base
+    × F_time × F_price
+    × F_channel × F_bundle
+    × confidence))`,
     terms: [
       { symbol: 'Q_s', meaning: '전략 적용 후 예상 판매·예약량', detail: '할인·기간·채널·번들 효과를 반영한 결과입니다.' },
       { symbol: 'Q_available', meaning: '사용 가능한 수량 또는 capacity', detail: '웰니스·그린푸드는 판매 가능 재고, 여행은 좌석·객실·슬롯, 리바트는 처리 가능한 제품·설치 capacity입니다.' },
@@ -94,6 +115,12 @@ const formulaHelps: Record<string, FormulaHelp> = {
     label: '매출·변동비',
     title: '판매한 뒤 실제로 남는 금액은 얼마인가?',
     intro: '매출은 할인 후 고객 결제액에서 쿠폰·포인트·지원금 부담을 차감합니다. 변동비는 전략을 실행할 때 추가로 발생하는 비용만 넣습니다.',
+    formula: `Revenue_s = Q_s × P_list × (1 - discount)
+            - Q_s × (coupon + point + subsidy)
+
+VariableCost_s = Q_s × (commission
+  + payment + fulfillment + return_expected)
+  + campaign_fixed_cost`,
     terms: [
       { symbol: 'P_list', meaning: '정상 판매가', detail: '전략을 적용하기 전 기준 가격입니다.' },
       { symbol: 'discount', meaning: '할인율', detail: '정상 판매가에서 직접 차감되는 비율입니다.' },
@@ -112,6 +139,12 @@ const formulaHelps: Record<string, FormulaHelp> = {
     label: '회피비용·하방',
     title: '처리해서 줄이는 비용과 실패 위험은 얼마인가?',
     intro: '재고를 그대로 두었을 때 생길 비용과 전략을 실행했을 때의 하방 위험을 분리합니다. 여행처럼 폐기되지 않는 상품은 위약금·capacity 기회비용을 사용합니다.',
+    formula: `AvoidedCost_s = holding_avoided
+  + disposal_avoided
+  + supplier_penalty_avoided
+  + capacity_loss_avoided
+
+RiskPenalty_s = probability × impact`,
     terms: [
       { symbol: 'holding_avoided', meaning: '회피 보관비', detail: '재고를 빨리 처리해 줄어드는 창고·전시·냉장·공간 대체가치입니다.', glossaryId: 'holding-cost' },
       { symbol: 'disposal_avoided', meaning: '회피 폐기비', detail: '소비기한·품질·계약 조건 때문에 발생할 폐기·운송·처리 비용을 줄인 금액입니다.', glossaryId: 'disposal-cost' },
@@ -127,6 +160,11 @@ const formulaHelps: Record<string, FormulaHelp> = {
     label: '위험점수',
     title: '위험하다는 판단은 어떻게 점수로 바뀌는가?',
     intro: '위험점수는 여러 신호를 0~100 범위로 정규화한 우선순위 점수입니다. 점수가 높아도 하드 차단을 통과하지 못하면 실행하지 않습니다.',
+    formula: `RiskScore_i = 100 × Σ(w_k × z_ik)
+Σw_k = 1
+
+z_ik ∈ [0, 1]
+등급 = 정상 / 주의 / 위험`,
     terms: [
       { symbol: 'RiskScore_i', meaning: '상품·예약 항목 i의 위험점수', detail: '처리기한·판매속도·가치·불확실성·capacity 신호를 합친 우선순위입니다.' },
       { symbol: 'w_k', meaning: '신호별 가중치', detail: '계열사·상품군별로 처리기한, 공간, 위약금 등 신호의 중요도를 정합니다.' },
@@ -260,6 +298,7 @@ function FormulaHelpModal({ help, onClose }: { help: FormulaHelp; onClose: () =>
           <button type="button" className="formula-help-close" aria-label="설명 닫기" onClick={onClose}>×</button>
         </div>
         <p className="formula-help-intro">{help.intro}</p>
+        <pre className="formula-help-formula"><code>{help.formula}</code></pre>
         <div className="formula-help-terms">
           {help.terms.map((term) => (
             <article key={term.symbol} className="formula-help-term">

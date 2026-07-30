@@ -40,6 +40,14 @@ var formulaHelps = {
 		label: "공통 목적함수",
 		title: "이 전략이 기준선보다 실제로 나은가?",
 		intro: "M_inc는 전략을 실행했을 때 기준선보다 추가로 얻는 현금 성과입니다. 매출만 크게 만드는 안이 아니라, 비용·위험·회피되는 손실까지 합쳐 비교합니다.",
+		formula: `M_inc(s) = feasible(s) × [
+  Revenue_s - VariableCost_s
+  + AvoidedCost_s
+  - Cannibalization_s
+  - RiskPenalty_s
+  - AI_CaseCost_s
+  - M_baseline
+]`,
 		terms: [
 			{
 				symbol: "M_inc(s)",
@@ -99,6 +107,13 @@ var formulaHelps = {
 		label: "하드 차단 조건",
 		title: "이익 계산 전에 실행할 수 있는지 확인합니다.",
 		intro: "아래 조건 중 하나라도 확인되지 않으면 수익성이 좋아 보여도 추천 후보에서 제외합니다. 비용 최적화보다 먼저 지키는 안전선입니다.",
+		formula: `feasible(s) = 1
+  ownership_ok
+  ∧ legal_ok
+  ∧ freshness_ok
+  ∧ capacity_ok
+  ∧ data_quality_ok
+else 0`,
 		terms: [
 			{
 				symbol: "ownership_ok",
@@ -136,6 +151,11 @@ var formulaHelps = {
 		label: "예상 판매량 / 예약량",
 		title: "얼마나 팔리거나 예약될 수 있는가?",
 		intro: "Q_s는 전략을 적용했을 때 예상되는 판매·예약량입니다. 실제로 가용한 재고 또는 서비스 capacity를 넘지 않도록 제한합니다.",
+		formula: `Q_s = min(Q_available,
+  max(0, Q_base
+    × F_time × F_price
+    × F_channel × F_bundle
+    × confidence))`,
 		terms: [
 			{
 				symbol: "Q_s",
@@ -188,6 +208,12 @@ var formulaHelps = {
 		label: "매출·변동비",
 		title: "판매한 뒤 실제로 남는 금액은 얼마인가?",
 		intro: "매출은 할인 후 고객 결제액에서 쿠폰·포인트·지원금 부담을 차감합니다. 변동비는 전략을 실행할 때 추가로 발생하는 비용만 넣습니다.",
+		formula: `Revenue_s = Q_s × P_list × (1 - discount)
+            - Q_s × (coupon + point + subsidy)
+
+VariableCost_s = Q_s × (commission
+  + payment + fulfillment + return_expected)
+  + campaign_fixed_cost`,
 		terms: [
 			{
 				symbol: "P_list",
@@ -243,6 +269,12 @@ var formulaHelps = {
 		label: "회피비용·하방",
 		title: "처리해서 줄이는 비용과 실패 위험은 얼마인가?",
 		intro: "재고를 그대로 두었을 때 생길 비용과 전략을 실행했을 때의 하방 위험을 분리합니다. 여행처럼 폐기되지 않는 상품은 위약금·capacity 기회비용을 사용합니다.",
+		formula: `AvoidedCost_s = holding_avoided
+  + disposal_avoided
+  + supplier_penalty_avoided
+  + capacity_loss_avoided
+
+RiskPenalty_s = probability × impact`,
 		terms: [
 			{
 				symbol: "holding_avoided",
@@ -284,6 +316,11 @@ var formulaHelps = {
 		label: "위험점수",
 		title: "위험하다는 판단은 어떻게 점수로 바뀌는가?",
 		intro: "위험점수는 여러 신호를 0~100 범위로 정규화한 우선순위 점수입니다. 점수가 높아도 하드 차단을 통과하지 못하면 실행하지 않습니다.",
+		formula: `RiskScore_i = 100 × Σ(w_k × z_ik)
+Σw_k = 1
+
+z_ik ∈ [0, 1]
+등급 = 정상 / 주의 / 위험`,
 		terms: [
 			{
 				symbol: "RiskScore_i",
@@ -543,6 +580,10 @@ function FormulaHelpModal({ help, onClose }) {
 				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
 					className: "formula-help-intro",
 					children: help.intro
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("pre", {
+					className: "formula-help-formula",
+					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("code", { children: help.formula })
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 					className: "formula-help-terms",
