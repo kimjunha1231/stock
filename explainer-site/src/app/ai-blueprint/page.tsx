@@ -16,7 +16,7 @@ const sequenceSteps = [
 
 const affiliateRows = [
   ['현대웰니스', '비타민·마그네슘·오메가3·콜라겐·건강식품', 'product → sku → lot', '성분·기능·대상·소비기한·보관조건·표시·회수상태', '보관비·폐기비·반품비·할인 제한', '소비기한·표시·회수 상태'],
-  ['현대리바트', '거실·침실·주방 가구·옵션·모듈 제품', 'product → sku → cost profile', '옵션·판매채널·배송권역·설치여부·비용정책', '배송비·설치비·보관비·예상 파손비·반품비·무료배송 기준', '비용 정책·배송·설치 조건'],
+  ['현대리바트', '거실·침실·주방 가구·옵션·모듈 제품', 'product → sku → cost profile', '옵션·설치여부·배송·설치비·비용정책', '배송비·설치비·보관비·예상 파손비·반품비·무료배송 기준', '비용 정책·배송·설치 비용'],
   ['현대그린푸드', '농산물·수산물·축산물·가공식품·케어푸드', 'product → sku → lot', '로트·소비기한·온도구분·검사·이력추적·채널·콜드체인', '보관·배송·검사·폐기·반품 비용', '소비기한·보관·검사·콜드체인'],
 ];
 
@@ -70,11 +70,11 @@ const formulaCards = [
     formula: `feasible(s) = ownership_ok
   ∧ legal_ok
   ∧ freshness_ok
-  ∧ capacity_ok
+  ∧ policy_ok
   ∧ data_quality_ok`,
-    plain: '돈이 될 것 같아도 판매 권한·법적 제한·기한·배송/설치 여유·데이터 품질을 모두 확인한 뒤에만 다음 계산을 합니다.',
-    inputs: '소유권, 판매 가능 여부, 소비기한·검사 상태, 배송·설치·콜드체인 여유, 데이터 누락 여부',
-    affiliate: '웰니스·그린푸드는 기한·표시·검사, 리바트는 배송권역·설치 슬롯을 먼저 봅니다.',
+    plain: '돈이 될 것 같아도 소유권·법적 제한·기한·계열사 정책·데이터 품질을 모두 확인한 뒤에만 전략 후보로 비교합니다.',
+    inputs: '소유권, 전략 적용 가능 여부, 소비기한·검사 상태, 할인·처리 정책, 데이터 누락 여부',
+    affiliate: '웰니스·그린푸드는 기한·표시·검사, 리바트는 배송·설치 비용과 상품 정책을 확인합니다.',
   },
   {
     id: 'trend',
@@ -99,7 +99,7 @@ z_ik = 검색·SNS·조회·판매 변화의 0~1 점수`,
     × confidence))`,
     plain: '평소 판매량에 트렌드·가격·프로모션·계절 효과를 반영하되, 실제로 팔 수 있는 수량과 예측 신뢰도 안에서만 잡습니다.',
     inputs: '정상 판매량, 품절 보정값, 트렌드 점수, 가격·할인율, 행사 효과, 요일·계절, 판매 가능 재고',
-    affiliate: '웰니스·그린푸드는 로트별 판매 가능 수량, 리바트는 옵션·배송·설치 가능 수량을 상한으로 사용합니다.',
+    affiliate: '웰니스·그린푸드는 로트별 판매 가능한 현재 재고, 리바트는 옵션별 보류 수량을 제외한 현재 재고를 상한으로 사용합니다.',
   },
   {
     id: 'cost',
@@ -124,9 +124,9 @@ VariableCost_s = Q_s × (channel_fee
 Σw_k = 1
 
 등급 = 정상 / 주의 / 위험`,
-    plain: '소비기한 압박, 느린 판매, 높은 보관·폐기비, 배송·설치 실패 가능성처럼 서로 다른 위험 신호를 0~100점으로 합칩니다.',
-    inputs: '기한 압박, 판매속도, 재고금액, 보관일, 예상 폐기·파손·반품비, capacity 부족, 예측 불확실성',
-    affiliate: '기본 수식은 같지만 웰니스·그린푸드는 기한과 폐기, 리바트는 보관·설치·파손, 그린푸드는 콜드체인과 폐기 가중치를 높입니다.',
+    plain: '소비기한 압박, 느린 판매, 높은 보관·폐기비, 배송·설치 비용처럼 서로 다른 위험 신호를 0~100점으로 합칩니다.',
+    inputs: '기한 압박, 판매속도, 재고금액, 보관일, 예상 폐기·파손·반품비, 배송·설치 비용, 예측 불확실성',
+    affiliate: '기본 수식은 같지만 웰니스·그린푸드는 기한과 폐기, 리바트는 보관·파손·AS 비용, 그린푸드는 콜드체인·폐기 비용의 가중치를 높입니다.',
   },
   {
     id: 'objective',
@@ -148,8 +148,8 @@ VariableCost_s = Q_s × (channel_fee
 
 const affiliateFormulaRows = [
   ['현대웰니스', '건강기능식품·영양제', 'product → sku → lot', 'Q_available = 판매 가능한 로트 수량(최소 잔여기한 충족)', '기한 압박·판매속도·폐기비·표시/회수 상태', '배송·포장·검수·반품·폐기비', '성분·기능 관심 상승 + 실제 판매 상승이면 입고·프로모션 후보. 기한·표시·회수 문제가 있으면 차단'],
-  ['현대리바트', '가구·리빙·옵션·모듈', 'product → option → sku', 'Q_available = min(재고−예약, 배송 가능량, 설치 가능량)', '보관일·납기·설치 슬롯·파손/AS·반품 비용', '배송·설치·보관·파손·재배송·반품비·무료배송 기준', '인테리어 관심과 판매가 함께 오르면 노출·할인 후보. 설치 슬롯·정책이 없으면 차단'],
-  ['현대그린푸드', '농산물·수산물·축산물·가공·케어푸드', 'product → sku → lot', 'Q_available = 판매 가능한 로트 수량과 냉장·냉동 처리량 중 작은 값', '소비기한·주문마감·온도·검사·이력추적·폐기량', '콜드체인·피킹·포장·보냉재·폐기·반품비', '메뉴·검색·판매가 함께 오르면 추가 입고 후보. 소비기한·검사·콜드체인 문제가 있으면 차단'],
+  ['현대리바트', '가구·리빙·옵션·모듈', 'product → option → sku', 'Q_available = 보류 수량을 제외한 현재 재고', '보관일·납기·파손/AS·반품 비용', '배송·설치·보관·파손·재배송·반품비·무료배송 기준', '인테리어 관심과 판매가 함께 오르면 노출·할인 후보. 배송·설치 비용 정책이 없으면 비용 미반영 경고'],
+  ['현대그린푸드', '농산물·수산물·축산물·가공·케어푸드', 'product → sku → lot', 'Q_available = 판매 가능한 로트의 현재 재고', '소비기한·온도·검사·이력추적·폐기량', '콜드체인·피킹·포장·보냉재·폐기·반품비', '메뉴·검색·판매가 함께 오르면 추가 입고 후보. 소비기한·검사 조건이 없으면 차단'],
 ];
 
 const strategyBuildRows = [
@@ -173,7 +173,7 @@ const inventoryRows = [
   ['상품·SKU·옵션', '실제 판매·재고 단위', '상품 상세 이동'],
   ['가용재고·판매속도', '현재고 − 예약분, 최근 정상 판매량', '소진일·입고 판단'],
   ['예상수요·트렌드', '예측 일판매량과 상승·유지·하락 신호', '수요 변화 조기 확인'],
-  ['처리기한·비용', '소비기한·배송·설치·보관·반품·폐기 조건', '하드 차단·손익 계산'],
+  ['처리기한·비용', '소비기한·배송·설치·보관·반품·폐기 비용 조건', '하드 차단·손익 계산'],
   ['위험·추천 행동', '점수·등급·판단 이유·다음 행동', '담당자 확인·승인'],
   ['기준시각·데이터 상태', '언제의 어떤 품질 데이터인지', '결과 신뢰도·감사'],
 ];
@@ -277,10 +277,10 @@ export default function AiBlueprintPage() {
     <section className="section-tight band blueprint-affiliate-formula-section">
       <div className="container">
         <div className="section-heading"><span className="eyebrow">05-B · 계열사·상품별 적용</span><h2>공통 수식에<br /><em>상품 특성만 다르게 넣습니다.</em></h2><p>계열사마다 AI 모델을 따로 만드는 것이 아니라, 상품의 재고 단위·처리기한·비용·하드 차단을 프로필로 바꿔 같은 계산 흐름에 넣습니다.</p></div>
-        <SimpleTable caption="계열사와 상품 유형별 수식 입력 차이" headers={['계열사', '대표 상품 유형', '재고 단위', '판매 가능 수량 상한', '위험 신호', '비용 프로필', '전략 적용 예시']} rows={affiliateFormulaRows} className="blueprint-affiliate-formula-table" />
+        <SimpleTable caption="계열사와 상품 유형별 수식 입력 차이" headers={['계열사', '대표 상품 유형', '재고 단위', '전략 계산 수량', '위험 신호', '비용 프로필', '전략 적용 예시']} rows={affiliateFormulaRows} className="blueprint-affiliate-formula-table" />
         <div className="blueprint-guide-rule"><strong>가구 크기 필드에 대한 결정</strong><p>이번 MVP는 가로·세로·높이·부피 자체를 재고 전략의 핵심 필드로 저장하지 않습니다. 대신 배송비·무료배송 기준금액·설치비·보관비·예상 파손비·예상 반품비처럼 <b>비용을 직접 발생시키는 수치</b>를 SKU 비용 프로필에 저장합니다. 실제 물류 시스템에서 크기가 필요해지는 경우에도 전략 DB에는 비용으로 환산된 값만 우선 사용합니다.</p></div>
         <div className="blueprint-guide-section-heading"><span>상품별 입력 규칙</span><h3>어떤 상품이든<br /><em>먼저 이 네 가지를 채웁니다.</em></h3></div>
-        <div className="blueprint-product-rule-grid"><article><span>01</span><strong>무엇을 한 단위로 셀까?</strong><p>웰니스·그린푸드는 로트, 리바트는 옵션이 반영된 SKU를 기준으로 재고·판매를 연결합니다.</p></article><article><span>02</span><strong>언제까지 팔아야 할까?</strong><p>식품은 소비기한·주문마감, 가구는 납기·설치일, 웰니스는 최소 잔여기한을 사용합니다.</p></article><article><span>03</span><strong>팔 때 어떤 비용이 생길까?</strong><p>배송·설치·콜드체인·포장·반품·파손·폐기처럼 전략을 실행할 때 실제로 변하는 값만 넣습니다.</p></article><article><span>04</span><strong>팔면 안 되는 경우는?</strong><p>법적 제한·표시·검사·회수·소유권·capacity가 확인되지 않으면 이익 계산 전에 차단합니다.</p></article></div>
+        <div className="blueprint-product-rule-grid"><article><span>01</span><strong>무엇을 한 단위로 셀까?</strong><p>웰니스·그린푸드는 로트, 리바트는 옵션이 반영된 SKU를 기준으로 재고·판매이력을 연결합니다.</p></article><article><span>02</span><strong>언제까지 처리해야 할까?</strong><p>식품은 소비기한, 가구는 납기·보관일, 웰니스는 최소 잔여기한을 사용합니다.</p></article><article><span>03</span><strong>전략을 적용하면 어떤 비용이 생길까?</strong><p>배송·설치·콜드체인·포장·반품·파손·폐기처럼 전략 손익에 실제로 변하는 값만 넣습니다.</p></article><article><span>04</span><strong>전략을 제안하면 안 되는 경우는?</strong><p>법적 제한·표시·검사·회수·소유권이 확인되지 않으면 이익 계산 전에 차단합니다.</p></article></div>
       </div>
     </section>
 
@@ -296,7 +296,7 @@ export default function AiBlueprintPage() {
       <div className="container">
         <div className="section-heading"><span className="eyebrow">06 · 학습·검증</span><h2>기준모델보다 좋아지는지<br /><em>시간순으로 검증합니다.</em></h2><p>복잡한 모델을 먼저 붙이지 않습니다. 데이터가 쌓이면 기준모델 → 트렌드 피처 → 계층 보정 순으로 확장합니다.</p></div>
         <SimpleTable caption="수요예측 학습·검증 순서" headers={['단계', '팀원이 할 일']} rows={forecastSteps} />
-        <div className="blueprint-guide-rule blueprint-guide-rule-green"><strong>자동화 경계</strong><p>자동 입고·자동 가격변경·자동 판매 등록은 하지 않습니다. 검증된 추천과 시뮬레이션 결과를 담당자가 확인하고 승인합니다.</p></div>
+        <div className="blueprint-guide-rule blueprint-guide-rule-green"><strong>외부 판매 시스템과의 경계</strong><p>이 서비스는 주문·결제·배송·상품 등록을 실행하지 않습니다. 검증된 전략과 시뮬레이션 결과를 담당자가 확인하고, 필요하면 Teams로 외부 판매 시스템 담당자에게 전달합니다.</p></div>
       </div>
     </section>
 

@@ -6,7 +6,7 @@ var import_jsx_runtime = require_jsx_runtime();
 var stacks = {
 	frontend: {
 		label: "프론트엔드",
-		summary: "3개 계열사의 상품·재고·배송·설치 가능량을 같은 화면 언어로 비교하는 운영 UI",
+		summary: "3개 계열사의 상품·재고·비용·전략 결과를 같은 화면 언어로 비교하는 의사결정 UI",
 		items: [
 			[
 				"React 19 + JavaScript + HTML/CSS",
@@ -31,7 +31,7 @@ var stacks = {
 			[
 				"TanStack Table",
 				"대용량 표",
-				"계열사·채널·상품·로트·배송 가능량 필터/정렬/페이지네이션"
+				"계열사·채널·상품·로트·비용·위험 필터/정렬/페이지네이션"
 			],
 			[
 				"Vite + pnpm",
@@ -103,7 +103,7 @@ var stacks = {
 			[
 				"공통 canonical 모델",
 				"통합 기준",
-				"계열사 원천키와 공통 상품/서비스·capacity 키를 매핑"
+				"계열사 원천키와 공통 상품·SKU·비용 키를 매핑"
 			],
 			[
 				"이력·lineage",
@@ -211,7 +211,7 @@ function TechStackPage() {
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("br", {}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("em", { children: "현재 기술 스택" })
 					] }) }),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Reveal, { children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "상품·재고·배송·설치 가능량을 공통 모델로 연결하고, 권한·계산·승인·증빙을 분리해 운영합니다. 아래 목록은 현재 합의된 스택만 반영합니다." }) }),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Reveal, { children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "상품·재고·비용·전략 결과를 공통 모델로 연결하고, 권한·계산·승인·증빙을 분리해 운영합니다. 실제 주문·배송·결제는 외부 시스템의 책임입니다." }) }),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 						className: "formula-hero-points",
 						children: [
@@ -398,7 +398,7 @@ function TechStackPage() {
 									className: "metric-value",
 									children: "Fail closed"
 								}),
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "법규·소유권·신선도·capacity·데이터 품질이 확인되지 않으면 추천하지 않습니다." })
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "법규·소유권·신선도·정책·데이터 품질이 확인되지 않으면 추천하지 않습니다." })
 							]
 						})
 					]

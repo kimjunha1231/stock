@@ -8,9 +8,11 @@
 
 > 이 문서는 “화면에 무엇을 보여줄 것인가”뿐 아니라, 어떤 데이터를 받아 어떤 규칙과 수식으로 계산하고 어떤 상태로 승인·기록할 것인지까지 정의한다. 실제 원가·수수료·공급사 계약·판매 이력은 내부 데이터 계약이 연결되기 전까지 미확정으로 취급한다.
 
+> 범위 경계: 이 서비스는 주문·결제·배송·상품 등록을 실행하지 않는다. 외부 판매·정산 시스템의 이력은 수요예측과 성과 비교에 사용하고, 이 서비스는 적절한 할인·판매 방식·입고·처리 전략을 계산해 검토 자료로 전달한다.
+
 ## CAPABILITY
 
-계열사 담당자가 소속 계열사의 상품·재고·판매·배송·설치 정보를 확인하고, 계열사와 카테고리에 맞는 위험재고 처리 전략을 비교·시뮬레이션·승인할 수 있는 통합 운영 서비스다. 데이터와 화면은 통합하지만 상품 단위, 처리기한, 법규, 비용, 위험 가중치와 하드 차단 조건은 계열사별 정책으로 분리한다.
+계열사 담당자가 소속 계열사의 상품·재고·외부 판매이력·비용 정보를 확인하고, 계열사와 카테고리에 맞는 위험재고 처리 전략을 비교·시뮬레이션·승인할 수 있는 통합 의사결정 서비스다. 데이터와 화면은 통합하지만 상품 단위, 처리기한, 법규, 비용, 위험 가중치와 하드 차단 조건은 계열사별 정책으로 분리한다.
 
 서비스의 최종 결과는 “AI가 임의로 가격을 바꾸는 것”이 아니다. 결정론적 정책·수식 엔진이 실행 가능 여부와 손익을 계산하고, 예측 모델이 트렌드·판매량을 반영해 수요를 추정하며, LLM은 승인된 결과를 사람이 이해하기 쉬운 전략 설명으로 변환한다. 최종 가격·수량·실행은 권한 있는 담당자가 승인한다.
 
@@ -20,7 +22,7 @@
 
 - 3개 계열사의 데이터를 하나의 공통 조회 모델로 관리하되, 계열사·법인·점포·채널 권한은 분리한다.
 - 원가는 일반 화면에 표시하지 않는다. 손익 계산과 감사 로그에는 원가 버전·출처·접근권한을 남긴다.
-- 법규·소비기한·소유권·배송·설치·처리 capacity·필수 데이터 품질을 비용이 아닌 하드 차단 조건으로 처리한다.
+- 법규·소비기한·소유권·정책·필수 데이터 품질을 비용이 아닌 하드 차단 조건으로 처리한다.
 - 필수값이 `unknown`이면 수익 순위를 계산하거나 실행 추천을 생성하지 않는다. 차단 사유와 확인 담당자를 표시한다.
 - 전략 조건이 승인 후 변경되면 새 전략 버전을 만들고 재승인한다.
 - Teams는 요청·결과 전달 채널이며 서비스의 승인 기록을 대체하지 않는다.
@@ -29,9 +31,9 @@
 ### 공통과 계열사별 분리 원칙
 
 - 공통: 전략 실행 가능성, 예상 판매량, 매출, 변동비, 회피비용, 위험손실, 기준선 대비 증분이익, 승인·감사 상태.
-- 계열사별: 재고 단위, 처리기한, capacity, 법규 필드, 비용 항목, 위험 신호, 가중치, 임계값, 허용 전략.
+- 계열사별: 재고 단위, 처리기한, 법규 필드, 비용 항목, 위험 신호, 가중치, 임계값, 허용 전략.
 - 카테고리별: 가격 반응, 판매 속도 기준, 반품·폐기율, 보관 조건, 최소 잔여기한, 채널 정책.
-- 상품별: 현재 수량·가격·기한·주문·비용·상태·판매 이력과 정책 버전.
+- 상품별: 현재 수량·가격·기한·비용·상태·외부 판매 이력과 정책 버전.
 
 ### 데이터 준비 수준
 
@@ -93,29 +95,29 @@
 ### F-07 법규·안전·판매 제한
 
 - 공통 필드: legal_ok, restriction_type, evidence_id, valid_from, valid_to, checked_at, checked_by.
-- 판매 차단 예: 리콜, 표시 누락, 소비기한·보관조건 미확인, 주문제작 취소 제한 미확인, 설치 가능량 미확인.
+- 전략 차단 예: 리콜, 표시 누락, 소비기한·보관조건 미확인, 주문제작 취소·AS 정책 미확인, 비용 정책 미확인.
 - 출력: 가능, 조건부 가능, 차단, 확인 필요.
 
-## 3. 재고·capacity·판매 데이터
+## 3. 재고·외부 성과 데이터
 
 ### F-08 원천 데이터 연결·수집
 
-- 원천 범위: ERP, POS, WMS, 검색·SNS 신호, 판매 채널, 정산 시스템, 배송·설치 시스템, 품질·검사 시스템.
+- 원천 범위: ERP, POS, WMS, 검색·SNS 신호, 외부 판매·정산 시스템, 품질·검사 시스템.
 - 수집 방식: API, 파일, 배치, 수동 업로드 중 계열사별 방식을 지정한다.
 - 모든 수집에는 source_system, source_record_id, observed_at, received_at, batch_id를 붙인다.
 - 실패 처리: 재시도, 중복 방지, 격리 저장, 부분 성공 보고, 마지막 정상 시각 표시.
 
-### F-09 재고 스냅샷·로트·주문
+### F-09 재고 스냅샷·로트·보류 수량
 
 - 물리 재고: on_hand_qty, reserved_qty, available_qty, warehouse/store, lot_id, received_at.
-- 서비스 capacity: capacity_total, capacity_booked, capacity_available, supplier_id, slot_type.
+- 외부 시스템에서 보류된 수량이 있으면 `reserved_qty`로 회수하되 주문·배송 상태를 이 서비스가 관리하지 않는다.
 - 공통 계산 단위는 `Q_available`로 추상화하되 원래 단위와 변환 규칙을 저장한다.
 - 기준시각이 다른 원천 데이터를 섞지 않도록 snapshot_id를 계산 입력에 포함한다.
 
 ### F-10 판매 이력
 
 - 필드: transaction_id, product_or_offer_id, quantity, price, discount, coupon, channel, occurred_at, cancel_qty, return_qty, status.
-- 주문형 상품은 주문·취소·환불을 분리한다.
+- 외부 원천의 판매·취소·환불 결과를 구분해 회수한다.
 - 판매 이력은 전략 효과 검증과 수요 예측의 label로 사용하며, 수기 입력을 원천 데이터로 간주하지 않는다.
 
 ### F-11 재고 변동·정산·비용 이력
@@ -126,7 +128,7 @@
 
 ### F-12 데이터 품질·신선도
 
-- 검사: 필수값, 중복, 단위, 음수 수량, 가격 순서, 시간 순서, 외부키 매핑, 기한·마감 역전, capacity 음수.
+- 검사: 필수값, 중복, 단위, 음수 수량, 가격 순서, 시간 순서, 외부키 매핑, 기한·마감 역전.
 - 상태: accepted, accepted_with_warning, quarantined, rejected.
 - 화면: 품질 점수, 누락 필드, 기준시각, 담당자, 재검증 예정시각.
 - 규칙: `quarantined` 또는 핵심 필드 `unknown`이면 추천·승인 버튼을 비활성화한다.
@@ -135,19 +137,19 @@
 
 ### F-13 통합 홈 대시보드
 
-- KPI: 전체 가용 수량/capacity, 재고금액, 위험·주의·정상 비율, 장기재고, 판매 부진, 미확정 데이터 건수.
+- KPI: 전체 가용 수량, 재고금액, 위험·주의·정상 비율, 장기재고, 판매 부진, 미확정 데이터 건수.
 - 필터: 계열사, 법인, 점포/센터, 채널, 카테고리, 브랜드, 기한 구간, 위험 등급.
 - 기능: KPI 클릭 시 목록으로 drill-down, 기준시각 표시, 데이터 지연 배지, CSV 내보내기.
 
-### F-14 재고·capacity 목록
+### F-14 통합 재고 목록
 
-- 컬럼: 상품/SKU, 계열사, 카테고리, 가용량, 판매속도, 남은 기한/설치일까지, 위험점수, 차단 사유, 마지막 갱신.
+- 컬럼: 상품/SKU, 계열사, 카테고리, 전략 대상 수량, 판매속도, 남은 기한/납기, 위험점수, 차단 사유, 마지막 갱신.
 - 기능: 정렬·필터·컬럼 저장·대량 선택·상세 이동.
 - 원가: 권한이 없으면 금액을 숨기고 위험·수량·판매속도 중심으로 표시한다.
 
 ### F-15 상품 상세
 
-- 탭: 기본정보, 재고·로트/capacity, 판매 추이, 비용 요약, 위험 진단, 전략 이력, 감사 이력.
+- 탭: 기본정보, 재고·로트, 외부 성과 추이, 비용 요약, 위험 진단, 전략 이력, 감사 이력.
 - 그래프: 기간별 판매량, 가격·할인, 재고 잔량, 취소·반품, 기한 압박.
 - 액션: 위험 진단 보기, 전략 생성 요청, 기존 전략 비교.
 
@@ -155,14 +157,14 @@
 
 ### F-16 위험점수 계산
 
-- 공통 신호: 처리기한 압박, 판매속도 부족, 가용량 대비 수요, 재고가치 또는 capacity 손실, 데이터 불확실성.
+- 공통 신호: 처리기한 압박, 판매속도 부족, 전략 대상 수량 대비 수요, 재고가치·보관·폐기 비용, 데이터 불확실성.
 - 계열사 신호는 아래 수식 프로필에서 정의한다.
 - 결과: score 0–100, grade, contributing_signals, hard_stop, policy_version.
 - 실행 주기: 일 1회 기본, 내부 데이터 갱신 빈도에 따라 추가 주기 검토.
 
 ### F-17 위험 이유·우선순위
 
-- 이유는 “소비기한 14일 남음”, “설치 슬롯 부족”, “트렌드 급락”처럼 원천값과 함께 표시한다.
+- 이유는 “소비기한 14일 남음”, “배송·설치 비용 미확인”, “트렌드 급락”처럼 원천값과 함께 표시한다.
 - 위험점수는 처리 순서이며, 법규·소유권·데이터 미확인을 상쇄하지 않는다.
 - 사용자 액션: 확인, 전략 생성, 보류 사유 입력, 예외 검토 요청.
 
@@ -170,13 +172,13 @@
 
 ### F-18 전략 입력·목표 선택
 
-- 목표: 순마진 방어, 빠른 소진, 최대 매출.
-- 허용 입력: 적용 수량, 할인율, 쿠폰·포인트, 판매 기간, 판매 채널, 배송 지원, 묶음 여부, 캠페인 비용.
-- 계열사별 금지 조합: 법규 위반, 할인 한도 초과, 설치·콜드체인 capacity 초과.
+- 목표: 순마진 방어, 빠른 소진, 최대 매출, 위험 최소화.
+- 허용 입력: 적용 수량, 할인율, 쿠폰·포인트, 처리 기간, 판매 방식, 배송·설치 예상비, 묶음 여부, 캠페인 비용.
+- 계열사별 금지 조합: 법규 위반, 할인 한도 초과, 필수 비용·정책 미확인.
 
 ### F-19 전략 후보 생성
 
-- MVP: 허용된 할인율·기간·수량·채널의 유한 조합을 생성한다.
+- MVP: 허용된 할인율·처리 기간·수량·판매 방식의 유한 조합을 생성한다.
 - 순서: 하드 차단 → 예상량 계산 → 손익 계산 → 기준선 비교 → 목적별 정렬 → 최대 3개 후보.
 - 후보마다 입력 snapshot, 정책 버전, 수식 버전, 예상 결과, 신뢰도, 주요 위험을 저장한다.
 - LLM은 후보의 숫자를 새로 계산하거나 수정하지 않는다.
@@ -194,8 +196,8 @@
 
 ### F-21 조건 변경
 
-- 화면 입력: 수량, 할인율, 쿠폰, 포인트, 기간, 배송비 지원, 프로모션 비용, 번들 구성·가격.
-- 검증: 수량 범위, 할인 상한, 기간·설치일·소비기한, 채널 가능 여부, capacity, 하드 차단.
+- 화면 입력: 수량, 할인율, 쿠폰, 포인트, 처리 기간, 배송·설치 예상비, 프로모션 비용, 번들 구성·가격.
+- 검증: 수량 범위, 할인 상한, 처리 기간·소비기한, 판매 방식 정책, 하드 차단.
 - 변경 시 원본 추천값과 사용자 변경값을 구분한다.
 
 ### F-22 시뮬레이션 결과
@@ -218,18 +220,18 @@
 ### F-24 현대리바트
 
 - 대상 단위: 제품·옵션·프로젝트·WIP.
-- 필수 입력: dimension, weight, warehouse_location, lead_time_days, install_required, install_slot_available, delivery_zone, damage_rate, return_rate, as_cost.
+- 필수 입력: option, lead_time_days, install_required, delivery_fee, install_fee, damage_rate, return_rate, as_cost.
 - 주요 비용: 보관·전시 공간, 라스트마일, 설치, 파손·재배송·회수, 반품·AS.
-- 하드 차단: 배송권역·설치 슬롯·주문제작 생산상태·반품·AS 조건 미확인.
-- 위험 신호: 부피×보관일, 납기 지연, 설치 capacity, 파손·반품·AS 비용.
+- 하드 차단: 주문제작 생산상태·반품·AS·배송·설치 비용 정책 미확인.
+- 위험 신호: 보관일, 납기 지연, 파손·반품·AS 비용.
 
 ### F-25 현대그린푸드
 
 - 대상 단위: SKU·lot·배송센터.
-- 필수 입력: expiry_at, temperature_class, storage_condition, origin, traceability_id, order_cutoff_at, delivery_window, cold_chain_capacity, inspection_status.
+- 필수 입력: expiry_at, temperature_class, storage_condition, origin, traceability_id, inspection_status, disposal_cost.
 - 주요 비용: 피킹·포장, 냉장·냉동 배송, 보냉재·에너지, 회수·폐기, 채널 수수료·반품.
-- 하드 차단: 소비기한·보관조건·HACCP/이력추적·검사 보류·콜드체인 capacity 미확인.
-- 위험 신호: 소비기한, 예상 폐기량, 온도 이탈, 배송 capacity, 주문 마감과 배송일 불일치.
+- 하드 차단: 소비기한·보관조건·HACCP/이력추적·검사 보류 정보 미확인.
+- 위험 신호: 소비기한, 예상 폐기량, 온도 이탈, 냉장·냉동 비용.
 
 ## 9. 수식·계산 엔진
 
@@ -259,7 +261,6 @@ VariableCost_s = Q_expected × (commission + channel_fee
                  + campaign_fixed_cost
 
 AvoidedCost_s = avoided_holding + avoided_disposal
-              + avoided_capacity_loss
 
 M_s = Revenue_s - VariableCost_s + AvoidedCost_s
       - Cannibalization_s - RiskPenalty_s - AI_CaseCost_s
@@ -289,7 +290,7 @@ z_ik ∈ [0, 1]
 - `user`, `role`, `permission_scope`, `user_scope`
 - `brand`, `category`, `product`, `product_option`, `sku`
 - `external_product_mapping`
-- `inventory_snapshot`, `inventory_lot`, `capacity_snapshot`
+- `inventory_snapshot`, `inventory_lot`, `strategy_cost_snapshot`
 - `sales_event`, `inventory_movement`
 - `cost_snapshot`, `settlement_rule`, `policy_profile`, `formula_profile`
 - `risk_assessment`, `risk_signal`, `risk_threshold`
@@ -300,8 +301,8 @@ z_ik ∈ [0, 1]
 ### 계열사 확장 테이블 또는 JSON 속성
 
 - Wellness: lot·expiry·storage·function claim·return eligibility.
-- Livart: dimension·weight·lead time·install slot·delivery zone·damage/AS.
-- Green Food: lot·expiry·temperature·traceability·inspection·cold-chain.
+- Livart: option·lead time·install required·delivery/install fee·damage/AS.
+- Green Food: lot·expiry·temperature·traceability·inspection·disposal cost.
 
 핵심 조회·조인에 사용하는 필드는 정규화 테이블로 두고, 계열사별 확장 속성은 변경 빈도와 검색 필요성에 따라 별도 테이블 또는 Oracle JSON 컬럼을 선택한다. 정책과 계산 결과에는 항상 `policy_version`, `formula_version`, `snapshot_id`, `model_version`을 기록한다.
 
@@ -317,7 +318,7 @@ z_ik ∈ [0, 1]
 
 ### 전략
 
-`draft → generated → edited → submitted → approved / rejected → scheduled → executing → completed / failed / cancelled`
+`draft → generated → edited → submitted → approved / rejected → handed_off → outcome_received / failed / cancelled`
 
 조건·수량·가격·정책 버전이 바뀌면 기존 승인 상태를 유지하지 않고 새 버전으로 되돌린다.
 
@@ -357,7 +358,7 @@ Teams 전송 성공은 서비스 승인 성공과 별도 상태로 보관한다.
 
 ## 13. 알림·감사·관제
 
-- 알림: 신규 위험재고, 데이터 차단, 전략 검토 요청, 승인·거절, 번들 capacity 부족, Teams 실패, 배치 실패.
+- 알림: 신규 위험재고, 데이터 차단, 전략 검토 요청, 승인·거절, 번들 구성 부족, Teams 실패, 배치 실패.
 - Sentry: 화면·API 오류와 사용자 흐름.
 - ELK: 요청 ID·계열사·배치·전략 ID 기반 구조화 로그.
 - Prometheus/Grafana: API 지연, 오류율, 배치 성공률, 데이터 신선도, 추천 차단율, Teams 성공률, AI 호출 비용.
@@ -368,10 +369,10 @@ Teams 전송 성공은 서비스 승인 성공과 별도 상태로 보관한다.
 ### P0 — 기반과 대표 수직 슬라이스
 
 - 권한·조직 범위
-- 공통 상품·재고·판매 모델
+- 공통 상품·재고·외부 성과 이력 모델
 - 계열사별 필수 입력과 하드 차단
 - 결정론적 위험점수·시뮬레이션 엔진
-- 그린푸드 로트/소비기한 또는 리바트 설치/capacity 중 대표 수직 슬라이스 1개 완성
+- 그린푸드 로트/소비기한 또는 리바트 배송·설치 비용 중 대표 수직 슬라이스 1개 완성
 - 계산 결과·버전·감사 로그
 
 ### P1 — 4계열사 확장과 사람 승인
@@ -386,7 +387,6 @@ Teams 전송 성공은 서비스 승인 성공과 별도 상태로 보관한다.
 ### P2 — 확장 기능
 
 - 교차 계열사 번들 구성·재고 예약·매출 배분
-- 고객용 통합 판매 카탈로그
 - 계열사 간 재고 이동 추천
 - 자동 재학습·모델 배포
 - 고급 채널 최적화와 공동 프로모션

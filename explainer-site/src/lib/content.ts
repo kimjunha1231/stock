@@ -52,7 +52,7 @@ export const sources: SourceItem[] = [
   { id: 'pipc-genai', kind: '법·정책', title: '개인정보위 생성형 AI 개인정보 처리 기준', location: '생성형 AI 전 과정의 적법성·안전성·내부관리', note: '고객 데이터를 최소화하고 로그·권한을 분리하는 근거', url: 'https://www.korea.kr/news/policyNewsView.do?newsId=148947194' },
   { id: 'openai-pricing', kind: '기술', title: 'OpenAI API 가격 안내', location: '입력·출력·캐시·Batch 사용량', note: '공급자 가격 자체보다 usage 원장을 남기는 방식의 참고', url: 'https://openai.com/index/introducing-gpt-5-for-developers/' },
   { id: 'affiliate-wellness', kind: '계열사', title: '현대웰니스 공식몰', location: '건강기능식품·영양제·브랜드·성분·기능·대상별 상품 분류', note: '상품 페이지에서 수량, 판매가, 소비기한, 임박 태그를 분리해 입력해야 하는 근거', url: 'https://www.hyundaiwellness.com/' },
-  { id: 'affiliate-livart-product', kind: '계열사', title: '현대리바트 공식 상품 페이지', location: '배송·설치 예정일, 설치기사 연락, 배송 연기 조건', note: '가구 전략에 제품 수량뿐 아니라 설치 슬롯·배송·반품·AS 비용을 넣어야 하는 근거', url: 'https://company.hyundailivart.co.kr/p/P200086559?buyNow=P200086559' },
+  { id: 'affiliate-livart-product', kind: '계열사', title: '현대리바트 공식 상품 페이지', location: '배송·설치 안내, 배송 연기 조건', note: '가구 전략에 제품 수량뿐 아니라 배송·설치·반품·AS 비용을 넣어야 하는 근거', url: 'https://company.hyundailivart.co.kr/p/P200086559?buyNow=P200086559' },
   { id: 'affiliate-livart-catalog', kind: '계열사', title: '현대리바트 오피스 카탈로그', location: '제품군·배송·설치·AS', note: '가구가 배송과 설치가 결합된 서비스 상품이라는 공식 카탈로그 근거', url: 'https://www.hyundailivart.co.kr/UserFiles/home/ko/brand/2020_OFFICE.pdf' },
   { id: 'affiliate-greenfood', kind: '계열사', title: '현대그린푸드 식자재 유통', location: '급식·외식·유통 고객 대상 식재료 공급', note: '식품 전략의 대상이 리테일 상품뿐 아니라 B2B 식자재·서비스 수요일 수 있음을 확인하는 공식 자료', url: 'https://www.hyundaigreenfood.com/po/fb/fdb/FBFDB01L.hgc' },
   { id: 'affiliate-greenfood-reservation', kind: '계열사', title: '현대그린푸드 사전예약 서비스', location: '제철 농·수·축산물 사전예약·배송', note: '식품의 주문 마감일, 배송일, 소비기한과 남은 물량을 연결해 계산해야 하는 근거', url: 'https://www.hyundaigreenfood.com/po/pr/ntn/PRNTN02V.hg?bbsSqPk=193712' },
@@ -63,8 +63,8 @@ export const sources: SourceItem[] = [
   { id: 'markdown-cannibalization', kind: '기술', title: 'Hu, Shum & Yu (2016), INFORMS', location: 'Markdown, strategic consumers and residual inventory', note: '할인이 정상판매를 잠식할 수 있어 잠식손실을 별도 항목으로 둬야 하는 근거', url: 'https://pubsonline.informs.org/doi/10.1287/opre.2015.1439' },
   { id: 'wellness-foodsafety', kind: '법·정책', title: '식품안전나라 건강기능식품 안내', location: '기능성 표시·섭취방법·주의사항·유통기한', note: '현대웰니스 건강기능식품의 표시·클레임 하드 차단 입력 근거', url: 'https://www.foodsafetykorea.go.kr/portal/board/boardDetail.do?bbs_no=bbs001&menu_grp=MENU_NEW01&menu_no=3120&ntctxt_no=21776' },
   { id: 'wellness-law', kind: '법·정책', title: '건강기능식품에 관한 법률', location: '안전성·품질·건전한 유통·소비자 보호', note: '현대웰니스 상품의 승인·리콜·표시 검토 상태를 판매전략보다 먼저 확인하는 근거', url: 'https://www.law.go.kr/LSW/lsInfoP.do?ancYnChk=0&lsId=009353' },
-  { id: 'livart-corporation', kind: '계열사', title: '현대리바트 법인사업', location: '대량 납품·자체 배송·계약별 납기', note: 'B2B/프로젝트 주문은 MOQ·계약가격·납기·배송 capacity를 별도 입력해야 하는 근거', url: 'https://company.hyundailivart.co.kr/ko/corporation' },
-  { id: 'livart-smart-factory', kind: '계열사', title: '현대리바트 스마트워크센터', location: '스마트팩토리·자동화 공정·물류센터', note: '원자재·WIP·공정 capacity·출고 상태를 가구 전략 입력으로 고려하는 근거', url: 'https://company.hyundailivart.co.kr/ko/smartWorkCenter' },
+  { id: 'livart-corporation', kind: '계열사', title: '현대리바트 법인사업', location: '대량 납품·계약별 납기·비용', note: 'B2B/프로젝트 상품은 MOQ·계약가격·납기·배송·설치 비용을 별도 입력해야 하는 근거', url: 'https://company.hyundailivart.co.kr/ko/corporation' },
+  { id: 'livart-smart-factory', kind: '계열사', title: '현대리바트 스마트워크센터', location: '스마트팩토리·자동화 공정·물류센터', note: '가구 전략에 상품 상태·납기·보관·출고 비용을 연결하는 근거', url: 'https://company.hyundailivart.co.kr/ko/smartWorkCenter' },
   { id: 'greenfood-retail', kind: '계열사', title: '현대그린푸드 리테일 사업', location: '오프라인·온라인·홈쇼핑·케어푸드 채널', note: '식품의 채널·점포·상품군별 재고와 수수료를 구분하는 근거', url: 'https://hyundaigreenfood.com/po/fb/rtb/FBRTB01L.hgc' },
   { id: 'greenfood-lab', kind: '계열사', title: '현대그린푸드 식품위생연구소', location: '미생물·잔류농약·중금속·HACCP 검사', note: '검사·보류·해제·리콜 상태를 판매전략보다 먼저 검증하는 근거', url: 'https://hyundaigreenfood.com/po/is/fdr/ISFDR02L.hgc' },
   { id: 'food-label-standards', kind: '법·정책', title: '식약처 「식품등의 표시기준」', location: '소비기한·보관방법·안전 주의사항', note: '표시기준은 판매 허가가 아니며, 누락·불일치·리콜은 하드 차단해야 한다는 공공 근거', url: 'https://www.law.go.kr/LSW/admRulInfoP.do?admRulSeq=2100000263350' },
@@ -206,7 +206,7 @@ export const glossary: GlossaryTerm[] = [
     category: '기본 개념',
     short: '시간·비용·품질 조건 때문에 손실 가능성이 커진 재고',
     definition: '장기보관, 유통기한 임박, 방송 후 잔량, 공간 점유, 반품·파손 가능성 등으로 처리 지연 시 손실이 커질 수 있는 재고입니다.',
-    example: '소비기한이 임박한 식품과 설치 슬롯이 부족한 리빙 상품은 서로 다른 이유로 위험재고가 됩니다.',
+    example: '소비기한이 임박한 식품과 보관·파손 비용이 큰 리빙 상품은 서로 다른 이유로 위험재고가 됩니다.',
     related: ['hard-stop'],
     sourceIds: ['project-types', 'project-simulation'],
   },
@@ -215,7 +215,7 @@ export const glossary: GlossaryTerm[] = [
     term: '하드 차단',
     category: 'AI·운영',
     short: '비용보다 먼저 적용되는 실행 불가 조건',
-    definition: '식품안전, 유통기한, 소유권, 법규, 물류 용량, 데이터 품질처럼 위반하면 전략 후보에서 제외해야 하는 조건입니다.',
+    definition: '식품안전, 유통기한, 소유권, 법규, 계열사 정책, 데이터 품질처럼 위반하면 전략 후보에서 제외해야 하는 조건입니다.',
     example: '재고 소유권이 확인되지 않거나 식품안전 조건을 위반하는 할인안은 이익이 높아도 추천하지 않습니다.',
     related: ['risk-stock'],
     sourceIds: ['project-policy', 'food-label-standards', 'mfds-storage'],
@@ -223,7 +223,7 @@ export const glossary: GlossaryTerm[] = [
   {
     id: 'dday', term: 'D-day / 처리기한', category: '재고·물류', short: '판매·회수·기부·폐기 중 하나를 확정해야 하는 남은 시간',
     definition: '식품의 소비기한, 패션의 시즌 종료, 캠페인의 종료일처럼 전략 선택을 바꾸는 시간 제약입니다. 단순한 비용이 아니라 먼저 지켜야 할 제약조건입니다.',
-    example: '소비기한이 임박한 식품은 전국 배송보다 안전한 보관·배송 capacity가 있는 대안을 먼저 비교합니다.', related: ['risk-stock', 'hard-stop'], sourceIds: ['project-types', 'food-label-standards', 'mfds-storage'],
+    example: '소비기한이 임박한 식품은 추가 입고보다 폐기·할인·회수 비용을 먼저 비교합니다.', related: ['risk-stock', 'hard-stop'], sourceIds: ['project-types', 'food-label-standards', 'mfds-storage'],
   },
   {
     id: 'ownership-model', term: '재고 소유·정산 구조', category: '재고·물류', short: '상품 또는 서비스의 소유권·비용 부담·정산 권한을 정의하는 계약 정보',
@@ -248,16 +248,11 @@ export const glossary: GlossaryTerm[] = [
   {
     id: 'return-rate', term: '반품률', category: '마케팅·고객', short: '판매 후 되돌아오는 비율',
     definition: '온라인 비중이 늘면 매출만큼 반품·검수·재판매 가능성·환불 시점이 중요해집니다. 상품군과 채널별로 따로 계산합니다.',
-    formula: '반품률 = 반품 수량 ÷ 판매 수량', example: '건강기능식품, 가구, 식품의 반품·취소 조건을 같은 값으로 두지 않습니다.', related: ['contribution-cash', 'delivery-capacity'], sourceIds: ['project-simulation'],
-  },
-  {
-    id: 'delivery-capacity', term: '배송 capacity', category: '마케팅·고객', short: '특정 시간에 처리할 수 있는 배송·포장·픽업의 최대량',
-    definition: '배송 가능 상품과 오늘 처리 가능한 수량은 다릅니다. 냉장·냉동, 포장 인력, 차량, 매장 픽업 슬롯을 함께 제한조건으로 둡니다.',
-    example: 'D-5 식품을 할인해도 당일 배송 capacity가 없으면 판매 전략이 아닙니다.', related: ['dday', 'return-rate'], sourceIds: ['affiliate-greenfood-reservation', 'mfds-storage', 'project-simulation'],
+    formula: '반품률 = 반품 수량 ÷ 판매 수량', example: '건강기능식품, 가구, 식품의 반품·취소 비용을 같은 값으로 두지 않습니다.', related: ['contribution-cash'], sourceIds: ['project-simulation'],
   },
   {
     id: 'scenario', term: '시나리오', category: 'AI·운영', short: '같은 전략을 보수·기본·낙관 조건으로 나눠 보는 방법',
-    definition: '수요, 할인 반응, 반품률, 배송 capacity, 폐기확률이 달라질 때 결과 범위를 보여줍니다. 낙관값만으로 승인하지 않습니다.',
+    definition: '수요, 할인 반응, 반품률, 배송·설치 비용, 폐기확률이 달라질 때 결과 범위를 보여줍니다. 낙관값만으로 승인하지 않습니다.',
     example: '기본 시나리오가 좋아도 보수 시나리오의 하방이 감당 가능한지 확인합니다.', related: ['baseline', 'fallback'], sourceIds: ['project-policy', 'project-simulation'],
   },
   {
@@ -300,22 +295,22 @@ export const mvpMenu = [
   {
     id: '03', label: '위험재고 분석', kind: '위험 원인 확인 화면',
     purpose: '왜 위험한지 확인하고 처리 대상을 고릅니다.',
-    features: ['위험점수·등급', '판단 이유와 사용한 항목', '장기보관·판매부진 목록', '소비기한·설치·검사 차단 사유', '과거 판매·재고 추이'],
+    features: ['위험점수·등급', '판단 이유와 사용한 항목', '장기보관·판매부진 목록', '소비기한·검사·법적 제한 사유', '과거 판매·재고 추이'],
   },
   {
     id: '04', label: 'AI 전략', kind: '추천 생성 화면',
     purpose: '선택한 상품에 적용할 전략 후보를 만듭니다.',
-    features: ['할인·쿠폰·프로모션 추천', '판매 채널 활용안', '마진 극대화·빠른 소진·최대 매출 목적', '예상 결과와 추천 이유', '전략 초안 저장'],
+    features: ['할인·쿠폰·프로모션 추천', '판매 방식 비교안·외부 채널 활용안', '마진 극대화·빠른 소진·최대 매출 목적', '예상 결과와 추천 이유', '전략 초안 저장'],
   },
   {
     id: '05', label: '시뮬레이션', kind: '조건 비교 화면',
     purpose: '조건을 바꿔보고 결과를 비교합니다.',
-    features: ['수량·할인율·판매기간 변경', '쿠폰·포인트·배송비·프로모션 비용 반영', '예상 판매량·매출·이익·마진율', '소진기간·잔여재고·회피비용', '기준선·추천안·수정안 비교'],
+    features: ['수량·할인율·처리기간 변경', '쿠폰·포인트·배송·설치 예상비·프로모션 비용 반영', '예상 판매량·매출·이익·마진율', '소진기간·잔여재고·회피비용', '기준선·추천안·수정안 비교'],
   },
   {
     id: '06', label: '번들상품', kind: '계열사 상품 조합 화면',
     purpose: '서로 다른 계열사의 상품을 하나의 기획으로 묶습니다.',
-    features: ['연관 상품 추천', '구성 상품·수량·가격 설정', '품절·판매 제한 검증', '판매 가능 번들 수량', '예상 매출·마진'],
+    features: ['연관 상품 추천', '구성 상품·수량·가격 설정', '품절·법적 제한 검증', '번들 적용 가능 수량', '예상 매출·마진'],
   },
   {
     id: '07', label: '검토·성과', kind: '승인·결과 확인 화면',

@@ -22,7 +22,7 @@ const tracks: { id: Track; label: string; hint: string }[] = [
   { id: 'all', label: '전체 기능', hint: '공통 기능과 계열사별 확장' },
   { id: 'common', label: '공통 서비스', hint: '권한·데이터·전략·운영' },
   { id: 'wellness', label: '현대웰니스', hint: '로트·소비기한·표시' },
-  { id: 'livart', label: '현대리바트', hint: '배송·설치·AS' },
+  { id: 'livart', label: '현대리바트', hint: '배송·설치 비용·AS' },
   { id: 'greenfood', label: '현대그린푸드', hint: '식품·콜드체인·검사' },
 ];
 
@@ -59,15 +59,15 @@ const capabilities: CapabilityCard[] = [
     id: 'F-05', track: 'common', title: '통합 재고 대시보드·검색', phase: 'P0',
     summary: '계열사 전체 현황에서 위험 상품 상세까지 내려가며 처리 우선순위를 좁힙니다.',
     inputs: ['계열사·카테고리·채널', '위험등급·기한·판매속도', '기준시각'],
-    outputs: ['수량·capacity·재고금액', '정상·주의·위험 비율', '장기·판매부진 목록', 'CSV'],
+    outputs: ['수량·재고금액', '정상·주의·위험 비율', '장기·판매부진 목록', 'CSV'],
     rule: '원가 권한이 없으면 원가를 숨기고 위험·수량·속도와 기준시각을 우선 표시',
   },
   {
     id: 'F-06', track: 'common', title: '위험재고 탐지', phase: 'P0',
     summary: '공통 위험점수 골격에 계열사별 신호·가중치·임계값을 적용해 먼저 처리할 대상을 찾습니다.',
-    inputs: ['처리기한·설치일', '판매속도·가용량', '보관·폐기·배송비', '데이터 품질'],
+    inputs: ['처리기한', '판매속도·가용재고', '보관·폐기·배송·설치비', '데이터 품질'],
     outputs: ['0–100 점수', '정상·주의·위험 등급', '기여 신호', '하드 차단 사유'],
-    rule: '점수보다 법규·소유권·capacity·데이터 품질 차단을 먼저 적용',
+    rule: '점수보다 법규·소유권·필수 데이터 품질 차단을 먼저 적용',
   },
   {
     id: 'F-07', track: 'common', title: '정책·수식 프로필 관리', phase: 'P0',
@@ -78,29 +78,29 @@ const capabilities: CapabilityCard[] = [
   },
   {
     id: 'F-08', track: 'common', title: '전략 후보 생성·AI 추천', phase: 'P1',
-    summary: '허용된 할인·기간·수량·채널 조합을 만들고 수식 엔진으로 순위를 정한 뒤 AI가 이유를 설명합니다.',
+    summary: '허용된 할인·기간·수량·판매 방식 조합을 만들고 수식 엔진으로 순위를 정한 뒤 AI가 이유를 설명합니다.',
     inputs: ['목표: 순마진·빠른 소진·최대 매출', '허용 action space', '수요 예측', '정책 profile'],
     outputs: ['최대 3개 후보', '예상 결과·신뢰도', '하방 위험', '추천 이유'],
-    rule: 'LLM은 숫자를 계산·수정하지 않고, 계산이 끝난 후보의 설명과 확인 질문만 생성',
+    rule: 'LLM은 숫자를 계산·수정하지 않고, 계산이 끝난 후보의 설명과 확인 질문만 생성하며 외부 판매 시스템을 호출하지 않음',
   },
   {
     id: 'F-09', track: 'common', title: '전략 시뮬레이션', phase: 'P0',
     summary: '담당자가 조건을 바꾸면 기준선·추천안·조정안을 같은 기준으로 다시 계산합니다.',
-    inputs: ['수량·할인율·기간', '쿠폰·포인트·배송비', '채널·번들', '캠페인 비용'],
+    inputs: ['수량·할인율·기간', '쿠폰·포인트·배송·설치 예상비', '판매 방식·번들', '캠페인 비용'],
     outputs: ['예상 판매·매출', '변동비·이익·마진율', '소진기간·잔량', '회피비용·위험손실'],
-    rule: '조건·정책·snapshot이 바뀌면 새 simulation_run으로 저장하고 기존 승인과 분리',
+    rule: '조건·정책·snapshot이 바뀌면 새 simulation_run으로 저장하고 기존 승인과 분리하며, 판매 실행은 외부 시스템의 책임',
   },
   {
     id: 'F-10', track: 'common', title: '검토·승인·Teams 전달', phase: 'P1',
-    summary: '담당자가 추천안을 수정해 검토를 요청하고, 승인 결과와 실행 조건을 Teams로 전달합니다.',
+    summary: '담당자가 추천안을 수정해 검토를 요청하고, 승인 결과와 전략 조건을 Teams로 전달합니다.',
     inputs: ['전략 버전', '승인자', '적용 조건', 'Teams 채널 매핑'],
     outputs: ['승인·거절·재승인 상태', '전달 성공·실패·재시도', '승인 감사 로그'],
-    rule: 'Teams 성공은 서비스 승인 성공과 별도 상태이며, 승인 기록은 서비스가 소유',
+    rule: 'Teams 성공은 서비스 승인 성공과 별도 상태이며, 이 서비스는 주문·가격변경·상품등록을 실행하지 않음',
   },
   {
-    id: 'F-11', track: 'common', title: '실행 이력·예상 대비 실제 성과', phase: 'P1',
-    summary: '승인 전략의 실제 판매·매출·마진·잔량을 회수해 예측 오차와 원인을 기록합니다.',
-    inputs: ['approved strategy revision', '판매·정산 결과', '실행 기간', '원인 코드'],
+    id: 'F-11', track: 'common', title: '외부 성과 회수·예상 대비 비교', phase: 'P1',
+    summary: '외부 판매·정산 시스템에서 결과를 받아 예측 오차와 원인을 기록합니다. 이 서비스가 판매를 실행하지는 않습니다.',
+    inputs: ['approved strategy revision', '외부 판매·정산 결과', '비교 기간', '원인 코드'],
     outputs: ['예상 vs 실제', '달성률·오차', '잔여·폐기 결과', '모델 검증 데이터'],
     rule: '실제값이 없으면 임의 숫자를 표시하지 않고 미수집 상태로 표시',
   },
@@ -112,18 +112,11 @@ const capabilities: CapabilityCard[] = [
     rule: '업무 알림은 꼭 필요한 상태만 보여주고, 개발·배치 오류는 Grafana와 운영 로그로 확인',
   },
   {
-    id: 'F-13', track: 'common', title: '교차 계열사 번들·재고 이동', phase: 'P2',
-    summary: '서로 다른 계열사의 상품을 묶거나 재고를 이동하는 확장 기능입니다.',
-    inputs: ['구성 상품·수량', '재고 예약', '이동비·수신 capacity', '매출 배분 규칙'],
-    outputs: ['번들 판매 가능 수량', '배분 매출·마진', '품절·판매 제한', '승인 절차'],
-    rule: 'P0/P1에서는 실행하지 않고 계산·데이터 경계만 준비',
-  },
-  {
-    id: 'F-14', track: 'common', title: '고객용 읽기 전용 상품 조회', phase: 'P2',
-    summary: '위험재고 할인상품과 승인된 번들상품을 고객에게 보여주는 확장 화면입니다.',
-    inputs: ['approved strategy', '판매 가능 재고', '공개 가격·혜택', '법적 표시'],
-    outputs: ['상품 목록·상세', '할인·번들 정보', '재고 부족·판매 제한 상태'],
-    rule: '초기에는 장바구니·결제 없이 조회 화면만 준비',
+    id: 'F-13', track: 'common', title: '교차 계열사 번들 전략·재고 이동 검토', phase: 'P2',
+    summary: '서로 다른 계열사의 상품을 묶거나 재고 이동안을 비교하는 확장 기능입니다. 실제 상품 등록·이동은 하지 않습니다.',
+    inputs: ['구성 상품·수량', '현재 재고', '예상 이동비', '매출 배분 규칙'],
+    outputs: ['번들 적용 가능 수량', '배분 매출·마진', '품절·법적 제한', '승인 검토 자료'],
+    rule: 'P0/P1에서는 전략 계산과 검토 자료만 준비하고 외부 시스템 실행은 하지 않음',
   },
   {
     id: 'F-15', track: 'common', title: '수요예측', phase: 'P0',
@@ -162,8 +155,8 @@ const capabilityDetails: Record<string, CapabilityDetails> = {
     done: ['필수값 누락 상품은 추천 불가', '품질 상태가 대시보드에 표시', '격리 데이터가 정상 데이터에 섞이지 않음'],
   },
   'F-05': {
-    micro: ['전체 KPI·정상/위험 비율', '계열사·카테고리·채널 필터', '위험 목록에서 상품 상세 drill-down', '판매·재고·capacity 추이 차트', '권한별 CSV 내보내기'],
-    considerations: ['모든 KPI의 기준시각과 데이터 지연 표시', '수량과 배송·설치 가능량을 같은 숫자로 오해하지 않음', '원가 권한에 따른 금액 마스킹'],
+    micro: ['전체 KPI·정상/위험 비율', '계열사·카테고리·채널 필터', '위험 목록에서 상품 상세 drill-down', '판매·재고·비용 추이 차트', '권한별 CSV 내보내기'],
+    considerations: ['모든 KPI의 기준시각과 데이터 지연 표시', '재고 수량과 비용 정보를 서로 다른 의미로 표시', '원가 권한에 따른 금액 마스킹'],
     done: ['홈에서 위험 규모를 확인', '필터 결과와 상세 목록 수가 일치', '데이터가 오래되면 지연 배지 표시'],
   },
   'F-06': {
@@ -183,7 +176,7 @@ const capabilityDetails: Record<string, CapabilityDetails> = {
   },
   'F-09': {
     micro: ['추천값과 사용자 조정값 분리', '수량·할인·기간·비용 입력 검증', '조건 변경 즉시 재계산', '기준선·추천안·조정안 비교', '시뮬레이션 저장·공유'],
-    considerations: ['소비기한·설치 capacity를 넘는 조건 차단', '반품·수수료·배송·회피비용 중복 차감 금지', '입력 조건과 결과 버전을 함께 저장'],
+    considerations: ['소비기한·정책상 허용 범위를 넘는 조건 차단', '반품·수수료·배송·회피비용 중복 차감 금지', '입력 조건과 결과 버전을 함께 저장'],
     done: ['조건을 바꿨을 때 결과가 즉시 변경', '차단 조건은 계산 결과와 구분', '승인 대상은 저장된 simulation_run으로 재현'],
   },
   'F-10': {
@@ -192,8 +185,8 @@ const capabilityDetails: Record<string, CapabilityDetails> = {
     done: ['승인 상태가 서비스에 남음', 'Teams 메시지에 조건·예상값·상세 링크 포함', '실패한 전송을 운영자가 재시도'],
   },
   'F-11': {
-    micro: ['승인 전략과 실제 거래 매칭', '판매·매출·마진 회수', '실제 잔량·폐기 기록', '예상 대비 오차·달성률 계산', '오차 원인 코드와 검증 데이터 저장'],
-    considerations: ['실제값이 없으면 임의 대체 숫자 금지', '전략 버전·실행 기간·원천 거래를 연결', '결과 데이터의 정산 확정 여부 표시'],
+    micro: ['승인 전략과 외부 결과 매칭', '판매·매출·마진 결과 회수', '실제 잔량·폐기 결과 회수', '예상 대비 오차·달성률 계산', '오차 원인 코드와 검증 데이터 저장'],
+    considerations: ['실제값이 없으면 임의 대체 숫자 금지', '전략 버전·비교 기간·원천 결과를 연결', '결과 데이터의 정산 확정 여부 표시'],
     done: ['전략별 예상·실제 비교 가능', '오차 원인을 계열사별로 분류', '검증된 결과만 이후 예측 모델에 사용'],
   },
   'F-12': {
@@ -202,18 +195,13 @@ const capabilityDetails: Record<string, CapabilityDetails> = {
     done: ['각 기능의 실행 시각·결과·담당 범위가 남음', '실패 원인과 마지막 정상 상태 확인', '운영자가 실패 건을 재시도하고 결과 추적'],
   },
   'F-13': {
-    micro: ['구성 상품 검색·번들 편집', '구성 수량·판매가·재고 예약', '품절·법적 제한 검증', '계열사별 매출·마진 배분', '번들 승인·판매 제한 상태'],
-    considerations: ['P0/P1 실행과 P2 확장을 화면에서 명확히 구분', '구성품 하나의 품절·차단이 전체 판매에 미치는 영향', '교차 계열사 정산·책임 주체'],
-    done: ['판매 가능 수량이 구성품 기준으로 계산', '배분 규칙과 승인 이력 보존', 'P2 실행 버튼이 초기에는 비활성화'],
-  },
-  'F-14': {
-    micro: ['승인 상품 목록·상세 조회', '공개 가격·혜택·재고 상태 표시', '법적 표시·주의사항 노출', '재고 부족·판매 제한 표시', '장바구니·결제 없이 읽기 전용 제공'],
-    considerations: ['승인되지 않은 상품·원가·내부 위험정보 노출 금지', '고객용 문구와 담당자용 계산 근거 분리', '실시간 재고 부족 시 표시 상태 갱신'],
-    done: ['고객이 승인된 상품만 조회', '판매 제한 사유가 안전한 문구로 표시', 'P2 범위임을 운영 화면과 데이터에 표시'],
+    micro: ['구성 상품 검색·번들 편집', '구성 수량·가격·비용 입력', '품절·법적 제한 검증', '계열사별 매출·마진 배분 계산', '번들 검토 자료 저장'],
+    considerations: ['P0/P1 실행과 P2 확장을 화면에서 명확히 구분', '구성품 하나의 품절·차단이 전체 전략에 미치는 영향', '교차 계열사 정산·책임 주체'],
+    done: ['번들 적용 가능 수량이 구성품 기준으로 계산', '배분 규칙과 검토 이력 보존', '외부 판매 시스템 실행 버튼이 없음'],
   },
   'F-15': {
     micro: ['최근 28일 판매이력 조회', '취소·반품·품절일을 구분', '최근 기간별 평균 판매량 계산', '할인·프로모션·시즌·요일 보정', '판매기간별 예상량·소진일 계산', '예측에 사용한 기준 저장'],
-    considerations: ['품절일을 판매 부진으로 잘못 계산하지 않음', '신규 상품은 카테고리 평균 또는 예측 부족으로 표시', '예상량이 현재 가용 재고를 넘지 않도록 제한', '계열사별 단위와 배송·설치 가능량을 구분'],
+    considerations: ['품절일을 판매 부진으로 잘못 계산하지 않음', '신규 상품은 카테고리 평균 또는 예측 부족으로 표시', '예상량이 현재 가용 재고를 넘지 않도록 제한', '실제 판매 처리 조건은 외부 시스템의 책임으로 구분'],
     done: ['상품별 예상 판매량과 계산 기준이 표시', '판매이력이 부족하면 상태가 명확히 표시', '같은 입력과 버전으로 결과를 다시 계산 가능'],
   },
 };
@@ -248,21 +236,21 @@ function CapabilityDetailModal({ capability, onClose }: { capability: Capability
 
 const affiliateProfiles = [
   { id: 'wellness', name: '현대웰니스', unit: 'SKU·lot', color: 'green', focus: '소비기한과 표시·보관조건', fields: 'lot_id · expiry_at · storage_condition · function_claim_class · return_eligible', costs: '배송·포장·수수료 · 쿠폰·포인트 · 반품 검수 · 회수·폐기', stop: '기한·표시·보관·리콜·판매 권한이 확인되지 않으면 차단', signal: '잔여기한 · 판매속도 · 예상 폐기비 · 표시정보 누락' },
-  { id: 'livart', name: '현대리바트', unit: '제품·옵션·프로젝트', color: 'amber', focus: '배송·설치·AS capacity', fields: 'dimension · weight · lead_time · install_slot · delivery_zone · as_cost', costs: '보관·전시 · 배송·설치 · 파손·재배송·회수 · 반품·AS', stop: '배송권역·설치 슬롯·주문제작·AS 조건이 없으면 차단', signal: '부피×보관일 · 납기지연 · 설치 부족 · 파손·AS 비용' },
-  { id: 'greenfood', name: '현대그린푸드', unit: 'SKU·lot·센터', color: 'teal', focus: '소비기한·콜드체인·검사', fields: 'expiry_at · temperature_class · traceability_id · delivery_window · inspection_status', costs: '피킹·포장 · 냉장·냉동 · 보냉재·에너지 · 회수·폐기 · 채널 수수료', stop: '기한·보관·HACCP·검사·콜드체인이 없으면 차단', signal: '기한 압박 · 폐기량 · 온도 이탈 · 배송 capacity' },
+  { id: 'livart', name: '현대리바트', unit: '제품·옵션·프로젝트', color: 'amber', focus: '배송·설치 비용·AS', fields: 'option · lead_time · install_required · delivery_fee · install_fee · as_cost', costs: '보관·전시 · 배송·설치 · 파손·재배송·회수 · 반품·AS', stop: '주문제작·반품·AS 정책과 필수 상품 정보가 없으면 차단', signal: '보관일 · 납기지연 · 파손·AS 비용' },
+  { id: 'greenfood', name: '현대그린푸드', unit: 'SKU·lot·센터', color: 'teal', focus: '소비기한·콜드체인·검사 비용', fields: 'expiry_at · temperature_class · traceability_id · inspection_status · disposal_cost', costs: '피킹·포장 · 냉장·냉동 · 보냉재·에너지 · 회수·폐기 · 채널 수수료', stop: '기한·보관·HACCP·검사 정보가 없으면 차단', signal: '기한 압박 · 폐기량 · 온도 이탈 · 콜드체인 비용' },
 ];
 
 const architectureLayers = [
   ['01', '원천 데이터', 'ERP·POS·WMS·정산에서 기준시각이 있는 snapshot과 이력을 받습니다.'],
-  ['02', '정책·하드 차단', '계열사·카테고리 profile로 판매 가능 여부와 필수값을 먼저 확인합니다.'],
-  ['03', '예측·수식 엔진', '판매량·capacity·비용·기준선·위험을 결정론적으로 계산합니다.'],
+  ['02', '정책·하드 차단', '계열사·카테고리 profile로 전략 적용 가능 여부와 필수값을 먼저 확인합니다.'],
+  ['03', '예측·수식 엔진', '판매이력·비용·기준선·위험을 결정론적으로 계산합니다.'],
   ['04', 'AI 설명·사람 승인', 'LLM은 계산 결과를 설명하고 담당 MD가 최종 조건을 승인합니다.'],
-  ['05', '실행·성과 회수', 'Teams로 전달하고 실제 결과를 받아 다음 정책과 모델을 검증합니다.'],
+  ['05', '전달·성과 회수', 'Teams로 전략을 전달하고 외부 판매·정산 결과를 받아 다음 정책과 모델을 검증합니다.'],
 ];
 
 const formulaRows = [
   ['실행 가능 여부', '모든 하드 차단 조건이 통과해야 1, 하나라도 모르면 0', 'unknown은 추천·승인 차단'],
-  ['예상 판매량', 'min(가용량, 기준량 × 시간효과 × 가격효과 × 채널효과 × 번들효과)', 'confidence는 수량에 곱하지 않고 예측 구간·표본 상태로 표시'],
+  ['예상 판매량', 'min(전략 대상 재고, 기준량 × 시간효과 × 가격효과 × 판매 방식 효과 × 번들효과)', 'confidence는 수량에 곱하지 않고 예측 구간·표본 상태로 표시'],
   ['증분 기여현금이익', '매출 − 변동비 + 회피비용 − 잠식 − 위험손실 − AI 원가 − 기준선', '원가·수수료·반품 중복 차감 금지'],
   ['위험점수', '100 × Σ(신호별 가중치 × 상품별 위험값)', '가중치·임계값은 계열사·카테고리별 버전 관리'],
 ];
@@ -271,31 +259,31 @@ const inventoryColumns = [
   ['계열사', '상품이 어느 계열사에 속하는지', '필터와 권한 범위를 판단합니다.'],
   ['상품 코드', '통합 상품 코드와 계열사 원천 코드', '상품 상세·원천 데이터 추적에 사용합니다.'],
   ['상품명·카테고리', '상품명, 브랜드, 공통 카테고리, 옵션 요약', '같은 이름의 상품을 구분하고 상세로 이동합니다.'],
-  ['판매 채널·운영 단위', '온라인·오프라인·식자재·배송권역·설치권역', '판매 가능 범위와 처리 capacity를 확인합니다.'],
-  ['재고 상태·가용수량', '현재고에서 예약·보류 수량을 뺀 판매 가능 수량', '실제로 처리할 수 있는 수량을 판단합니다.'],
-  ['판매가·소진예상', '판매가, 최근 판매속도, 예상 소진일', '할인·추가입고·처리 우선순위를 정합니다.'],
+  ['추천 판매 방식', '할인·쿠폰·번들·외부 채널 등 비교한 전략 후보', '어떤 방식이 적절한지 검토합니다.'],
+  ['재고 상태·전략 대상 수량', '현재고에서 보류 수량을 뺀 전략 계산 수량', '전략을 적용할 범위를 정합니다.'],
+  ['기준 가격·소진예상', '기준 가격, 최근 판매속도, 예상 소진일', '할인·추가입고·처리 우선순위를 정합니다.'],
   ['위험 태그·추천 행동', '위험 등급, 판단 이유, 다음 검토 행동', '담당자가 바로 확인할 대상을 찾습니다.'],
 ];
 
 const inventoryMockRows = [
-  ['현대웰니스', 'WEL-VIT-001', '멀티비타민 데일리', '건강기능식품 · 영양', '판매중', '320개', '18일', '위험', '소비기한 임박 · 할인 검토'],
-  ['현대리바트', 'LIV-SOF-204', '모듈형 패브릭 소파', '가구 · 거실 · 설치', '판매중', '12개', '74일', '주의', '설치 슬롯 확인'],
-  ['현대그린푸드', 'GFD-SEA-031', '손질 고등어 800g', '식품 · 수산 · 냉동', '판매 제한', '86개', '4일', '위험', '검사 결과 확인'],
+  ['현대웰니스', 'WEL-VIT-001', '멀티비타민 데일리', '건강기능식품 · 영양', '운영중', '320개', '18일', '위험', '소비기한 임박 · 할인 검토'],
+  ['현대리바트', 'LIV-SOF-204', '모듈형 패브릭 소파', '가구 · 거실 · 설치', '운영중', '12개', '74일', '주의', '배송·설치 비용 확인'],
+  ['현대그린푸드', 'GFD-SEA-031', '손질 고등어 800g', '식품 · 수산 · 냉동', '검토 필요', '86개', '4일', '위험', '검사 결과 확인'],
 ];
 
 const detailFields = [
-  ['상단 요약', '상품명·계열사·카테고리·SKU·판매 상태·위험 태그', '현재 어떤 상품을 보고 있는지 즉시 이해'],
+  ['상단 요약', '상품명·계열사·카테고리·SKU·상품 상태·위험 태그', '현재 어떤 상품을 보고 있는지 즉시 이해'],
   ['핵심 지표', '판매가·가용재고·최근 판매속도·예상 소진일·처리기한', '재고를 얼마나 빨리 처리해야 하는지 판단'],
   ['옵션·로트', '색상·사이즈·용량·로트별 수량·소비기한·보관조건', '상품 전체가 아닌 실제 SKU·로트 단위로 확인'],
   ['AI 위험 분석', '위험점수·등급·판단 이유·사용한 기준시각·데이터 상태', '추천이 나온 이유와 부족한 자료를 확인'],
-  ['판매·재고 이력', '입고·판매·반품·조정·프로모션 이력과 추이', '예측과 실제 흐름을 비교하고 원인을 찾음'],
+  ['재고·외부 성과 이력', '입고·외부 판매·반품·조정·프로모션 결과와 추이', '외부 시스템 결과를 예측과 비교하고 원인을 찾음'],
   ['다음 행동', '할인 검토·추가입고 검토·전략 시뮬레이션·승인 요청', '상세 화면에서 다음 단계로 바로 이동'],
 ];
 
 const stateRows = [
   ['데이터', 'received', 'validating', 'accepted / warning / quarantined / rejected'],
   ['위험 진단', 'detected', 'acknowledged', 'in_review → strategy_requested → resolved / suppressed'],
-  ['전략', 'draft', 'generated / edited', 'submitted → approved / rejected → scheduled → executing → completed / failed'],
+  ['전략', 'draft', 'generated / edited', 'submitted → approved / rejected → handed_off → outcome_received / failed'],
   ['Teams', 'not_requested', 'requested', 'sent → delivered / failed → retrying / exhausted'],
 ];
 
@@ -328,7 +316,7 @@ const functionalSpecGroups: FunctionalSpecGroup[] = [
       ['BASE-007', '상품 옵션 조회', '담당자', '색상·크기·용량·구성 등 상품별 선택 조건을 확인합니다.', 'MVP'],
       ['BASE-008', 'SKU 상세 조회', '담당자', '실제로 재고를 세는 가장 작은 단위의 수량·가격·기한·상태를 봅니다.', 'MVP'],
       ['BASE-009', '원천 상품코드 연결', '시스템', '각 계열사의 상품코드와 통합 상품·SKU ID를 연결해 원본을 추적합니다.', 'MVP'],
-      ['BASE-010', '판매 제한 정보 조회', '담당자', '소비기한·설치·검사·법적 표시 등 판매 제한 사유를 확인합니다.', 'MVP'],
+      ['BASE-010', '전략 제한 정보 조회', '담당자', '소비기한·검사·법적 표시·정책 등 전략 제한 사유를 확인합니다.', 'MVP'],
       ['BASE-011', '상품 이미지 조회', '담당자', '상품 목록과 상세에서 저장된 대표 이미지를 보여줍니다.', 'P2'],
       ['BASE-012', '기준정보 변경 이력', '관리자', '상품·카테고리·SKU 상태가 언제 바뀌었는지 기록합니다.', 'P1'],
     ],
@@ -363,7 +351,6 @@ const functionalSpecGroups: FunctionalSpecGroup[] = [
       ['INV-010', '재고표 핵심 열 표시', '담당자', '계열사·상품·SKU·현재수량·판매속도·위험등급·소진예상일을 표시합니다.', 'MVP'],
       ['INV-011', '상품·SKU 상세 이동', '담당자', '표의 행을 누르면 상품 정보와 해당 SKU의 이력 화면으로 이동합니다.', 'MVP'],
       ['INV-012', '판매·재고 추이 조회', '담당자', '상세 화면에서 기간별 판매량과 재고량 변화를 차트로 확인합니다.', 'MVP'],
-      ['INV-013', '배송·설치 가능량 구분', '담당자', '가구·식품의 배송·설치·콜드체인 가능량을 상품 수량과 구분해 표시합니다.', 'MVP'],
       ['INV-014', 'CSV 내보내기', '담당자', '현재 필터 결과를 파일로 내려받아 검토 자료로 사용합니다.', 'P1'],
       ['INV-015', '조회 상태 처리', '시스템', '로딩·데이터 없음·연동 지연·오류 상태를 각각 안내합니다.', 'MVP'],
     ],
@@ -387,9 +374,9 @@ const functionalSpecGroups: FunctionalSpecGroup[] = [
     id: '06', title: '위험재고·수요예측', rows: [
       ['RISK-001', '위험점수 계산', '시스템', '재고수량·판매속도·보관기간과 계열사별 위험 신호를 점수로 계산합니다.', 'MVP'],
       ['RISK-002', '위험등급 분류', '시스템', '점수 기준에 따라 정상·주의·위험으로 분류합니다.', 'MVP'],
-      ['RISK-003', '위험 판단 이유 표시', '담당자', '소비기한 임박·배송·설치 가능량 부족 등 이유를 쉽게 보여줍니다.', 'MVP'],
-      ['RISK-004', '하드 차단 검증', '시스템', '법적 제한·기한·capacity·필수 데이터가 없으면 추천 전에 차단합니다.', 'MVP'],
-      ['RISK-005', '계열사별 위험 요소 적용', '시스템', '웰니스·그린푸드는 소비기한, 리바트는 설치·배송을 반영합니다.', 'MVP'],
+      ['RISK-003', '위험 판단 이유 표시', '담당자', '소비기한 임박·판매속도 저하·보관·폐기 비용 상승 등 이유를 쉽게 보여줍니다.', 'MVP'],
+      ['RISK-004', '하드 차단 검증', '시스템', '법적 제한·기한·필수 데이터가 없으면 추천 전에 차단합니다.', 'MVP'],
+      ['RISK-005', '계열사별 위험 요소 적용', '시스템', '웰니스·그린푸드는 소비기한, 리바트는 보관·파손·AS 비용을 반영합니다.', 'MVP'],
       ['RISK-006', '위험재고 상세 조회', '담당자', '위험 상품의 현재 상태·비용·과거 판매·재고 흐름을 확인합니다.', 'MVP'],
       ['RISK-007', '위험분석 배치 실행', '시스템', '재고 동기화가 끝난 뒤 위험점수를 자동으로 다시 계산합니다.', 'MVP'],
       ['RISK-008', '위험점수 이력 조회', '담당자', '날짜별 점수와 등급이 어떻게 바뀌었는지 확인합니다.', 'P1'],
@@ -412,7 +399,7 @@ const functionalSpecGroups: FunctionalSpecGroup[] = [
       ['AI-003', '전략 후보 생성', '시스템', '허용된 할인·기간·수량·채널 조합을 만들고 차단 조건을 먼저 제거합니다.', 'MVP'],
       ['AI-004', '할인 판매 전략', 'AI', '할인율과 판매기간을 조합한 상품 처리안을 제안합니다.', 'MVP'],
       ['AI-005', '쿠폰·프로모션 전략', 'AI', '쿠폰·포인트·기간 한정 행사 적용안을 제안합니다.', 'MVP'],
-      ['AI-006', '판매 채널 전략', 'AI', '현재 채널 외에 활용할 수 있는 판매 채널을 제안합니다.', 'P1'],
+      ['AI-006', '판매 방식 전략', 'AI', '현재 방식과 외부 채널 활용안을 비교해 적절한 판매 방식을 제안합니다. 실제 등록은 하지 않습니다.', 'P1'],
       ['AI-007', '번들 전략 제안', 'AI', '다른 계열사 상품과 묶었을 때의 후보와 이유를 제안합니다.', 'P1'],
       ['AI-008', '목적별 전략 제공', '담당자', '마진 극대화·빠른 완판·최대 매출 중 목적별 후보를 제공합니다.', 'MVP'],
       ['AI-009', '예상 결과 제공', '시스템', '전략별 예상 판매량·매출·이익·잔여재고를 계산합니다.', 'MVP'],
@@ -435,14 +422,14 @@ const functionalSpecGroups: FunctionalSpecGroup[] = [
       ['BND-001', '번들 후보 추천', '시스템', '위험재고를 기준으로 함께 판매할 수 있는 다른 계열사 상품을 찾습니다.', 'P1'],
       ['BND-002', '번들 구성 편집', '담당자', '구성 상품을 추가·삭제하고 상품별 구성수량을 정합니다.', 'P1'],
       ['BND-003', '번들 판매가격 설정', '담당자', '번들 전체 판매가격과 할인 혜택을 입력합니다.', 'P1'],
-      ['BND-004', '번들 가능수량 계산', '시스템', '구성품 중 가장 적게 남은 수량을 기준으로 판매 가능 번들 수를 계산합니다.', 'P1'],
+      ['BND-004', '번들 적용 가능수량 계산', '시스템', '구성품 중 가장 적게 남은 수량을 기준으로 전략에 적용할 번들 수를 계산합니다.', 'P1'],
       ['BND-005', '번들 제한 검증', '시스템', '품절·법적 제한·기한·중복 상품 포함 여부를 확인합니다.', 'P1'],
       ['BND-006', '번들 매출·마진 계산', '시스템', '번들 가격과 구성 비용을 기준으로 예상 매출·마진을 계산합니다.', 'P1'],
       ['BND-007', '번들 임시 저장', '담당자', '완성 전 번들 구성을 임시 저장하고 다시 편집합니다.', 'P1'],
       ['REVIEW-001', '전략 수정·버전 생성', '담당자', 'AI 추천안을 수정하면 새 버전으로 저장하고 이전 결과를 보존합니다.', 'MVP'],
       ['REVIEW-002', 'Teams 검토 요청', '담당자', '상품·조건·예상 결과·추천 이유를 Teams로 보냅니다.', 'MVP'],
       ['REVIEW-003', 'Teams 전송 상태 확인', '담당자', '작성 중·전송 완료·전송 실패 상태를 서비스에서 확인합니다.', 'MVP'],
-      ['REVIEW-004', '실제 승인 기능 범위', '시스템', 'Teams 안에서 승인·거절하거나 실제 상품을 등록하지 않고 검토 요청까지만 제공합니다.', 'MVP'],
+      ['REVIEW-004', '외부 실행 경계 확인', '시스템', '승인·거절 기록과 전략 전달까지만 제공하고, 주문·결제·배송·상품 등록은 외부 시스템에서 처리합니다.', 'MVP'],
       ['PERF-001', '예상 결과 저장', '시스템', '전략별 예상 판매량·매출·마진·잔여재고를 저장합니다.', 'P1'],
       ['PERF-002', '더미 실제 결과 저장', '시스템', '발표용 판매이력으로 실제 판매량·매출·마진을 저장합니다.', 'P1'],
       ['PERF-003', '예상·실제 비교', '담당자', '예상과 실제의 판매량·매출·마진·잔여재고 차이를 보여줍니다.', 'P1'],
@@ -452,9 +439,6 @@ const functionalSpecGroups: FunctionalSpecGroup[] = [
       ['OPS-002', '분석·예측 이력 조회', '운영자', '위험분석과 수요예측 실행 결과와 사용 버전을 확인합니다.', 'P1'],
       ['OPS-003', '전략 생성·수정 이력', '운영자', '누가 언제 어떤 전략을 만들고 수정했는지 남깁니다.', 'P1'],
       ['OPS-004', '오류·모니터링 상태', '운영자', 'Sentry·ELK·Prometheus·Grafana에서 시스템 오류와 배치 상태를 확인합니다.', 'P1'],
-      ['OPS-005', '고객용 프로모션 조회', '고객', '승인된 위험재고 할인상품과 번들상품을 읽기 전용으로 조회합니다.', 'P2'],
-      ['OPS-006', '고객용 필터·상세', '고객', '계열사·카테고리 필터, 가격·행사기간·품절 상태와 상품 상세를 제공합니다.', 'P2'],
-      ['OPS-007', '주문·결제 제외', '시스템', '초기 MVP에서는 회원가입·장바구니·주문·결제·배송조회를 제공하지 않습니다.', 'P2'],
     ],
   },
 ];
@@ -494,7 +478,7 @@ export default function CapabilitiesPage() {
       <section className="section capability-section">
         <div className="container">
           <div className="capability-stats">
-            <div><strong>15</strong><span>기능 계약</span></div>
+            <div><strong>14</strong><span>기능 계약</span></div>
             <div><strong>3</strong><span>계열사 프로필</span></div>
             <div><strong>5</strong><span>서비스 레이어</span></div>
             <div><strong>P0 → P2</strong><span>단계별 범위</span></div>
@@ -548,7 +532,7 @@ export default function CapabilitiesPage() {
               <div className="inventory-mockup inventory-mockup-table" role="img" aria-label="3개 계열사 통합 재고 조회 화면 목업">
                 <div className="inventory-mock-top"><strong>통합 재고 조회</strong><span>기준시각 2026.06.10 09:00</span></div>
                 <div className="inventory-mock-filters"><span>전체 계열사⌄</span><span>전체 상품군⌄</span><span>전체 위험도⌄</span><b>상품명·코드 검색</b></div>
-                <div className="inventory-mock-table-wrap"><table className="inventory-mock-table"><thead><tr>{['계열사', '상품 코드', '상품명·카테고리', '판매 채널·운영', '상태', '가용재고', '소진예상', '위험', '추천 행동'].map((head) => <th key={head}>{head}</th>)}</tr></thead><tbody>{inventoryMockRows.map((row) => <tr key={row[1]}>{row.map((cell, index) => <td key={`${row[1]}-${index}`} className={index === 7 ? `inventory-mock-risk inventory-mock-risk-${cell === '위험' ? 'danger' : cell === '주의' ? 'warning' : 'safe'}` : undefined}>{index === 1 ? <code>{cell}</code> : index === 7 ? <span>{cell}</span> : cell}</td>)}</tr>)}</tbody></table></div>
+                <div className="inventory-mock-table-wrap"><table className="inventory-mock-table"><thead><tr>{['계열사', '상품 코드', '상품명·카테고리', '추천 판매 방식', '상품 상태', '전략 대상 수량', '소진예상', '위험', '추천 행동'].map((head) => <th key={head}>{head}</th>)}</tr></thead><tbody>{inventoryMockRows.map((row) => <tr key={row[1]}>{row.map((cell, index) => <td key={`${row[1]}-${index}`} className={index === 7 ? `inventory-mock-risk inventory-mock-risk-${cell === '위험' ? 'danger' : cell === '주의' ? 'warning' : 'safe'}` : undefined}>{index === 1 ? <code>{cell}</code> : index === 7 ? <span>{cell}</span> : cell}</td>)}</tr>)}</tbody></table></div>
                 <div className="inventory-mock-foot"><span>원가·취득원가는 기본 화면에 표시하지 않음</span><b>행을 누르면 상품 상세 →</b></div>
               </div>
               <div className="screen-copy"><span className="screen-meta">화면 01 · 목록 화면</span><h3>통합 재고 조회</h3><p>계열사·상품·SKU를 한 표에서 비교하고, 위험도·소진예상일·추천 행동으로 처리 우선순위를 찾습니다.</p></div>
@@ -556,8 +540,8 @@ export default function CapabilitiesPage() {
 
             <article className="inventory-design-card">
               <div className="inventory-mockup inventory-mockup-detail" role="img" aria-label="상품 상세 조회 화면 목업">
-                <div className="inventory-detail-header"><div className="inventory-detail-icon">H</div><div><span>WEL-VIT-001 · 현대웰니스</span><strong>멀티비타민 데일리</strong><small>건강기능식품 · 영양 · 판매중</small></div><i>×</i></div>
-                <div className="inventory-detail-tabs"><b>상품 기본정보</b><span>AI 위험 분석·기준선</span><span>판매·재고 이력</span></div>
+                <div className="inventory-detail-header"><div className="inventory-detail-icon">H</div><div><span>WEL-VIT-001 · 현대웰니스</span><strong>멀티비타민 데일리</strong><small>건강기능식품 · 영양 · 운영중</small></div><i>×</i></div>
+                <div className="inventory-detail-tabs"><b>상품 기본정보</b><span>AI 위험 분석·기준선</span><span>재고·외부 성과 이력</span></div>
                 <div className="inventory-detail-stats"><div><small>판매가</small><strong>₩39,000</strong></div><div><small>가용재고</small><strong>320개</strong></div><div><small>예상 소진</small><strong>18일</strong></div><div><small>위험 등급</small><strong className="text-danger">위험</strong></div></div>
                 <div className="inventory-detail-panels"><div className="inventory-detail-panel"><div><b>옵션·로트별 재고</b><span>총 320개</span></div><ul><li><span>기본형 · 30정</span><strong>210개</strong></li><li><span>기본형 · 60정</span><strong>110개</strong></li></ul></div><div className="inventory-detail-panel"><div><b>최근 흐름</b><span>최근 30일</span></div><ul><li><span>순판매량</span><strong>17개 소진</strong></li><li><span>입고 이력</span><strong>+189개</strong></li><li><span>위험 이유</span><strong className="text-danger">소비기한 임박</strong></li></ul></div></div>
                 <div className="inventory-detail-action"><span>추천: 할인 전략 검토</span><button type="button">AI 전략 수립으로 이동</button></div>
@@ -592,11 +576,11 @@ export default function CapabilitiesPage() {
       </section>
 
       <section className="section-tight band capability-section">
-        <div className="container"><div className="section-heading"><span className="eyebrow">Formula contract</span><h2>수식은 공통 골격,<br />변수는 계열사 프로필</h2><p>수식의 이름과 계산 순서는 통일하지만, 처리기한·capacity·비용·위험 신호는 계열사와 카테고리별 profile에서 가져옵니다.</p></div><div className="formula-contract-grid">{formulaRows.map(([name, formula, rule]) => <article className="formula-contract-card" key={name}><span className="capability-label">{name}</span><code>{formula}</code><p>{rule}</p></article>)}</div><div className="capability-callout"><strong>계산 결과의 필수 버전</strong><p>모든 전략 결과에는 <code>snapshot_id · formula_version · policy_version · model_version</code>을 남겨 같은 입력으로 결과를 재현할 수 있어야 합니다.</p></div></div>
+        <div className="container"><div className="section-heading"><span className="eyebrow">Formula contract</span><h2>수식은 공통 골격,<br />변수는 계열사 프로필</h2><p>수식의 이름과 계산 순서는 통일하지만, 처리기한·비용·위험 신호는 계열사와 카테고리별 profile에서 가져옵니다. 실제 판매·배송·주문 실행은 외부 시스템에서 담당합니다.</p></div><div className="formula-contract-grid">{formulaRows.map(([name, formula, rule]) => <article className="formula-contract-card" key={name}><span className="capability-label">{name}</span><code>{formula}</code><p>{rule}</p></article>)}</div><div className="capability-callout"><strong>계산 결과의 필수 버전</strong><p>모든 전략 결과에는 <code>snapshot_id · formula_version · policy_version · model_version</code>을 남겨 같은 입력으로 결과를 재현할 수 있어야 합니다.</p></div></div>
       </section>
 
       <section className="section capability-section">
-        <div className="container capability-two-column"><div><div className="section-heading"><span className="eyebrow">Lifecycle</span><h2>데이터와 전략은<br /><em>상태로 추적</em>합니다.</h2><p>화면에 보이는 추천 하나가 어느 단계에서 막혔는지, 누가 다음 처리를 해야 하는지 상태로 확인합니다.</p></div><div className="state-list">{stateRows.map(([name, start, middle, end]) => <div className="state-row" key={name}><strong>{name}</strong><span>{start}</span><i>→</i><span>{middle}</span><i>→</i><b>{end}</b></div>)}</div></div><div className="capability-api-card"><span className="eyebrow">Interface surface</span><h3>서비스가 제공하는<br />주요 인터페이스</h3><ul><li><code>GET</code> 상품·재고·위험·이력 조회</li><li><code>POST</code> 전략 추천 요청·시뮬레이션</li><li><code>POST</code> 검토 요청·승인·거절</li><li><code>POST</code> 재고 갱신·위험 재분석 배치</li><li><code>GET</code> 예상 결과와 실제 성과 비교</li></ul><p>모든 응답은 request_id, 기준시각, 권한 범위, 정책·수식 버전을 포함합니다.</p></div></div>
+        <div className="container capability-two-column"><div><div className="section-heading"><span className="eyebrow">Lifecycle</span><h2>데이터와 전략은<br /><em>상태로 추적</em>합니다.</h2><p>화면에 보이는 추천 하나가 어느 단계에서 막혔는지, 누가 다음 검토를 해야 하는지 상태로 확인합니다.</p></div><div className="state-list">{stateRows.map(([name, start, middle, end]) => <div className="state-row" key={name}><strong>{name}</strong><span>{start}</span><i>→</i><span>{middle}</span><i>→</i><b>{end}</b></div>)}</div></div><div className="capability-api-card"><span className="eyebrow">Interface surface</span><h3>서비스가 제공하는<br />주요 인터페이스</h3><ul><li><code>GET</code> 상품·재고·위험·이력 조회</li><li><code>POST</code> 전략 추천 요청·시뮬레이션</li><li><code>POST</code> 검토 요청·승인·거절</li><li><code>POST</code> 재고 갱신·위험 재분석 배치</li><li><code>GET</code> 외부 성과 결과와 예상 비교</li></ul><p>모든 응답은 request_id, 기준시각, 권한 범위, 정책·수식 버전을 포함합니다. 주문·결제·배송 실행 API는 제공하지 않습니다.</p></div></div>
       </section>
 
       <section className="section-tight band capability-section">

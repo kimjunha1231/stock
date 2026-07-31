@@ -8,13 +8,13 @@ type StackTab = 'all' | 'frontend' | 'backend' | 'data' | 'infra' | 'ai';
 const stacks: Record<Exclude<StackTab, 'all'>, { label: string; summary: string; items: [string, string, string][] }> = {
   frontend: {
     label: '프론트엔드',
-    summary: '3개 계열사의 상품·재고·배송·설치 가능량을 같은 화면 언어로 비교하는 운영 UI',
+    summary: '3개 계열사의 상품·재고·비용·전략 결과를 같은 화면 언어로 비교하는 의사결정 UI',
     items: [
       ['React 19 + JavaScript + HTML/CSS', '화면과 컴포넌트', '계열사별 데이터 차이를 재사용 가능한 화면으로 표현'],
       ['Tailwind CSS + shadcn/ui', '스타일·접근성', '공통 디자인 토큰과 키보드 접근 가능한 운영 컴포넌트'],
       ['TanStack Query + Zustand', '상태 관리', '서버 상태 캐시와 시뮬레이션·필터 UI 상태 분리'],
       ['React Router (react-router-dom)', '페이지 이동', '대시보드·상품·위험재고·전략·승인 흐름 라우팅'],
-      ['TanStack Table', '대용량 표', '계열사·채널·상품·로트·배송 가능량 필터/정렬/페이지네이션'],
+      ['TanStack Table', '대용량 표', '계열사·채널·상품·로트·비용·위험 필터/정렬/페이지네이션'],
       ['Vite + pnpm', '빌드·패키지', '빠른 개발 피드백과 재현 가능한 의존성 관리'],
       ['Playwright + Vitest', '검증', '핵심 사용자 흐름 E2E와 계산·상태 단위 테스트'],
     ],
@@ -38,7 +38,7 @@ const stacks: Record<Exclude<StackTab, 'all'>, { label: string; summary: string;
     items: [
       ['Oracle', '업무 원장', '상품·옵션·SKU·재고·판매·비용·승인·감사 이력 저장'],
       ['Redis', '캐시·단기 상태', '대시보드 집계·세션·중복 요청 키·임시 시뮬레이션 캐시'],
-      ['공통 canonical 모델', '통합 기준', '계열사 원천키와 공통 상품/서비스·capacity 키를 매핑'],
+      ['공통 canonical 모델', '통합 기준', '계열사 원천키와 공통 상품·SKU·비용 키를 매핑'],
       ['이력·lineage', '증빙', '원천 시각·버전·단위·결측·중복·계산 버전을 보존'],
     ],
   },
@@ -74,8 +74,8 @@ export default function TechStackPage() {
   const visible = activeTab === 'all' ? Object.entries(stacks) : [[activeTab, stacks[activeTab]]];
 
   return <>
-    <section className="page-hero"><div className="container"><Reveal><span className="eyebrow">03-C · Tech stack &amp; architecture</span></Reveal><Reveal><h1>3개 계열사 통합 서비스를 위한<br /><em>현재 기술 스택</em></h1></Reveal><Reveal><p>상품·재고·배송·설치 가능량을 공통 모델로 연결하고, 권한·계산·승인·증빙을 분리해 운영합니다. 아래 목록은 현재 합의된 스택만 반영합니다.</p></Reveal><div className="formula-hero-points"><span><b>공통</b> React 19 · Java 17 · Oracle</span><span><b>검증</b> Playwright · Vitest · k6</span><span><b>관제</b> Sentry · ELK · Prometheus/Grafana</span></div><div className="affiliate-tabs" role="tablist" aria-label="기술 영역 선택">{tabs.map(([id, label]) => <button type="button" key={id} role="tab" aria-selected={activeTab === id} className={activeTab === id ? 'affiliate-tab active' : 'affiliate-tab'} onClick={() => setActiveTab(id)}><strong>{label}</strong><span>{id === 'all' ? '전체 아키텍처' : stacks[id].summary}</span></button>)}</div></div></section>
+    <section className="page-hero"><div className="container"><Reveal><span className="eyebrow">03-C · Tech stack &amp; architecture</span></Reveal><Reveal><h1>3개 계열사 통합 서비스를 위한<br /><em>현재 기술 스택</em></h1></Reveal><Reveal><p>상품·재고·비용·전략 결과를 공통 모델로 연결하고, 권한·계산·승인·증빙을 분리해 운영합니다. 실제 주문·배송·결제는 외부 시스템의 책임입니다.</p></Reveal><div className="formula-hero-points"><span><b>공통</b> React 19 · Java 17 · Oracle</span><span><b>검증</b> Playwright · Vitest · k6</span><span><b>관제</b> Sentry · ELK · Prometheus/Grafana</span></div><div className="affiliate-tabs" role="tablist" aria-label="기술 영역 선택">{tabs.map(([id, label]) => <button type="button" key={id} role="tab" aria-selected={activeTab === id} className={activeTab === id ? 'affiliate-tab active' : 'affiliate-tab'} onClick={() => setActiveTab(id)}><strong>{label}</strong><span>{id === 'all' ? '전체 아키텍처' : stacks[id].summary}</span></button>)}</div></div></section>
     <section className="section"><div className="container"><div className="section-heading"><span className="eyebrow">Architecture map</span><h2>기술은 기능 경계를 따라 배치합니다.</h2><p>계열사별 차이는 데이터 계약과 정책으로 흡수하고, 인증·계산·승인·관제는 공통 플랫폼으로 관리합니다.</p></div><div className="tech-stack-sections">{visible.map(([id, stack]) => <article className="stack-card" style={{display: 'block', padding: 24}} key={id}><div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 16, flexWrap: 'wrap'}}><div><span className="eyebrow">{id}</span><h3 style={{fontSize: '1.3rem', margin: '8px 0'}}>{stack.label}</h3></div><p style={{color: 'var(--muted)', fontSize: 12, margin: 0, maxWidth: 520}}>{stack.summary}</p></div><div style={{overflowX: 'auto', marginTop: 18}}><table style={{width: '100%', borderCollapse: 'collapse', fontSize: 12}}><thead><tr style={{borderBottom: '2px solid var(--line)', textAlign: 'left'}}><th style={{padding: 10}}>기술</th><th style={{padding: 10}}>역할</th><th style={{padding: 10}}>적용 기준</th></tr></thead><tbody>{stack.items.map(([technology, role, use]) => <tr key={technology} style={{borderBottom: '1px solid var(--line)'}}><td style={{padding: 10, fontWeight: 700}}>{technology}</td><td style={{padding: 10, color: 'var(--blue)'}}>{role}</td><td style={{padding: 10, color: 'var(--muted)'}}>{use}</td></tr>)}</tbody></table></div></article>)}</div></div></section>
-    <section className="section-tight band"><div className="container"><div className="section-heading"><span className="eyebrow">Decision rules</span><h2>기술보다 먼저 지키는 운영 원칙</h2></div><Stagger className="metric-grid"><article className="metric-card"><span className="eyebrow">01 · 권한</span><span className="metric-value">서버 검증</span><p>계열사·채널·역할 scope와 원가·마진 필드 노출을 API에서 강제합니다.</p></article><article className="metric-card"><span className="eyebrow">02 · 계산</span><span className="metric-value">재현성</span><p>기준선 snapshot, 데이터 cutoff, 수식·모델 버전을 함께 저장합니다.</p></article><article className="metric-card"><span className="eyebrow">03 · AI</span><span className="metric-value">Fail closed</span><p>법규·소유권·신선도·capacity·데이터 품질이 확인되지 않으면 추천하지 않습니다.</p></article></Stagger></div></section>
+    <section className="section-tight band"><div className="container"><div className="section-heading"><span className="eyebrow">Decision rules</span><h2>기술보다 먼저 지키는 운영 원칙</h2></div><Stagger className="metric-grid"><article className="metric-card"><span className="eyebrow">01 · 권한</span><span className="metric-value">서버 검증</span><p>계열사·채널·역할 scope와 원가·마진 필드 노출을 API에서 강제합니다.</p></article><article className="metric-card"><span className="eyebrow">02 · 계산</span><span className="metric-value">재현성</span><p>기준선 snapshot, 데이터 cutoff, 수식·모델 버전을 함께 저장합니다.</p></article><article className="metric-card"><span className="eyebrow">03 · AI</span><span className="metric-value">Fail closed</span><p>법규·소유권·신선도·정책·데이터 품질이 확인되지 않으면 추천하지 않습니다.</p></article></Stagger></div></section>
   </>;
 }

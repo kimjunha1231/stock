@@ -5,6 +5,8 @@
 
 이 문서는 세 계열사의 실제 상품군 차이를 DB와 AI 계산에 반영하기 위한 개발 기준입니다. 상품 원천 데이터는 하나의 공통 모델로 모으되, 계열사·카테고리별 속성, 비용, 위험 신호, 허용 전략은 별도 프로필로 관리합니다.
 
+이 서비스는 주문·결제·배송·상품 등록을 실행하지 않습니다. 외부 판매·정산 시스템의 과거 결과는 수요예측과 성과 검증을 위한 입력으로만 회수하고, 이 서비스는 어떤 할인·판매 방식·입고·처리 전략이 적절한지 비교해 담당자에게 전달합니다.
+
 ## 1. 먼저 결론
 
 초기에는 AI 모델을 계열사별로 여러 개 만들지 않습니다.
@@ -13,7 +15,7 @@
 | --- | --- | --- |
 | 트렌드 감지 | 공통 신호 계산기 + 계열사별 키워드·가중치 | 검색·SNS 지수는 상대값일 수 있어 판매량과 함께 해석해야 함 |
 | 수요예측 | 공통 글로벌 모델 + 계열사·카테고리 피처 | 상품별 데이터가 적어도 카테고리·계열사 패턴을 공유할 수 있음 |
-| 위험재고 | 규칙·가중치 기반 결정론적 엔진 | 법규·소비기한·설치·검사 조건은 학습 결과가 아니라 차단 규칙이어야 함 |
+| 위험재고 | 규칙·가중치 기반 결정론적 엔진 | 법규·소비기한·검사·정책 조건은 학습 결과가 아니라 차단 규칙이어야 함 |
 | 전략 추천 | 후보 생성 + 수식/최적화 엔진 | 같은 입력이면 같은 손익 결과가 나와야 승인·감사를 할 수 있음 |
 | 설명 | LLM 1개를 공통 어댑터로 사용 | LLM은 계산된 결과를 쉽게 설명하고 누락 질문만 작성 |
 
@@ -71,7 +73,7 @@ Q_forecast(h) = max(0, exp(log(Q_hat(t+h))))
 
 ### AI-03 위험재고 탐지
 
-법규·소유권·데이터 품질·배송/설치/검사 가능 여부를 먼저 하드 차단하고, 통과한 상품만 점수화합니다.
+법규·소유권·데이터 품질·검사·정책 적용 가능 여부를 먼저 하드 차단하고, 통과한 상품만 점수화합니다.
 
 ```text
 RiskScore_i = 100 × Σ_k (w_k × z_ik)
@@ -88,7 +90,7 @@ LLM에게 바로 “할인율을 정해 달라”고 요청하지 않습니다. 
 
 ```text
 feasible(s) = ownership_ok ∧ legal_ok ∧ freshness_ok
-              ∧ capacity_ok ∧ data_quality_ok
+              ∧ policy_ok ∧ data_quality_ok
 
 Revenue_s = Q_s × sale_price_s - discount_cost_s - benefit_cost_s
 VariableCost_s = commission_s + fulfillment_s + return_expected_s
@@ -100,24 +102,21 @@ M_inc(s) = feasible(s) × (M_s - M_baseline)
 
 가격·재고가 함께 변하는 마크다운 문제는 재고 수준에 따른 가격 경로와 배분을 함께 봐야 한다는 연구를 근거로 합니다. 소비기한 상품은 가격·주문·처분을 함께 최적화해야 한다는 연구를 참고합니다. [Smith & Agrawal (2017)](https://pubsonline.informs.org/doi/abs/10.1287/msom.2016.0609), [Chen·Pang·Pan (2014)](https://pubsonline.informs.org/doi/10.1287/opre.2014.1261)
 
-### AI-05 입고·추가 공급 추천
+### AI-05 입고·추가 공급 전략 추천
 
-트렌드 상승이 곧바로 발주 확정은 아닙니다. 예측수요, 리드타임, 안전재고, 이미 들어오는 물량, 처리 가능량을 함께 계산합니다.
+트렌드 상승이 곧바로 발주 확정은 아닙니다. 예측수요, 리드타임, 안전재고, 이미 들어오는 물량과 비용을 계산해 “추가 입고 검토” 후보만 만듭니다. 실제 발주·입고 처리는 외부 시스템에서 담당합니다.
 
 ```text
 forecast_lead = Σ_{d=1..lead_time} Q_forecast(d)
 safety_stock  = z_service × σ_lead
 target_stock  = forecast_lead + safety_stock
 
-recommended_inbound = clip(
+recommended_inbound_candidate = max(
     target_stock - available_qty - open_inbound_qty,
-    0,
-    supplier_capacity,
-    storage_capacity,
-    delivery_or_install_capacity)
+    0)
 ```
 
-리바트는 `storage_capacity`와 `install_capacity`, 그린푸드는 `cold_chain_capacity`, 웰니스는 `expiry_window`와 공급사 회수 조건이 상한이 됩니다. 예측 오차가 큰 상품은 안전재고를 크게 잡는 대신 “추가 입고 검토” 상태로 낮춰 담당자가 확인합니다.
+리바트는 배송·설치·보관 비용과 납기 정책, 그린푸드는 소비기한·온도·검사 비용, 웰니스는 `expiry_window`와 공급사 회수 조건을 전략 비용과 차단 기준으로 사용합니다. 예측 오차가 큰 상품은 “추가 입고 검토” 상태로 낮춰 담당자가 확인합니다.
 
 ### AI-06 설명·질문 생성
 
@@ -139,7 +138,7 @@ LLM 입력에는 계산된 숫자, 데이터 기간, 모델 버전, 정책 버�
 
 - 현대웰니스 공식몰에는 비타민·마그네슘·오메가3·콜라겐 등 영양제와 세트 상품, 임박 표시가 보입니다. 따라서 `ingredient`, `function_claim`, `target_group`, `lot`, `expiry_at`, `storage_condition`, `claim_review_status`가 중요합니다. [현대웰니스 공식몰](https://www.hyundaiwellness.com/)
 - 현대리바트 상품은 거실·침실·주방 등 공간별 제품, 옵션·사이즈·컬러와 배송·설치·반품/AS가 결합된 구조입니다. 이번 MVP에서는 크기·창고 적재 여부를 직접 계산하지 않고 `delivery_fee`, `free_shipping_threshold`, `install_fee`, `storage_cost_per_day`, `expected_damage_cost`, `expected_return_cost`, `as_cost`처럼 전략에 직접 들어가는 비용을 저장합니다. [리바트 상품 페이지](https://living.hyundailivart.co.kr/p/P100022920), [리바트 고객센터](https://www.hyundailivart.co.kr/csCenter/main)
-- 현대그린푸드는 식자재 유통, 리테일, 건강식 등 다양한 채널과 농산물·수산물·축산물·글로벌상품을 운영합니다. 따라서 `lot`, `expiry_at`, `temperature_class`, `traceability_id`, `inspection_status`, `channel`, `delivery_window`, `cold_chain_capacity`가 중요합니다. [식자재 유통](https://www.hyundaigreenfood.com/po/fb/fdb/FBFDB01L.hgc), [리테일 사업](https://hyundaigreenfood.com/po/fb/rtb/FBRTB01L.hgc)
+- 현대그린푸드는 식자재 유통, 리테일, 건강식 등 다양한 채널과 농산물·수산물·축산물·글로벌상품을 운영합니다. 따라서 `lot`, `expiry_at`, `temperature_class`, `traceability_id`, `inspection_status`, `waste_rate`가 중요합니다. [식자재 유통](https://www.hyundaigreenfood.com/po/fb/fdb/FBFDB01L.hgc), [리테일 사업](https://hyundaigreenfood.com/po/fb/rtb/FBRTB01L.hgc)
 
 식품·건강기능식품은 소비기한·보관방법·표시·주의사항을 판매 가능 여부와 분리해 검증해야 합니다. [식품 등의 표시·광고에 관한 법률](https://law.go.kr/lsInfoP.do?lsiSeq=202703), [식품안전나라 소비기한 안내](https://www.foodsafetykorea.go.kr/portal/board/boardDetail.do?bbs_no=bbs001&menu_grp=MENU_NEW01&menu_no=3120&ntctxt_no=1093173)
 
@@ -188,7 +187,7 @@ livart_sku_profile(sku_id, option_group, delivery_zone, install_required,
 
 greenfood_sku_profile(sku_id, temperature_class, storage_condition,
                       origin, traceability_id, inspection_status,
-                      delivery_window, cold_chain_capacity, waste_rate)
+                      waste_rate, disposal_cost)
 ```
 
 확장 테이블은 `sku_id`를 외래키로 사용하고, 조회·집계에 자주 쓰는 비용 값은 컬럼으로 둡니다. 이번 MVP에서는 가로·세로·높이·부피를 저장하지 않고, 상품별로 직접 적용할 배송·설치·보관·파손·반품 비용을 저장합니다. 원천 상품 코드와 공통 `product_id/sku_id` 매핑은 반드시 보존합니다.
@@ -231,12 +230,12 @@ strategy_cost_snapshot(
 | --- | --- | --- |
 | 계열사·카테고리 | 어느 조직·상품군인지 | 웰니스/영양제, 리바트/거실가구, 그린푸드/농산물 |
 | 상품·SKU | 실제 판매 단위 | 용량·색상·사이즈·로트까지 구분 |
-| 현재 가용수량 | `on_hand - reserved` | 리바트는 설치 가능량, 그린푸드는 콜드체인 가능량 배지 추가 |
+| 현재 가용수량 | `on_hand - reserved` | 외부 시스템에서 보류된 수량을 제외한 전략 계산 수량 |
 | 판매속도·예상수요 | 최근 순판매량과 예측 일일량 | 트렌드 효과가 적용됐는지 표시 |
 | 트렌드 | 상승·유지·하락, 변화율 | 검색·SNS·판매 신호별 출처와 수집시각 |
-| 처리기한 | 위험을 바꾸는 시간 | 웰니스/그린푸드는 소비기한, 리바트는 보관일·납기·설치일 |
+| 처리기한 | 위험을 바꾸는 시간 | 웰니스/그린푸드는 소비기한, 리바트는 보관일·납기 |
 | 위험점수·등급 | 0~100, 정상·주의·위험 | 기여 신호를 클릭하면 원천값 표시 |
-| 차단 상태 | 판매·추천 가능 여부 | 표시 누락, 검사 보류, 설치 슬롯 부족 등 |
+| 차단 상태 | 전략 추천 가능 여부 | 표시 누락, 검사 보류, 소유권·정책 미확인 등 |
 | 추천 다음 행동 | 검토용 결과 | 추가 입고 검토, 할인 검토, 유지, 처리 우선 |
 | 데이터 기준시각 | 결과가 언제 기준인지 | snapshot·forecast run 시간 |
 
@@ -267,12 +266,12 @@ strategy_cost_snapshot(
 5. 하드 차단과 위험점수 엔진을 고정하고, 전략 후보 계산을 연결합니다.
 6. 계열사별 정책 프로필을 적용해 같은 SKU라도 다른 전략 조건으로 계산합니다.
 7. 통합 재고 표에서 근거·예측 구간·추천 다음 행동을 확인하게 합니다.
-8. 승인·실행 후 실제 판매·잔여재고를 회수해 모델 오차와 정책 효과를 비교합니다.
+8. 승인된 전략을 외부 시스템에 전달한 뒤 실제 판매·잔여재고를 회수해 모델 오차와 정책 효과를 비교합니다.
 
 ## 8. 모델 도입 보류 조건
 
 - 검색·SNS 신호의 상품 매핑이 불안정하면 트렌드 효과를 0으로 두고 판매이력만 사용
 - 판매이력이 너무 짧거나 품절 보정이 안 되면 “예측 부족”으로 표시
 - 계열사별 원가·처리비·소유권이 확정되지 않으면 마진 순위를 만들지 않음
-- 식품 표시·검사·보관조건, 리바트 설치·배송 가능량이 없으면 해당 후보를 차단
+- 식품 표시·검사·보관조건, 리바트 배송·설치 비용 정책이 없으면 해당 후보를 차단하거나 비용 미반영 경고
 - 실제 결과가 충분히 쌓이기 전에는 자동 입고·자동 가격변경을 실행하지 않음

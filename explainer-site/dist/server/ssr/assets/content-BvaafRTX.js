@@ -92,8 +92,8 @@ var sources = [
 		id: "affiliate-livart-product",
 		kind: "계열사",
 		title: "현대리바트 공식 상품 페이지",
-		location: "배송·설치 예정일, 설치기사 연락, 배송 연기 조건",
-		note: "가구 전략에 제품 수량뿐 아니라 설치 슬롯·배송·반품·AS 비용을 넣어야 하는 근거",
+		location: "배송·설치 안내, 배송 연기 조건",
+		note: "가구 전략에 제품 수량뿐 아니라 배송·설치·반품·AS 비용을 넣어야 하는 근거",
 		url: "https://company.hyundailivart.co.kr/p/P200086559?buyNow=P200086559"
 	},
 	{
@@ -180,8 +180,8 @@ var sources = [
 		id: "livart-corporation",
 		kind: "계열사",
 		title: "현대리바트 법인사업",
-		location: "대량 납품·자체 배송·계약별 납기",
-		note: "B2B/프로젝트 주문은 MOQ·계약가격·납기·배송 capacity를 별도 입력해야 하는 근거",
+		location: "대량 납품·계약별 납기·비용",
+		note: "B2B/프로젝트 상품은 MOQ·계약가격·납기·배송·설치 비용을 별도 입력해야 하는 근거",
 		url: "https://company.hyundailivart.co.kr/ko/corporation"
 	},
 	{
@@ -189,7 +189,7 @@ var sources = [
 		kind: "계열사",
 		title: "현대리바트 스마트워크센터",
 		location: "스마트팩토리·자동화 공정·물류센터",
-		note: "원자재·WIP·공정 capacity·출고 상태를 가구 전략 입력으로 고려하는 근거",
+		note: "가구 전략에 상품 상태·납기·보관·출고 비용을 연결하는 근거",
 		url: "https://company.hyundailivart.co.kr/ko/smartWorkCenter"
 	},
 	{
@@ -397,7 +397,7 @@ var glossary = [
 		category: "기본 개념",
 		short: "시간·비용·품질 조건 때문에 손실 가능성이 커진 재고",
 		definition: "장기보관, 유통기한 임박, 방송 후 잔량, 공간 점유, 반품·파손 가능성 등으로 처리 지연 시 손실이 커질 수 있는 재고입니다.",
-		example: "소비기한이 임박한 식품과 설치 슬롯이 부족한 리빙 상품은 서로 다른 이유로 위험재고가 됩니다.",
+		example: "소비기한이 임박한 식품과 보관·파손 비용이 큰 리빙 상품은 서로 다른 이유로 위험재고가 됩니다.",
 		related: ["hard-stop"],
 		sourceIds: ["project-types", "project-simulation"]
 	},
@@ -406,7 +406,7 @@ var glossary = [
 		term: "하드 차단",
 		category: "AI·운영",
 		short: "비용보다 먼저 적용되는 실행 불가 조건",
-		definition: "식품안전, 유통기한, 소유권, 법규, 물류 용량, 데이터 품질처럼 위반하면 전략 후보에서 제외해야 하는 조건입니다.",
+		definition: "식품안전, 유통기한, 소유권, 법규, 계열사 정책, 데이터 품질처럼 위반하면 전략 후보에서 제외해야 하는 조건입니다.",
 		example: "재고 소유권이 확인되지 않거나 식품안전 조건을 위반하는 할인안은 이익이 높아도 추천하지 않습니다.",
 		related: ["risk-stock"],
 		sourceIds: [
@@ -421,7 +421,7 @@ var glossary = [
 		category: "재고·물류",
 		short: "판매·회수·기부·폐기 중 하나를 확정해야 하는 남은 시간",
 		definition: "식품의 소비기한, 패션의 시즌 종료, 캠페인의 종료일처럼 전략 선택을 바꾸는 시간 제약입니다. 단순한 비용이 아니라 먼저 지켜야 할 제약조건입니다.",
-		example: "소비기한이 임박한 식품은 전국 배송보다 안전한 보관·배송 capacity가 있는 대안을 먼저 비교합니다.",
+		example: "소비기한이 임박한 식품은 추가 입고보다 폐기·할인·회수 비용을 먼저 비교합니다.",
 		related: ["risk-stock", "hard-stop"],
 		sourceIds: [
 			"project-types",
@@ -477,30 +477,16 @@ var glossary = [
 		short: "판매 후 되돌아오는 비율",
 		definition: "온라인 비중이 늘면 매출만큼 반품·검수·재판매 가능성·환불 시점이 중요해집니다. 상품군과 채널별로 따로 계산합니다.",
 		formula: "반품률 = 반품 수량 ÷ 판매 수량",
-		example: "건강기능식품, 가구, 식품의 반품·취소 조건을 같은 값으로 두지 않습니다.",
-		related: ["contribution-cash", "delivery-capacity"],
+		example: "건강기능식품, 가구, 식품의 반품·취소 비용을 같은 값으로 두지 않습니다.",
+		related: ["contribution-cash"],
 		sourceIds: ["project-simulation"]
-	},
-	{
-		id: "delivery-capacity",
-		term: "배송 capacity",
-		category: "마케팅·고객",
-		short: "특정 시간에 처리할 수 있는 배송·포장·픽업의 최대량",
-		definition: "배송 가능 상품과 오늘 처리 가능한 수량은 다릅니다. 냉장·냉동, 포장 인력, 차량, 매장 픽업 슬롯을 함께 제한조건으로 둡니다.",
-		example: "D-5 식품을 할인해도 당일 배송 capacity가 없으면 판매 전략이 아닙니다.",
-		related: ["dday", "return-rate"],
-		sourceIds: [
-			"affiliate-greenfood-reservation",
-			"mfds-storage",
-			"project-simulation"
-		]
 	},
 	{
 		id: "scenario",
 		term: "시나리오",
 		category: "AI·운영",
 		short: "같은 전략을 보수·기본·낙관 조건으로 나눠 보는 방법",
-		definition: "수요, 할인 반응, 반품률, 배송 capacity, 폐기확률이 달라질 때 결과 범위를 보여줍니다. 낙관값만으로 승인하지 않습니다.",
+		definition: "수요, 할인 반응, 반품률, 배송·설치 비용, 폐기확률이 달라질 때 결과 범위를 보여줍니다. 낙관값만으로 승인하지 않습니다.",
 		example: "기본 시나리오가 좋아도 보수 시나리오의 하방이 감당 가능한지 확인합니다.",
 		related: ["baseline", "fallback"],
 		sourceIds: ["project-policy", "project-simulation"]
@@ -603,7 +589,7 @@ var mvpMenu = [
 			"위험점수·등급",
 			"판단 이유와 사용한 항목",
 			"장기보관·판매부진 목록",
-			"소비기한·설치·검사 차단 사유",
+			"소비기한·검사·법적 제한 사유",
 			"과거 판매·재고 추이"
 		]
 	},
@@ -614,7 +600,7 @@ var mvpMenu = [
 		purpose: "선택한 상품에 적용할 전략 후보를 만듭니다.",
 		features: [
 			"할인·쿠폰·프로모션 추천",
-			"판매 채널 활용안",
+			"판매 방식 비교안·외부 채널 활용안",
 			"마진 극대화·빠른 소진·최대 매출 목적",
 			"예상 결과와 추천 이유",
 			"전략 초안 저장"
@@ -626,8 +612,8 @@ var mvpMenu = [
 		kind: "조건 비교 화면",
 		purpose: "조건을 바꿔보고 결과를 비교합니다.",
 		features: [
-			"수량·할인율·판매기간 변경",
-			"쿠폰·포인트·배송비·프로모션 비용 반영",
+			"수량·할인율·처리기간 변경",
+			"쿠폰·포인트·배송·설치 예상비·프로모션 비용 반영",
 			"예상 판매량·매출·이익·마진율",
 			"소진기간·잔여재고·회피비용",
 			"기준선·추천안·수정안 비교"
@@ -641,8 +627,8 @@ var mvpMenu = [
 		features: [
 			"연관 상품 추천",
 			"구성 상품·수량·가격 설정",
-			"품절·판매 제한 검증",
-			"판매 가능 번들 수량",
+			"품절·법적 제한 검증",
+			"번들 적용 가능 수량",
 			"예상 매출·마진"
 		]
 	},
