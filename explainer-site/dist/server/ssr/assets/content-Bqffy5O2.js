@@ -223,6 +223,62 @@ var sources = [
 		location: "표시된 보관방법과 안전한계기간",
 		note: "SKU별 로트·보관온도·포장 데이터로 처리기한을 계산해야 하는 보조 근거",
 		url: "https://www.law.go.kr/LSW/admRulInfoP.do?admRulSeq=2100000210351"
+	},
+	{
+		id: "google-trends-help",
+		kind: "기술",
+		title: "Google Trends 데이터 안내",
+		location: "상대 검색 관심도·비교·급증 해석",
+		note: "검색량 절대값이 아니라 상대지수로 제공되므로 내부 판매량과 함께 사용해야 하는 근거",
+		url: "https://support.google.com/trends/answer/4365533?hl=ko"
+	},
+	{
+		id: "google-trends-api",
+		kind: "기술",
+		title: "Google Trends API 안내",
+		location: "일·주·월 단위 검색 관심도 수집",
+		note: "프로그램으로 검색 관심도와 지역·기간별 추이를 수집하는 연동 후보",
+		url: "https://developers.google.com/search/apis/trends"
+	},
+	{
+		id: "social-demand-informs",
+		kind: "기술",
+		title: "The Value of Social Media Data in Fashion Forecasting",
+		location: "INFORMS MSOM 2023",
+		note: "SNS·검색지수를 판매예측에 결합해 초기 출하량을 판단한 실증 연구",
+		url: "https://pubsonline.informs.org/doi/10.1287/msom.2023.1193"
+	},
+	{
+		id: "social-demand-ibm",
+		kind: "기술",
+		title: "Can social media trends improve demand forecast?",
+		location: "IBM Research",
+		note: "SNS 게시물 수를 외생변수로 넣어 수요예측 정확도를 개선한 연구 요약",
+		url: "https://research.ibm.com/publications/can-social-media-trends-improve-demand-forecast"
+	},
+	{
+		id: "forecasting-tscv",
+		kind: "기술",
+		title: "Forecasting: Principles and Practice — Time series cross-validation",
+		location: "OTexts",
+		note: "미래 데이터를 섞지 않는 rolling-origin 검증과 다기간 예측 평가 근거",
+		url: "https://otexts.com/fpp3/tscv.html"
+	},
+	{
+		id: "forecasting-hierarchy",
+		kind: "기술",
+		title: "Forecasting hierarchical and grouped time series",
+		location: "OTexts",
+		note: "SKU·카테고리·계열사 집계 예측이 서로 맞아야 한다는 계층형 예측 근거",
+		url: "https://otexts.com/fpp3/hierarchical.html"
+	},
+	{
+		id: "forecasting-predictors",
+		kind: "기술",
+		title: "Forecasting — Selecting predictors",
+		location: "OTexts",
+		note: "예측 성능을 기준으로 외부 변수를 선택하고 과적합을 줄이는 근거",
+		url: "https://otexts.com/fpp3/selecting-predictors.html"
 	}
 ];
 var glossary = [
@@ -493,6 +549,10 @@ var navItems = [
 	{
 		href: "/ai-guide",
 		label: "AI 기능 길라잡이"
+	},
+	{
+		href: "/ai-blueprint",
+		label: "AI 모델·데이터 설계"
 	},
 	{
 		href: "/formulas",

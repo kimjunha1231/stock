@@ -72,7 +72,7 @@ export default function AiGuidePage() {
         <Reveal><span className="eyebrow">AI feature guide</span></Reveal>
         <Reveal><h1>AI가 무엇을 보고,<br /><em>어떻게 추천하는지</em> 한눈에 봅니다.</h1></Reveal>
         <Reveal><p>이 페이지는 개발자가 기능을 구현할 때 필요한 입력·계산·결과·예외 처리를 한 흐름으로 정리한 길라잡이입니다. AI는 상품을 마음대로 바꾸지 않고, 근거 있는 후보를 만들어 담당자의 판단을 돕습니다.</p></Reveal>
-        <div className="actions" style={{ marginTop: 26 }}><Link className="button primary" href="/formulas">수식과 한글 설명 보기 →</Link><Link className="button secondary" href="/capabilities">기능 명세 보기</Link></div>
+        <div className="actions" style={{ marginTop: 26 }}><Link className="button primary" href="/ai-blueprint">AI 모델·데이터 설계 보기 →</Link><Link className="button secondary" href="/formulas">수식과 한글 설명 보기</Link></div>
       </div>
     </section>
 

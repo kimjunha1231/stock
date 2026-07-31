@@ -69,6 +69,13 @@ export const sources: SourceItem[] = [
   { id: 'greenfood-lab', kind: '계열사', title: '현대그린푸드 식품위생연구소', location: '미생물·잔류농약·중금속·HACCP 검사', note: '검사·보류·해제·리콜 상태를 판매전략보다 먼저 검증하는 근거', url: 'https://hyundaigreenfood.com/po/is/fdr/ISFDR02L.hgc' },
   { id: 'food-label-standards', kind: '법·정책', title: '식약처 「식품등의 표시기준」', location: '소비기한·보관방법·안전 주의사항', note: '표시기준은 판매 허가가 아니며, 누락·불일치·리콜은 하드 차단해야 한다는 공공 근거', url: 'https://www.law.go.kr/LSW/admRulInfoP.do?admRulSeq=2100000263350' },
   { id: 'food-expiry-setting', kind: '법·정책', title: '식품·건강기능식품 소비기한 설정기준', location: '표시된 보관방법과 안전한계기간', note: 'SKU별 로트·보관온도·포장 데이터로 처리기한을 계산해야 하는 보조 근거', url: 'https://www.law.go.kr/LSW/admRulInfoP.do?admRulSeq=2100000210351' },
+  { id: 'google-trends-help', kind: '기술', title: 'Google Trends 데이터 안내', location: '상대 검색 관심도·비교·급증 해석', note: '검색량 절대값이 아니라 상대지수로 제공되므로 내부 판매량과 함께 사용해야 하는 근거', url: 'https://support.google.com/trends/answer/4365533?hl=ko' },
+  { id: 'google-trends-api', kind: '기술', title: 'Google Trends API 안내', location: '일·주·월 단위 검색 관심도 수집', note: '프로그램으로 검색 관심도와 지역·기간별 추이를 수집하는 연동 후보', url: 'https://developers.google.com/search/apis/trends' },
+  { id: 'social-demand-informs', kind: '기술', title: 'The Value of Social Media Data in Fashion Forecasting', location: 'INFORMS MSOM 2023', note: 'SNS·검색지수를 판매예측에 결합해 초기 출하량을 판단한 실증 연구', url: 'https://pubsonline.informs.org/doi/10.1287/msom.2023.1193' },
+  { id: 'social-demand-ibm', kind: '기술', title: 'Can social media trends improve demand forecast?', location: 'IBM Research', note: 'SNS 게시물 수를 외생변수로 넣어 수요예측 정확도를 개선한 연구 요약', url: 'https://research.ibm.com/publications/can-social-media-trends-improve-demand-forecast' },
+  { id: 'forecasting-tscv', kind: '기술', title: 'Forecasting: Principles and Practice — Time series cross-validation', location: 'OTexts', note: '미래 데이터를 섞지 않는 rolling-origin 검증과 다기간 예측 평가 근거', url: 'https://otexts.com/fpp3/tscv.html' },
+  { id: 'forecasting-hierarchy', kind: '기술', title: 'Forecasting hierarchical and grouped time series', location: 'OTexts', note: 'SKU·카테고리·계열사 집계 예측이 서로 맞아야 한다는 계층형 예측 근거', url: 'https://otexts.com/fpp3/hierarchical.html' },
+  { id: 'forecasting-predictors', kind: '기술', title: 'Forecasting — Selecting predictors', location: 'OTexts', note: '예측 성능을 기준으로 외부 변수를 선택하고 과적합을 줄이는 근거', url: 'https://otexts.com/fpp3/selecting-predictors.html' },
 ];
 
 export const glossary: GlossaryTerm[] = [
@@ -273,6 +280,7 @@ export const glossary: GlossaryTerm[] = [
 export const navItems = [
   { href: '/problem', label: '문제' },
   { href: '/ai-guide', label: 'AI 기능 길라잡이' },
+  { href: '/ai-blueprint', label: 'AI 모델·데이터 설계' },
   { href: '/formulas', label: '수식 및 계산' },
   { href: '/capabilities', label: '기능 명세' },
   { href: '/tech-stack', label: '기술 스택 & 아키텍처' },

@@ -9,6 +9,7 @@ async function generateStaticPages() {
   const routes = [
     '/',
     '/ai-guide',
+    '/ai-blueprint',
     '/capabilities',
     '/formulas',
     '/glossary',
