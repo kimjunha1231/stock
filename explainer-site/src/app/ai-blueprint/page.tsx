@@ -4,11 +4,11 @@ import { SourceNote } from '@/components/source-note';
 import { sources } from '@/lib/content';
 
 const modelRows = [
-  ['모델 1', '트렌드 신호 계산기', '검색·SNS·조회·판매 변화율을 정규화해 상승·유지·하락 신호 생성', '상품 키워드, 수집시각, 상대 검색지수, 언급량, 순판매량', '학습보다 데이터 품질·출처·중복 제거를 먼저 확인'],
-  ['모델 2', '트렌드 반영 수요예측', '기본수요에 트렌드·가격·프로모션·요일·계절 효과를 추가해 일별 예측', '판매·품절·반품·가격·프로모션·트렌드 자료', '기준모델과 시간순 검증(rolling-origin)을 거친 뒤 운영 반영'],
-  ['엔진 1', '위험·하드 차단 엔진', '법규·소유권·기한·배송·설치·검사·데이터 품질을 먼저 검사하고 위험점수 계산', '정책 프로필, 재고, 로트, 비용, 가능량', 'AI 학습 결과가 아니라 정해진 규칙으로 고정'],
-  ['엔진 2', '전략·시뮬레이션 엔진', '허용된 후보의 예상 판매·매출·마진·잔여재고를 계산하고 목적별 순위화', '예측수요, 가격, 할인, 비용, 기준선, 정책 버전', '같은 입력이면 같은 결과가 나와야 함'],
-  ['모델 3', 'AI 설명 도우미(LLM)', '계산 결과와 근거를 담당자가 이해할 문장과 확인 질문으로 변환', '계산 결과 데이터(JSON), 데이터 기간, 모델·정책 버전', '숫자·가격·수량을 새로 만들거나 바꾸지 않음'],
+  ['모델 1', '트렌드 신호 계산기', '통계 계산', '검색·SNS·조회·판매 변화율을 정규화해 상승·유지·하락 신호 생성', '상품 키워드, 수집시각, 상대 검색지수, 언급량, 순판매량', '학습보다 데이터 품질·출처·중복 제거를 먼저 확인'],
+  ['모델 2', '트렌드 반영 수요예측', '학습 모델', '기본수요에 트렌드·가격·프로모션·요일·계절 효과를 추가해 일별 예측', '판매·품절·반품·가격·프로모션·트렌드 자료', '기준모델과 시간순 검증(rolling-origin)을 거친 뒤 운영 반영'],
+  ['엔진 1', '위험·하드 차단 엔진', '규칙 엔진', '법규·소유권·기한·배송·설치·검사·데이터 품질을 먼저 검사하고 위험점수 계산', '정책 프로필, 재고, 로트, 비용, 가능량', 'AI 학습 결과가 아니라 정해진 규칙으로 고정'],
+  ['엔진 2', '전략·시뮬레이션 엔진', '수식 엔진', '허용된 후보의 예상 판매·매출·마진·잔여재고를 계산하고 목적별 순위화', '예측수요, 가격, 할인, 비용, 기준선, 정책 버전', '같은 입력이면 같은 결과가 나와야 함'],
+  ['모델 3', 'AI 설명 도우미(LLM)', '생성형 AI', '계산 결과와 근거를 담당자가 이해할 문장과 확인 질문으로 변환', '계산 결과 데이터(JSON), 데이터 기간, 모델·정책 버전', '숫자·가격·수량을 새로 만들거나 바꾸지 않음'],
 ];
 
 const productRows = [
@@ -25,6 +25,28 @@ const dbRows = [
   ['AI 입력', 'trend_signal(트렌드 신호) · feature_snapshot(계산용 자료 묶음) · forecast_run(예측 실행 기록)', '트렌드 원천과 예측값·예측구간·모델 버전 저장'],
   ['전략', 'policy_profile(계열사 정책) · risk_assessment(위험 평가) · strategy_candidate(전략 후보) · simulation_run(시뮬레이션 기록)', '계열사 정책, 위험 이유, 후보와 시뮬레이션 결과 저장'],
   ['운영', 'model_version(모델 버전) · data_quality_issue(데이터 오류) · approval_event(승인 기록) · audit_log(변경 이력)', '재현·승인·오류·변경 이력 추적'],
+];
+
+const profileRows = [
+  ['현대웰니스', 'wellness_product_profile', '성분·기능·대상·로트·소비기한·보관조건·표시·회수상태', '소비기한 임박·표시 누락·회수·폐기비용'],
+  ['현대리바트', 'livart_product_profile', '가로·세로·높이·중량·색상·옵션·배송권역·설치슬롯', '보관공간·배송·설치·파손·반품·AS'],
+  ['현대그린푸드', 'greenfood_product_profile', '로트·소비기한·온도구분·검사·이력추적·채널·콜드체인', '소비기한·냉장/냉동·검사·폐기비용'],
+];
+
+const guideFormulaRows = [
+  ['트렌드 신호', '검색관심도 변화 + SNS 언급량 변화 + 판매량 변화 + 조회·찜·장바구니 변화', '검색량만 급증해도 판매·재고 데이터가 부족하면 자동 입고로 확정하지 않음'],
+  ['수요예측', '기본수요 + 트렌드 효과 + 가격 효과 + 프로모션 효과 + 계절·요일 효과 + 계열사·카테고리 효과', '처음에는 기준모델과 비교하고, 예측 범위와 데이터 부족 상태를 함께 표시'],
+  ['위험 판단', '위험점수 0~100 + 법규·소유권·기한·배송·설치·검사 하드 차단', '점수가 낮아도 판매 불가 조건이면 추천 후보에서 제외'],
+  ['전략 목적함수', '할인 후 매출 − 수수료 − 배송·설치비 − 프로모션비 − 반품비 + 회피 보관·폐기비용 − 잠식 − 위험손실', '기준선과 비교해 최대 마진·빠른 소진·최대 매출·위험 최소화 순위를 따로 계산'],
+];
+
+const operationSteps = [
+  ['01', '원천 데이터 수집', 'ERP·POS·WMS·판매채널에서 상품·재고·판매 자료를 가져옵니다.'],
+  ['02', '상품·SKU 통합', '계열사 원천 코드를 공통 상품·SKU ID와 연결합니다.'],
+  ['03', '품질·트렌드 확인', '품절·반품·오류를 정리하고 검색·SNS·판매 변화를 계산합니다.'],
+  ['04', '수요예측', '기본수요와 트렌드·가격·프로모션·계절 효과로 앞으로의 판매량을 예측합니다.'],
+  ['05', '위험·전략 계산', '하드 차단 후 전략 후보별 매출·비용·마진·잔여재고를 계산합니다.'],
+  ['06', '설명·승인·성과 회수', 'AI가 결과를 쉽게 설명하고 담당자가 승인한 뒤 실제 결과를 다시 저장합니다.'],
 ];
 
 const strategyRows = [
@@ -57,10 +79,30 @@ export default function AiBlueprintPage() {
       </div>
     </section>
 
+    <section className="section blueprint-team-guide-section">
+      <div className="container">
+        <div className="section-heading"><span className="eyebrow">팀원용 상세 설계 가이드</span><h2>처음 읽는 팀원도<br /><em>이 페이지 하나로 이해합니다.</em></h2><p>이 프로젝트는 계열사마다 AI를 따로 만드는 것이 아니라, 공통 계산 흐름에 계열사·상품별 정책 프로필을 끼워 넣는 구조입니다.</p></div>
+        <div className="blueprint-decision-grid"><article><span>01</span><strong>학습 모델 1개</strong><p>판매·품절·가격·프로모션·트렌드를 함께 보는 공통 수요예측 모델입니다.</p></article><article><span>02</span><strong>통계 계산 1개</strong><p>검색·SNS·조회·판매량 변화로 트렌드 상승·유지·하락을 계산합니다.</p></article><article><span>03</span><strong>설명용 AI 1개</strong><p>수식 엔진이 계산한 결과만 받아 담당자에게 쉬운 말로 설명합니다.</p></article><article><span>04</span><strong>규칙·수식 엔진</strong><p>위험 차단과 손익 계산은 같은 입력에 같은 결과가 나오도록 고정합니다.</p></article></div>
+        <div className="blueprint-guide-rule"><strong>가장 중요한 분리 원칙</strong><p>AI 설명 도우미가 가격·수량을 직접 정하지 않습니다. <b>수요예측 → 위험·하드 차단 → 전략 수식 계산 → AI 설명 → 담당자 승인</b> 순서로 작동합니다.</p></div>
+
+        <div className="blueprint-guide-section-heading"><span>계열사별 상품 프로필</span><h3>공통 상품 테이블에<br /><em>각 계열사 필드를 덧붙입니다.</em></h3><p>실제 상품군이 다르기 때문에 소비기한·설치·콜드체인 같은 값은 계열사 확장 프로필에 저장합니다.</p></div>
+        <div className="blueprint-source-layout"><div className="blueprint-source-main"><div className="blueprint-guide-table-wrap"><table className="blueprint-guide-table"><caption className="sr-only">계열사별 확장 프로필과 위험 요소</caption><thead><tr><th scope="col">계열사</th><th scope="col">확장 프로필</th><th scope="col">저장할 핵심 필드</th><th scope="col">전략에서 먼저 보는 위험</th></tr></thead><tbody>{profileRows.map((row) => <tr key={row[0]}>{row.map((cell, index) => <td key={`${row[0]}-${index}`}>{index === 0 ? <strong>{cell}</strong> : index === 1 ? <code>{cell}</code> : cell}</td>)}</tr>)}</tbody></table></div></div><SourceRail ids={['affiliate-wellness', 'affiliate-livart-product', 'affiliate-greenfood', 'food-label-law']} note="공식 계열사 상품·사업 자료를 기준으로 필요한 필드를 나눈 이유입니다." /></div>
+
+        <div className="blueprint-guide-two-column"><div><div className="blueprint-guide-section-heading"><span>공통 ID 기준</span><h3>DB는 이 키로<br /><em>끝까지 연결합니다.</em></h3></div><div className="blueprint-key-list"><div><code>product_id</code><span>공통 상품 단위</span><p>계열사가 달라도 같은 상품 개념으로 묶는 ID입니다.</p></div><div><code>sku_id</code><span>실제 재고·판매 단위</span><p>용량·색상·사이즈·로트가 다르면 별도 SKU로 관리합니다.</p></div><div><code>source_sku_id</code><span>원천 시스템 코드</span><p>각 계열사의 ERP·POS·WMS 원본을 추적하는 코드입니다.</p></div><div><code>policy_profile</code><span>계열사·카테고리 정책</span><p>가중치·임계값·허용 전략·비용 계산 조건을 버전으로 저장합니다.</p></div></div></div><div><div className="blueprint-guide-section-heading"><span>개발자가 보는 입력·결과</span><h3>계산을 바꿔도<br /><em>근거가 남아야 합니다.</em></h3></div><div className="blueprint-rule-card"><p><b>입력</b> 상품·SKU·재고·판매·가격·프로모션·트렌드·계열사 정책·비용</p><p><b>결과</b> 예측수요·위험점수·차단사유·전략 후보·예상 매출·마진·잔여재고</p><p><b>필수 기록</b> 기준시각·데이터 상태·model_version·formula_version·policy_version·snapshot_id</p><p><b>보류 조건</b> 데이터가 부족하거나 법규·기한·설치·검사·콜드체인 확인이 안 되면 “확인 필요”로 표시</p></div></div></div>
+
+        <div className="blueprint-guide-section-heading"><span>수식을 읽는 순서</span><h3>검색량 하나가 아니라<br /><em>여러 신호를 합쳐 판단합니다.</em></h3><p>아래 표는 수식의 기술 이름보다 “무엇을 보고, 어떤 결정을 돕는지”를 먼저 설명합니다.</p></div>
+        <div className="blueprint-guide-table-wrap"><table className="blueprint-guide-table"><caption className="sr-only">AI 기능별 수식과 적용 원칙</caption><thead><tr><th scope="col">계산 영역</th><th scope="col">쉽게 말한 계산 구조</th><th scope="col">적용할 때 지킬 점</th></tr></thead><tbody>{guideFormulaRows.map((row) => <tr key={row[0]}>{row.map((cell, index) => <td key={`${row[0]}-${index}`}>{index === 0 ? <strong>{cell}</strong> : cell}</td>)}</tr>)}</tbody></table></div>
+
+        <div className="blueprint-guide-section-heading"><span>개발·운영 흐름</span><h3>데이터가 들어와<br /><em>성과로 돌아오는 순서</em></h3></div>
+        <div className="blueprint-operation-flow">{operationSteps.map(([num, title, body]) => <article key={num}><span>{num}</span><strong>{title}</strong><p>{body}</p></article>)}</div>
+        <div className="blueprint-guide-rule blueprint-guide-rule-green"><strong>MVP에서 자동화하지 않는 것</strong><p>자동 입고·자동 가격변경·자동 판매 등록은 하지 않습니다. 추천과 시뮬레이션 결과를 담당자가 확인하고 승인한 뒤 실제 운영으로 넘깁니다.</p></div>
+      </div>
+    </section>
+
     <section className="section">
       <div className="container">
         <div className="section-heading"><span className="eyebrow">추천 구성</span><h2>AI를 5개로 나누되,<br /><em>모델은 최소화합니다.</em></h2><p>트렌드와 수요를 예측하고, 위험·손익 계산은 재현 가능한 엔진으로 고정합니다. AI 설명 도우미는 마지막 설명 단계에만 둡니다.</p></div>
-        <div className="blueprint-source-layout"><div className="blueprint-source-main"><div className="capability-detail-table-wrap"><table className="capability-detail-table"><caption className="sr-only">AI 모델과 결정론적 엔진의 역할</caption><thead><tr><th scope="col">구분</th><th scope="col">모델·엔진</th><th scope="col">하는 일</th><th scope="col">필요 자료</th><th scope="col">운영 원칙</th></tr></thead><tbody>{modelRows.map((row) => <tr key={row[0]}>{row.map((cell, index) => <td key={`${row[0]}-${index}`}>{index === 1 ? <strong>{cell}</strong> : cell}</td>)}</tr>)}</tbody></table></div></div><SourceRail ids={['google-trends-help', 'social-demand-informs', 'forecasting-tscv', 'forecasting-hierarchy']} note="검색·SNS 신호와 예측 검증 방식을 정한 근거입니다." /></div>
+        <div className="blueprint-source-layout"><div className="blueprint-source-main"><div className="capability-detail-table-wrap"><table className="capability-detail-table"><caption className="sr-only">AI 모델과 결정론적 엔진의 역할</caption><thead><tr><th scope="col">구분</th><th scope="col">모델·엔진</th><th scope="col">AI 여부</th><th scope="col">하는 일</th><th scope="col">필요 자료</th><th scope="col">운영 원칙</th></tr></thead><tbody>{modelRows.map((row) => <tr key={row[0]}>{row.map((cell, index) => <td key={`${row[0]}-${index}`}>{index === 1 ? <strong>{cell}</strong> : cell}</td>)}</tr>)}</tbody></table></div></div><SourceRail ids={['google-trends-help', 'social-demand-informs', 'forecasting-tscv', 'forecasting-hierarchy']} note="검색·SNS 신호와 예측 검증 방식을 정한 근거입니다." /></div>
       </div>
     </section>
 
