@@ -548,11 +548,7 @@ var navItems = [
 	},
 	{
 		href: "/ai-guide",
-		label: "AI 기능 길라잡이"
-	},
-	{
-		href: "/ai-blueprint",
-		label: "AI 모델·데이터 설계"
+		label: "AI 기능·데이터 가이드"
 	},
 	{
 		href: "/formulas",

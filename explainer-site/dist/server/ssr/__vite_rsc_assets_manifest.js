@@ -1,9 +1,9 @@
 export default {
-  "bootstrapScriptContent": "import(\"/assets/index-lB2ALIzK.js\")",
+  "bootstrapScriptContent": "import(\"/assets/index-BD4wfRQ9.js\")",
   "clientReferenceDeps": {
     "593f344dc510": {
       "js": [
-        "/assets/index-lB2ALIzK.js",
+        "/assets/index-BD4wfRQ9.js",
         "/assets/rolldown-runtime-S-ySWqyJ.js",
         "/assets/framework-CXnKph_e.js"
       ],
@@ -14,31 +14,31 @@ export default {
         "/assets/image-CFgqE4Ha.js",
         "/assets/rolldown-runtime-S-ySWqyJ.js",
         "/assets/framework-CXnKph_e.js",
-        "/assets/index-lB2ALIzK.js"
+        "/assets/index-BD4wfRQ9.js"
       ],
       "css": []
     },
     "15c18cfaeeff": {
       "js": [
-        "/assets/layout-segment-context-DztnB9lZ.js",
+        "/assets/layout-segment-context-pl2X-gXu.js",
         "/assets/rolldown-runtime-S-ySWqyJ.js",
-        "/assets/index-lB2ALIzK.js",
+        "/assets/index-BD4wfRQ9.js",
         "/assets/framework-CXnKph_e.js"
       ],
       "css": []
     },
     "c2747888630f": {
       "js": [
-        "/assets/link-C9zE3rwN.js",
+        "/assets/link-8nn-FTKM.js",
         "/assets/rolldown-runtime-S-ySWqyJ.js",
-        "/assets/index-lB2ALIzK.js",
+        "/assets/index-BD4wfRQ9.js",
         "/assets/framework-CXnKph_e.js"
       ],
       "css": []
     },
     "8c0f216c4604": {
       "js": [
-        "/assets/index-lB2ALIzK.js",
+        "/assets/index-BD4wfRQ9.js",
         "/assets/rolldown-runtime-S-ySWqyJ.js",
         "/assets/framework-CXnKph_e.js"
       ],
@@ -46,24 +46,24 @@ export default {
     },
     "9cc0f627b052": {
       "js": [
-        "/assets/page-DavoQiTO.js",
+        "/assets/page-BxpsIuwm.js",
         "/assets/rolldown-runtime-S-ySWqyJ.js",
         "/assets/framework-CXnKph_e.js",
         "/assets/reveal-YOJmgnTk.js",
-        "/assets/content-a3QfrLIv.js",
-        "/assets/index-lB2ALIzK.js"
+        "/assets/content-CmIZYP-W.js",
+        "/assets/index-BD4wfRQ9.js"
       ],
       "css": []
     },
     "372050548a1b": {
       "js": [
-        "/assets/page-B9YGep0F.js",
+        "/assets/page-CZYeKb3o.js",
         "/assets/rolldown-runtime-S-ySWqyJ.js",
         "/assets/framework-CXnKph_e.js",
-        "/assets/link-C9zE3rwN.js",
-        "/assets/index-lB2ALIzK.js",
+        "/assets/link-8nn-FTKM.js",
+        "/assets/index-BD4wfRQ9.js",
         "/assets/reveal-YOJmgnTk.js",
-        "/assets/content-a3QfrLIv.js"
+        "/assets/content-CmIZYP-W.js"
       ],
       "css": []
     },
@@ -73,39 +73,39 @@ export default {
         "/assets/rolldown-runtime-S-ySWqyJ.js",
         "/assets/framework-CXnKph_e.js",
         "/assets/reveal-YOJmgnTk.js",
-        "/assets/index-lB2ALIzK.js"
+        "/assets/index-BD4wfRQ9.js"
       ],
       "css": []
     },
     "fa4438e99613": {
       "js": [
-        "/assets/glossary-browser-DN1Ofyoq.js",
+        "/assets/glossary-browser-DuqpyjKL.js",
         "/assets/rolldown-runtime-S-ySWqyJ.js",
         "/assets/framework-CXnKph_e.js",
-        "/assets/content-a3QfrLIv.js",
-        "/assets/index-lB2ALIzK.js"
+        "/assets/content-CmIZYP-W.js",
+        "/assets/index-BD4wfRQ9.js"
       ],
       "css": []
     },
     "e0b926a333ff": {
       "js": [
-        "/assets/site-shell-DG25w3Th.js",
+        "/assets/site-shell-1BudzOkc.js",
         "/assets/rolldown-runtime-S-ySWqyJ.js",
         "/assets/framework-CXnKph_e.js",
-        "/assets/link-C9zE3rwN.js",
-        "/assets/index-lB2ALIzK.js",
-        "/assets/content-a3QfrLIv.js"
+        "/assets/link-8nn-FTKM.js",
+        "/assets/index-BD4wfRQ9.js",
+        "/assets/content-CmIZYP-W.js"
       ],
       "css": []
     },
     "f30fcd25c92f": {
       "js": [
-        "/assets/term-hint-XrwzxNq7.js",
+        "/assets/term-hint-DHvgVo_j.js",
         "/assets/rolldown-runtime-S-ySWqyJ.js",
         "/assets/framework-CXnKph_e.js",
-        "/assets/link-C9zE3rwN.js",
-        "/assets/index-lB2ALIzK.js",
-        "/assets/content-a3QfrLIv.js"
+        "/assets/link-8nn-FTKM.js",
+        "/assets/index-BD4wfRQ9.js",
+        "/assets/content-CmIZYP-W.js"
       ],
       "css": []
     }
@@ -114,7 +114,7 @@ export default {
     "src/app/layout.tsx": {
       "js": [],
       "css": [
-        "/assets/index-D3AD-sM-.css"
+        "/assets/index-CKhifsl7.css"
       ]
     }
   }

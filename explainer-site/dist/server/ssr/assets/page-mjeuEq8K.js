@@ -1,7 +1,7 @@
 import { t as require_jsx_runtime, w as __toESM, y as require_react } from "../index.js";
 import Link from "./link-BjpPdlMN.js";
 import { t as Reveal } from "./reveal-ASYv3BuO.js";
-import { a as sources } from "./content-Bqffy5O2.js";
+import { a as sources } from "./content-dTZIMMT4.js";
 //#region src/components/source-note.tsx
 var import_react = /* @__PURE__ */ __toESM(require_react(), 1);
 var import_jsx_runtime = require_jsx_runtime();

@@ -49,6 +49,24 @@ const operationSteps = [
   ['06', '설명·승인·성과 회수', 'AI가 결과를 쉽게 설명하고 담당자가 승인한 뒤 실제 결과를 다시 저장합니다.'],
 ];
 
+const aiFunctionRows = [
+  ['AI-01', '트렌드 신호 수집·해석', '검색·SNS·판매·조회 변화가 갑자기 늘거나 줄었는지 감지', '검색어 추이·SNS 언급량·판매량·조회수·프로모션 노출량', '상승·하락 신호·변화율·출처·수집시각', '“검색과 판매가 2주 연속 늘었습니다. 입고 확대를 검토하세요.”'],
+  ['AI-02', '트렌드 반영 수요예측', '평소 판매 흐름에 트렌드·계절·요일·가격·프로모션 효과를 반영', '판매이력·품절·반품·가격·할인·시즌·요일·트렌드 점수', '예상 일판매량·예측 범위·예상 소진일·신뢰 상태', '판매 이력이 부족하면 “예측 부족”으로 표시하고 자동 입고하지 않음'],
+  ['AI-03', '위험재고 탐지', '판매속도·남은 기한·비용·데이터 품질로 위험 정도를 계산', '현재고·예상수요·보관일·소비기한·보관비·폐기비·품질상태', '위험점수 0~100·정상/주의/위험·판단 이유', '법규·소유권·기한·설치·검사 문제는 점수보다 먼저 추천 차단'],
+  ['AI-04', '판매전략 후보 추천', '목표에 맞춰 할인·쿠폰·채널·번들·처리 시점을 조합', '예상수요·허용 할인·채널 비용·재고·처리기한·정책', '최대 3개 전략·예상 판매·매출·이익·잔여재고·추천 이유', '숫자는 수식 엔진이 계산하고 AI는 설명만 작성'],
+  ['AI-05', '전략 시뮬레이션·설명', '수량·할인율·기간·비용을 바꾸며 기준선·추천안·수정안을 비교', '시뮬레이션 조건·정책 버전·기준 시점 자료·수요예측', '예상 판매·매출·마진·소진기간·잔여재고·회피비용', '조건을 바꿀 때마다 같은 수식으로 즉시 다시 계산'],
+];
+
+const forecastingSteps = [
+  ['1. 데이터 모으기', '상품·SKU별 판매량, 품절, 가격·할인, 프로모션, 반품·취소, 재고·입고 이력을 최소 28일 이상 쌓습니다.'],
+  ['2. 트렌드 신호 만들기', '검색·SNS·조회수는 날짜와 출처를 함께 저장하고 전주 대비 변화율과 7일 이동평균을 계산합니다.'],
+  ['3. 학습용 정답 만들기', '예측 기준일 이후 실제 7일·14일 판매량을 연결합니다. 품절로 못 판 날은 판매 부진으로 학습하지 않습니다.'],
+  ['4. 모델 학습·비교하기', '카테고리 평균·이동평균을 기준으로 두고 트렌드 변수를 추가한 모델의 오차가 줄어드는지 비교합니다.'],
+  ['5. 시간 순서로 검증하기', '과거로 학습하고 이후 기간으로 검증하며 미래 데이터를 섞지 않습니다. 계열사·카테고리별 오차도 따로 봅니다.'],
+  ['6. 운영에 연결하기', '예측값·예측 범위·사용 기간·모델 버전을 저장하고 신뢰도가 낮으면 보수적 규칙 결과로 대체합니다.'],
+  ['7. 실제 결과로 점검하기', '전략 실행 후 실제 판매·매출·잔여재고와 예측을 비교합니다. 검증 전 자동 재학습·자동 입고는 하지 않습니다.'],
+];
+
 const strategyRows = [
   ['최대 마진', '기준선보다 추가 이익(M_inc)이 가장 큰 후보', '판매가·할인·수수료·배송·반품·회피비용', '최소 마진 미만이면 제외'],
   ['빠른 소진', '처리기한 안의 소진기간·잔여재고', '예측 판매량·현재고·처리기한·입고 리드타임', '기한 안에 처리 불가하면 제외'],
@@ -72,9 +90,9 @@ export default function AiBlueprintPage() {
   return <>
     <section className="page-hero capability-hero">
       <div className="container">
-        <Reveal><span className="eyebrow">AI 모델·데이터 설계</span></Reveal>
-        <Reveal><h1>계열사와 상품이 달라도<br /><em>같은 기준으로 연결하는 설계</em></h1></Reveal>
-        <Reveal><p>AI 모델, Oracle 데이터 구조, 통합 재고 표, 계열사별 전략 조건을 한 문서에 묶었습니다. 공통 엔진을 재사용하되 상품 특성은 프로필로 분리하는 것이 핵심입니다.</p></Reveal>
+        <Reveal><span className="eyebrow">AI 기능·데이터·개발 가이드</span></Reveal>
+        <Reveal><h1>AI가 무엇을 보고,<br /><em>어떻게 추천하는지 한 번에 이해합니다.</em></h1></Reveal>
+        <Reveal><p>AI 기능, 계열사별 상품 데이터, Oracle 저장 구조, 통합 재고 화면, 수식, 학습·검증 순서를 하나로 연결했습니다. 처음 보는 팀원도 이 페이지를 읽고 개발 흐름을 설명할 수 있도록 구성했습니다.</p></Reveal>
         <div className="actions" style={{ marginTop: 26 }}><Link className="button primary" href="/ai-guide">AI 기능 길라잡이 보기 →</Link><Link className="button secondary" href="/formulas">수식 및 계산 보기</Link></div>
       </div>
     </section>
@@ -84,6 +102,9 @@ export default function AiBlueprintPage() {
         <div className="section-heading"><span className="eyebrow">팀원용 상세 설계 가이드</span><h2>처음 읽는 팀원도<br /><em>이 페이지 하나로 이해합니다.</em></h2><p>이 프로젝트는 계열사마다 AI를 따로 만드는 것이 아니라, 공통 계산 흐름에 계열사·상품별 정책 프로필을 끼워 넣는 구조입니다.</p></div>
         <div className="blueprint-decision-grid"><article><span>01</span><strong>학습 모델 1개</strong><p>판매·품절·가격·프로모션·트렌드를 함께 보는 공통 수요예측 모델입니다.</p></article><article><span>02</span><strong>통계 계산 1개</strong><p>검색·SNS·조회·판매량 변화로 트렌드 상승·유지·하락을 계산합니다.</p></article><article><span>03</span><strong>설명용 AI 1개</strong><p>수식 엔진이 계산한 결과만 받아 담당자에게 쉬운 말로 설명합니다.</p></article><article><span>04</span><strong>규칙·수식 엔진</strong><p>위험 차단과 손익 계산은 같은 입력에 같은 결과가 나오도록 고정합니다.</p></article></div>
         <div className="blueprint-guide-rule"><strong>가장 중요한 분리 원칙</strong><p>AI 설명 도우미가 가격·수량을 직접 정하지 않습니다. <b>수요예측 → 위험·하드 차단 → 전략 수식 계산 → AI 설명 → 담당자 승인</b> 순서로 작동합니다.</p></div>
+
+        <div className="blueprint-guide-section-heading"><span>AI 기능별 상세</span><h3>필요한 자료부터<br /><em>화면에 보일 결과까지</em></h3><p>아래 표는 “무슨 AI인가”보다 실제 개발자가 연결해야 할 입력·결과·예외를 기준으로 정리했습니다.</p></div>
+        <div className="blueprint-guide-table-wrap blueprint-ai-function-table-wrap"><table className="blueprint-guide-table"><caption className="sr-only">AI 기능별 입력·결과·사용 방식</caption><thead><tr><th scope="col">ID</th><th scope="col">기능</th><th scope="col">하는 일</th><th scope="col">필요 자료</th><th scope="col">결과</th><th scope="col">팀원이 기억할 점</th></tr></thead><tbody>{aiFunctionRows.map((row) => <tr key={row[0]}>{row.map((cell, index) => <td key={`${row[0]}-${index}`}>{index === 0 ? <code>{cell}</code> : index === 1 ? <strong>{cell}</strong> : cell}</td>)}</tr>)}</tbody></table></div>
 
         <div className="blueprint-guide-section-heading"><span>계열사별 상품 프로필</span><h3>공통 상품 테이블에<br /><em>각 계열사 필드를 덧붙입니다.</em></h3><p>실제 상품군이 다르기 때문에 소비기한·설치·콜드체인 같은 값은 계열사 확장 프로필에 저장합니다.</p></div>
         <div className="blueprint-source-layout"><div className="blueprint-source-main"><div className="blueprint-guide-table-wrap"><table className="blueprint-guide-table"><caption className="sr-only">계열사별 확장 프로필과 위험 요소</caption><thead><tr><th scope="col">계열사</th><th scope="col">확장 프로필</th><th scope="col">저장할 핵심 필드</th><th scope="col">전략에서 먼저 보는 위험</th></tr></thead><tbody>{profileRows.map((row) => <tr key={row[0]}>{row.map((cell, index) => <td key={`${row[0]}-${index}`}>{index === 0 ? <strong>{cell}</strong> : index === 1 ? <code>{cell}</code> : cell}</td>)}</tr>)}</tbody></table></div></div><SourceRail ids={['affiliate-wellness', 'affiliate-livart-product', 'affiliate-greenfood', 'food-label-law']} note="공식 계열사 상품·사업 자료를 기준으로 필요한 필드를 나눈 이유입니다." /></div>
@@ -95,6 +116,8 @@ export default function AiBlueprintPage() {
 
         <div className="blueprint-guide-section-heading"><span>개발·운영 흐름</span><h3>데이터가 들어와<br /><em>성과로 돌아오는 순서</em></h3></div>
         <div className="blueprint-operation-flow">{operationSteps.map(([num, title, body]) => <article key={num}><span>{num}</span><strong>{title}</strong><p>{body}</p></article>)}</div>
+        <div className="blueprint-guide-section-heading"><span>수요예측 학습 체크리스트</span><h3>모델은 복잡하게 만들기보다<br /><em>검증 가능한 순서로 키웁니다.</em></h3><p>기준모델보다 실제 오차가 줄었는지 확인한 뒤 다음 단계로 넘어갑니다.</p></div>
+        <div className="blueprint-guide-table-wrap"><table className="blueprint-guide-table"><caption className="sr-only">수요예측 모델 학습 체크리스트</caption><thead><tr><th scope="col">단계</th><th scope="col">팀원이 할 일</th></tr></thead><tbody>{forecastingSteps.map((row) => <tr key={row[0]}><td><strong>{row[0]}</strong></td><td>{row[1]}</td></tr>)}</tbody></table></div>
         <div className="blueprint-guide-rule blueprint-guide-rule-green"><strong>MVP에서 자동화하지 않는 것</strong><p>자동 입고·자동 가격변경·자동 판매 등록은 하지 않습니다. 추천과 시뮬레이션 결과를 담당자가 확인하고 승인한 뒤 실제 운영으로 넘깁니다.</p></div>
       </div>
     </section>
