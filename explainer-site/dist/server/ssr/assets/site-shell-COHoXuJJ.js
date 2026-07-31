@@ -1,6 +1,6 @@
 import { t as require_jsx_runtime, w as __toESM, y as require_react } from "../index.js";
 import Link from "./link-BjpPdlMN.js";
-import { i as navItems } from "./content-BvaafRTX.js";
+import { i as navItems } from "./content-Bb1C003s.js";
 //#region src/components/site-shell.tsx
 var import_react = /* @__PURE__ */ __toESM(require_react(), 1);
 var import_jsx_runtime = require_jsx_runtime();

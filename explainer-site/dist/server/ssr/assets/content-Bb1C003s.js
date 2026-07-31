@@ -534,7 +534,7 @@ var navItems = [
 	},
 	{
 		href: "/ai-guide",
-		label: "AI 기능·데이터 가이드"
+		label: "AI 설계·운영 가이드"
 	},
 	{
 		href: "/capabilities",

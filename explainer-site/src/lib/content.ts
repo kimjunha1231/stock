@@ -274,7 +274,7 @@ export const glossary: GlossaryTerm[] = [
 
 export const navItems = [
   { href: '/problem', label: '문제' },
-  { href: '/ai-guide', label: 'AI 기능·데이터 가이드' },
+  { href: '/ai-guide', label: 'AI 설계·운영 가이드' },
   { href: '/capabilities', label: '기능 명세' },
   { href: '/tech-stack', label: '기술 스택 & 아키텍처' },
   { href: '/glossary', label: '용어 사전' },
