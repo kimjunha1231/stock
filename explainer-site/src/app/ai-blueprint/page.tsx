@@ -36,6 +36,16 @@ const strategyRows = [
 
 const sourceIds = ['affiliate-wellness', 'affiliate-livart-product', 'affiliate-greenfood', 'google-trends-help', 'social-demand-informs', 'forecasting-tscv', 'forecasting-hierarchy', 'markdown-paper', 'markdown-perishable', 'food-label-law'];
 
+function SourceRail({ ids, note }: { ids: string[]; note: string }) {
+  const sourceItems = ids.map((id) => sources.find((source) => source.id === id)).filter(Boolean);
+  return <aside className="blueprint-source-rail" aria-label="관련 출처">
+    <span className="blueprint-source-kicker">이 내용의 출처</span>
+    <strong>근거를 바로 확인하세요</strong>
+    <p>{note}</p>
+    <div className="blueprint-source-list">{sourceItems.map((source) => source ? <SourceNote key={source.id} source={source} /> : null)}</div>
+  </aside>;
+}
+
 export default function AiBlueprintPage() {
   return <>
     <section className="page-hero capability-hero">
@@ -50,48 +60,47 @@ export default function AiBlueprintPage() {
     <section className="section">
       <div className="container">
         <div className="section-heading"><span className="eyebrow">Recommended architecture</span><h2>AI를 5개로 나누되,<br /><em>모델은 최소화합니다.</em></h2><p>트렌드와 수요를 예측하고, 위험·손익 계산은 재현 가능한 엔진으로 고정합니다. LLM은 마지막 설명 단계에만 둡니다.</p></div>
-        <div className="capability-detail-table-wrap"><table className="capability-detail-table"><caption className="sr-only">AI 모델과 결정론적 엔진의 역할</caption><thead><tr><th scope="col">구분</th><th scope="col">모델·엔진</th><th scope="col">하는 일</th><th scope="col">필요 자료</th><th scope="col">운영 원칙</th></tr></thead><tbody>{modelRows.map((row) => <tr key={row[0]}>{row.map((cell, index) => <td key={`${row[0]}-${index}`}>{index === 1 ? <strong>{cell}</strong> : cell}</td>)}</tr>)}</tbody></table></div>
+        <div className="blueprint-source-layout"><div className="blueprint-source-main"><div className="capability-detail-table-wrap"><table className="capability-detail-table"><caption className="sr-only">AI 모델과 결정론적 엔진의 역할</caption><thead><tr><th scope="col">구분</th><th scope="col">모델·엔진</th><th scope="col">하는 일</th><th scope="col">필요 자료</th><th scope="col">운영 원칙</th></tr></thead><tbody>{modelRows.map((row) => <tr key={row[0]}>{row.map((cell, index) => <td key={`${row[0]}-${index}`}>{index === 1 ? <strong>{cell}</strong> : cell}</td>)}</tr>)}</tbody></table></div></div><SourceRail ids={['google-trends-help', 'social-demand-informs', 'forecasting-tscv', 'forecasting-hierarchy']} note="검색·SNS 신호와 예측 검증 방식을 정한 근거입니다." /></div>
       </div>
     </section>
 
     <section className="section band">
       <div className="container">
         <div className="section-heading"><span className="eyebrow">Affiliate product map</span><h2>실제 상품군을 보면<br /><em>필요한 필드가 달라집니다.</em></h2><p>공식몰·사업 페이지에서 확인되는 대표 상품과 운영 조건을 기준으로 DB 확장 필드를 정합니다.</p></div>
-        <div className="functional-spec-table-wrap"><table className="functional-spec-table"><caption className="sr-only">계열사별 대표 상품군과 전략 입력</caption><thead><tr><th scope="col">계열사</th><th scope="col">대표 상품군</th><th scope="col">상품·재고 필드</th><th scope="col">위험·비용 필드</th><th scope="col">전략에 반영</th></tr></thead><tbody>{productRows.map((row) => <tr key={row[0]}>{row.map((cell, index) => <td key={`${row[0]}-${index}`}>{index === 0 ? <strong>{cell}</strong> : cell}</td>)}</tr>)}</tbody></table></div>
+        <div className="blueprint-source-layout"><div className="blueprint-source-main"><div className="functional-spec-table-wrap"><table className="functional-spec-table"><caption className="sr-only">계열사별 대표 상품군과 전략 입력</caption><thead><tr><th scope="col">계열사</th><th scope="col">대표 상품군</th><th scope="col">상품·재고 필드</th><th scope="col">위험·비용 필드</th><th scope="col">전략에 반영</th></tr></thead><tbody>{productRows.map((row) => <tr key={row[0]}>{row.map((cell, index) => <td key={`${row[0]}-${index}`}>{index === 0 ? <strong>{cell}</strong> : cell}</td>)}</tr>)}</tbody></table></div></div><SourceRail ids={['affiliate-wellness', 'affiliate-livart-product', 'affiliate-greenfood', 'food-label-law']} note="공식 계열사 자료와 식품 표시 규정을 참고한 상품 필드입니다." /></div>
       </div>
     </section>
 
     <section className="section">
       <div className="container">
         <div className="section-heading"><span className="eyebrow">Canonical data model</span><h2>DB는 공통 테이블과<br /><em>계열사 확장 프로필</em>로 나눕니다.</h2><p>상품을 한 표에 억지로 맞추지 않고, 공통 ID로 연결한 뒤 계열사에만 필요한 속성은 별도 프로필로 저장합니다.</p></div>
-        <div className="functional-spec-table-wrap"><table className="functional-spec-table"><caption className="sr-only">Oracle 공통 테이블 구성</caption><thead><tr><th scope="col">영역</th><th scope="col">테이블</th><th scope="col">저장 목적</th></tr></thead><tbody>{dbRows.map((row) => <tr key={row[0]}><td><strong>{row[0]}</strong></td><td><code>{row[1]}</code></td><td>{row[2]}</td></tr>)}</tbody></table></div>
-        <div className="capability-callout"><strong>중요한 키</strong><p><code>product_id</code>는 공통 상품, <code>sku_id</code>는 실제 판매·재고 단위, <code>source_sku_id</code>는 계열사 원천 코드입니다. 같은 이름의 상품이라도 SKU·옵션·로트가 다르면 반드시 별도 행으로 관리합니다.</p></div>
+        <div className="blueprint-source-layout"><div className="blueprint-source-main"><div className="functional-spec-table-wrap"><table className="functional-spec-table"><caption className="sr-only">Oracle 공통 테이블 구성</caption><thead><tr><th scope="col">영역</th><th scope="col">테이블</th><th scope="col">저장 목적</th></tr></thead><tbody>{dbRows.map((row) => <tr key={row[0]}><td><strong>{row[0]}</strong></td><td><code>{row[1]}</code></td><td>{row[2]}</td></tr>)}</tbody></table></div><div className="capability-callout"><strong>중요한 키</strong><p><code>product_id</code>는 공통 상품, <code>sku_id</code>는 실제 판매·재고 단위, <code>source_sku_id</code>는 계열사 원천 코드입니다. 같은 이름의 상품이라도 SKU·옵션·로트가 다르면 반드시 별도 행으로 관리합니다.</p></div></div><SourceRail ids={['project-types', 'project-policy']} note="공통 ID와 권한·정책을 분리하는 프로젝트 설계 근거입니다." /></div>
       </div>
     </section>
 
     <section className="section band">
       <div className="container">
         <div className="section-heading"><span className="eyebrow">Unified inventory view</span><h2>통합 재고는<br /><em>이 컬럼으로 보여줍니다.</em></h2><p>담당자는 원가를 보지 않고도 무엇을 먼저 확인해야 하는지 알 수 있어야 합니다.</p></div>
-        <div className="strategy-goal-table-wrap"><table className="strategy-goal-table"><caption className="sr-only">통합 재고 화면 컬럼</caption><thead><tr><th scope="col">표시 항목</th><th scope="col">공통 의미</th><th scope="col">계열사별 예시</th><th scope="col">사용 목적</th></tr></thead><tbody>{[['계열사·카테고리', '어느 조직·상품군인지', '웰니스/영양제 · 리바트/거실가구 · 그린푸드/농산물', '필터·권한 범위'], ['상품·SKU·옵션', '실제 판매 단위', '용량·색상·사이즈·로트까지 표시', '상품 상세 이동'], ['현재 가용수량', '현재고 − 예약/보류분', '리바트 설치 가능량, 그린푸드 콜드체인 가능량 배지', '판매·입고 가능 범위'], ['판매속도·예상수요', '최근 순판매량과 예측 일일량', '트렌드 효과 적용 여부와 예측 구간', '소진일·입고 판단'], ['트렌드', '상승·유지·하락과 변화율', '검색·SNS·판매 신호별 출처·수집시각', '수요 변화 조기 발견'], ['처리기한·가능량', '기한과 운영 제약', '소비기한, 보관일, 설치일, 검사, 배송창', '하드 차단·위험 이유'], ['위험점수·차단 상태', '0~100 점수와 실행 가능 여부', '표시 누락·검사 보류·설치 슬롯 부족', '우선순위·보류'], ['추천 다음 행동·기준시각', '검토용 행동과 데이터 신선도', '추가 입고 검토·할인 검토·유지·처리 우선', '담당자 승인·감사']].map((row) => <tr key={row[0]}>{row.map((cell, index) => <td key={`${row[0]}-${index}`}>{index === 0 ? <strong>{cell}</strong> : cell}</td>)}</tr>)}</tbody></table></div>
+        <div className="blueprint-source-layout"><div className="blueprint-source-main"><div className="strategy-goal-table-wrap"><table className="strategy-goal-table"><caption className="sr-only">통합 재고 화면 컬럼</caption><thead><tr><th scope="col">표시 항목</th><th scope="col">공통 의미</th><th scope="col">계열사별 예시</th><th scope="col">사용 목적</th></tr></thead><tbody>{[['계열사·카테고리', '어느 조직·상품군인지', '웰니스/영양제 · 리바트/거실가구 · 그린푸드/농산물', '필터·권한 범위'], ['상품·SKU·옵션', '실제 판매 단위', '용량·색상·사이즈·로트까지 표시', '상품 상세 이동'], ['현재 가용수량', '현재고 − 예약/보류분', '리바트 설치 가능량, 그린푸드 콜드체인 가능량 배지', '판매·입고 가능 범위'], ['판매속도·예상수요', '최근 순판매량과 예측 일일량', '트렌드 효과 적용 여부와 예측 구간', '소진일·입고 판단'], ['트렌드', '상승·유지·하락과 변화율', '검색·SNS·판매 신호별 출처·수집시각', '수요 변화 조기 발견'], ['처리기한·가능량', '기한과 운영 제약', '소비기한, 보관일, 설치일, 검사, 배송창', '하드 차단·위험 이유'], ['위험점수·차단 상태', '0~100 점수와 실행 가능 여부', '표시 누락·검사 보류·설치 슬롯 부족', '우선순위·보류'], ['추천 다음 행동·기준시각', '검토용 행동과 데이터 신선도', '추가 입고 검토·할인 검토·유지·처리 우선', '담당자 승인·감사']].map((row) => <tr key={row[0]}>{row.map((cell, index) => <td key={`${row[0]}-${index}`}>{index === 0 ? <strong>{cell}</strong> : cell}</td>)}</tr>)}</tbody></table></div></div><SourceRail ids={['project-types', 'project-simulation']} note="통합 재고에 표시할 공통 상태와 계산 결과의 기준입니다." /></div>
       </div>
     </section>
 
     <section className="section">
       <div className="container">
         <div className="section-heading"><span className="eyebrow">Strategy contract</span><h2>상품별 전략은<br /><em>프로필을 바꿔 적용합니다.</em></h2><p>공통 목적함수는 유지하고, 각 계열사의 하드 차단·비용·시간축·가중치를 정책 프로필에서 읽습니다.</p></div>
-        <div className="strategy-goal-table-wrap"><table className="strategy-goal-table"><caption className="sr-only">목표별 전략 계산 기준</caption><thead><tr><th scope="col">목표</th><th scope="col">순위 기준</th><th scope="col">주요 입력</th><th scope="col">제외 기준</th></tr></thead><tbody>{strategyRows.map((row) => <tr key={row[0]}>{row.map((cell, index) => <td key={`${row[0]}-${index}`}>{index === 0 ? <strong>{cell}</strong> : cell}</td>)}</tr>)}</tbody></table></div>
+        <div className="blueprint-source-layout"><div className="blueprint-source-main"><div className="strategy-goal-table-wrap"><table className="strategy-goal-table"><caption className="sr-only">목표별 전략 계산 기준</caption><thead><tr><th scope="col">목표</th><th scope="col">순위 기준</th><th scope="col">주요 입력</th><th scope="col">제외 기준</th></tr></thead><tbody>{strategyRows.map((row) => <tr key={row[0]}>{row.map((cell, index) => <td key={`${row[0]}-${index}`}>{index === 0 ? <strong>{cell}</strong> : cell}</td>)}</tr>)}</tbody></table></div>
         <div className="formula-contract-grid" style={{ marginTop: 22 }}><article className="formula-contract-card"><span className="capability-label">하드 차단</span><code>{`feasible = ownership_ok ∧ legal_ok ∧ freshness_ok
            ∧ capacity_ok ∧ data_quality_ok`}</code><p>하나라도 확인되지 않으면 이익이 큰 후보도 추천하지 않습니다.</p></article><article className="formula-contract-card"><span className="capability-label">수요·입고</span><code>{`recommended_inbound = clip(
   target_stock - available - open_inbound,
-  0, 공급·보관·처리 가능량)`}</code><p>트렌드 상승은 추가 입고 검토 신호이며 자동 확정이 아닙니다.</p></article><article className="formula-contract-card"><span className="capability-label">증분이익</span><code>{`M_inc = feasible × (M_strategy - M_baseline)`}</code><p>할인 후 매출, 변동비, 회피비용, 잠식·위험·AI 원가를 기준선과 비교합니다.</p></article></div>
+  0, 공급·보관·처리 가능량)`}</code><p>트렌드 상승은 추가 입고 검토 신호이며 자동 확정이 아닙니다.</p></article><article className="formula-contract-card"><span className="capability-label">증분이익</span><code>{`M_inc = feasible × (M_strategy - M_baseline)`}</code><p>할인 후 매출, 변동비, 회피비용, 잠식·위험·AI 원가를 기준선과 비교합니다.</p></article></div></div><SourceRail ids={['markdown-paper', 'markdown-perishable', 'markdown-cannibalization']} note="가격·재고·폐기비용·잠식효과를 함께 계산하는 연구 근거입니다." /></div>
       </div>
     </section>
 
     <section className="section band">
       <div className="container">
         <div className="section-heading"><span className="eyebrow">Training &amp; validation</span><h2>모델은 이 순서로<br /><em>검증하고 운영합니다.</em></h2><p>상품군마다 데이터 양과 리스크가 다르므로, 복잡한 모델보다 기준모델 대비 개선 여부를 먼저 봅니다.</p></div>
-        <Stagger className="stack">{[['01', '품절·반품 보정', '품절일을 판매 부진으로 학습하지 않고, 취소·반품과 정상 판매를 분리합니다.'], ['02', '기준모델 만들기', '계절 naive·가중이동평균·ETS 중 성능이 좋은 기준모델을 둡니다.'], ['03', '트렌드 피처 추가', '검색·SNS·조회·판매 신호를 추가하고 상품군별 가중치와 지연 효과를 비교합니다.'], ['04', '시간 순서 검증', 'rolling-origin으로 미래 데이터를 섞지 않고 MAE·WAPE·MASE/RMSSE·구간 coverage를 측정합니다.'], ['05', '계층 보정', 'SKU 예측 합계가 카테고리·계열사·전체 집계와 맞는지 확인합니다.'], ['06', '운영·재학습', '모델 버전·피처 스냅샷·예측 오차를 저장하고 실제 결과가 쌓인 뒤 재학습합니다.']].map(([num, title, body]) => <article className="stack-card" key={num}><div className="stack-icon">{num}</div><div><strong>{title}</strong><p>{body}</p></div><b>MODEL</b></article>)}</Stagger>
-        <div className="capability-callout"><strong>보류 조건</strong><p>트렌드와 판매 데이터가 상품에 정확히 매핑되지 않거나, 소비기한·검사·설치·콜드체인 정보가 없으면 해당 추천을 “예측 부족/확인 필요”로 표시합니다. 자동 입고·자동 가격변경은 검증 이후 단계입니다.</p></div>
+        <div className="blueprint-source-layout"><div className="blueprint-source-main"><Stagger className="stack">{[['01', '품절·반품 보정', '품절일을 판매 부진으로 학습하지 않고, 취소·반품과 정상 판매를 분리합니다.'], ['02', '기준모델 만들기', '계절 naive·가중이동평균·ETS 중 성능이 좋은 기준모델을 둡니다.'], ['03', '트렌드 피처 추가', '검색·SNS·조회·판매 신호를 추가하고 상품군별 가중치와 지연 효과를 비교합니다.'], ['04', '시간 순서 검증', 'rolling-origin으로 미래 데이터를 섞지 않고 MAE·WAPE·MASE/RMSSE·구간 coverage를 측정합니다.'], ['05', '계층 보정', 'SKU 예측 합계가 카테고리·계열사·전체 집계와 맞는지 확인합니다.'], ['06', '운영·재학습', '모델 버전·피처 스냅샷·예측 오차를 저장하고 실제 결과가 쌓인 뒤 재학습합니다.']].map(([num, title, body]) => <article className="stack-card" key={num}><div className="stack-icon">{num}</div><div><strong>{title}</strong><p>{body}</p></div><b>MODEL</b></article>)}</Stagger>
+        <div className="capability-callout"><strong>보류 조건</strong><p>트렌드와 판매 데이터가 상품에 정확히 매핑되지 않거나, 소비기한·검사·설치·콜드체인 정보가 없으면 해당 추천을 “예측 부족/확인 필요”로 표시합니다. 자동 입고·자동 가격변경은 검증 이후 단계입니다.</p></div></div><SourceRail ids={['forecasting-tscv', 'forecasting-hierarchy', 'forecasting-predictors']} note="기준모델, 시간순 검증, 계층 보정을 정한 예측 방법론입니다." /></div>
       </div>
     </section>
 

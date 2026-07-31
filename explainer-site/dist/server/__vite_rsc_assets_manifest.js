@@ -114,7 +114,7 @@ export default {
     "src/app/layout.tsx": {
       "js": [],
       "css": [
-        "/assets/index-CMH51bFf.css"
+        "/assets/index-CdjRhGNY.css"
       ]
     }
   }
