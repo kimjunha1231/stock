@@ -557,6 +557,12 @@ main { position: relative; }
 .blueprint-source-list .source-note strong { display: block; width: 100%; font-size: 10px; line-height: 1.35; }
 .blueprint-source-list .source-note > span:not(.source-kind):not(:last-child) { width: 100%; line-height: 1.4; }
 .blueprint-team-guide-section { background: linear-gradient(180deg, #f8fbff 0, #fff 100%); }
+.blueprint-sequence-section { background: #fff; }
+.blueprint-sequence-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+.blueprint-sequence-grid article { min-width: 0; padding: 16px; border: 1px solid #d8e5f0; border-radius: 15px; background: #fff; box-shadow: 0 10px 22px #11243d06; }
+.blueprint-sequence-grid article > span { display: inline-grid; place-items: center; width: 27px; height: 27px; color: var(--blue); border-radius: 8px; background: #e7f0ff; font: 10px ui-monospace, SFMono-Regular, Menlo, monospace; }
+.blueprint-sequence-grid article strong { display: block; margin-top: 12px; color: var(--ink); font-size: 13px; letter-spacing: -.04em; }
+.blueprint-sequence-grid article p { margin: 7px 0 0; color: #617891; font-size: 10px; line-height: 1.55; }
 .blueprint-decision-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 11px; }
 .blueprint-decision-grid article { min-width: 0; padding: 18px; border: 1px solid #d8e5f0; border-radius: 16px; background: #fff; box-shadow: 0 11px 24px #11243d06; }
 .blueprint-decision-grid article > span { display: inline-grid; place-items: center; width: 27px; height: 27px; color: var(--blue); border-radius: 8px; background: #e7f0ff; font: 10px ui-monospace, SFMono-Regular, Menlo, monospace; }
@@ -602,6 +608,11 @@ main { position: relative; }
 .blueprint-ai-function-table-wrap .blueprint-guide-table td:nth-child(5) { min-width: 190px; }
 .blueprint-ai-function-table-wrap .blueprint-guide-table td:nth-child(6) { min-width: 220px; }
 .blueprint-guide-two-column { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; margin-top: 6px; }
+.blueprint-erd-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.blueprint-erd-grid article { min-width: 0; padding: 15px; border: 1px solid #dbe7f1; border-radius: 13px; background: #fff; }
+.blueprint-erd-grid article strong { display: block; color: var(--ink); font-size: 11px; }
+.blueprint-erd-grid article code { display: block; margin-top: 9px; color: #315985; font: 10px/1.45 ui-monospace, SFMono-Regular, Menlo, monospace; overflow-wrap: anywhere; }
+.blueprint-erd-grid article p { margin: 8px 0 0; color: #6b8097; font-size: 10px; line-height: 1.55; }
 .blueprint-key-list { display: grid; gap: 8px; }
 .blueprint-key-list > div { display: grid; grid-template-columns: minmax(120px, .42fr) 1fr; gap: 5px 11px; padding: 12px 14px; border: 1px solid #dbe7f1; border-radius: 11px; background: #fff; }
 .blueprint-key-list code { grid-row: span 2; align-self: start; padding: 6px 7px; color: #315985; border-radius: 7px; background: #eaf2fb; font: 10px ui-monospace, SFMono-Regular, Menlo, monospace; overflow-wrap: anywhere; }
@@ -735,6 +746,8 @@ main { position: relative; }
   .blueprint-decision-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .blueprint-guide-two-column { grid-template-columns: 1fr; gap: 12px; }
   .blueprint-operation-flow { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .blueprint-sequence-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .blueprint-erd-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .glossary-layout { grid-template-columns: 1fr; gap: 25px; }
   .glossary-intro { position: static; }
   .formula-help-layout { grid-template-columns: 1fr; }
@@ -782,5 +795,6 @@ main { position: relative; }
   .blueprint-decision-grid { grid-template-columns: 1fr; }
   .blueprint-operation-flow { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .blueprint-key-list > div { grid-template-columns: minmax(105px, .45fr) 1fr; }
+  .blueprint-sequence-grid, .blueprint-erd-grid { grid-template-columns: 1fr; }
   .site-footer { align-items: flex-start; flex-direction: column; }
 }
