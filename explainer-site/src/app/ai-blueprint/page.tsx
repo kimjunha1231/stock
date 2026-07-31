@@ -132,13 +132,13 @@ VariableCost_s = Q_s × (channel_fee
     id: 'objective',
     label: '06 · 전략 후보를 최종 비교',
     title: '증분 기여현금이익',
-    formula: `M_inc(s) = feasible(s) × [
-  Revenue_s - VariableCost_s
-  + AvoidedCost_s
-  - Cannibalization_s
-  - RiskPenalty_s
-  - AI_CaseCost_s
-  - M_baseline
+    formula: `증분 기여현금이익(전략) = 실행 가능 여부 × [
+  전략 매출 - 전략 변동비
+  + 피할 수 있는 비용
+  - 기존 판매 잠식 비용
+  - 위험 손실 비용
+  - AI 사용 비용
+  - 아무것도 하지 않을 때의 기준선 이익
 ]`,
     plain: '아무것도 하지 않을 때보다 이번 전략이 실제로 더 남기는 돈을 계산합니다. 실행 불가 후보는 처음부터 0점입니다.',
     inputs: '앞의 실행 가능 여부·수요·매출·변동비·회피비용·실패확률·기준선 결과',
