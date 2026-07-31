@@ -13,7 +13,7 @@ const modelRows = [
 
 const productRows = [
   ['현대웰니스', '비타민·마그네슘·오메가3·콜라겐·세트', '성분·기능·대상·로트·소비기한·보관·표시', '소비기한·표시·회수·폐기', '잔여기한 기반 처리 속도·할인·묶음'],
-  ['현대리바트', '거실·침실·주방 가구, 옵션·모듈 제품', '크기·중량·색상·옵션·창고·배송권역·설치 슬롯', '공간·배송·설치·파손·AS', '설치·배송 가능량을 넘지 않는 판매·공급'],
+  ['현대리바트', '거실·침실·주방 가구, 옵션·모듈 제품', '옵션·판매채널·배송권역·설치여부·비용정책', '배송비·설치비·보관비·예상 파손비·반품비·무료배송 기준', '비용을 반영해 할인·묶음·처리 전략 계산'],
   ['현대그린푸드', '농산물·수산물·축산물·가공식품·케어푸드', '로트·소비기한·온도·검사·이력추적·채널·콜드체인', '소비기한·검사·콜드체인·폐기', '로트별 소진·냉장/냉동 처리량·폐기 회피'],
 ];
 
@@ -29,8 +29,22 @@ const dbRows = [
 
 const profileRows = [
   ['현대웰니스', 'wellness_product_profile', '성분·기능·대상·로트·소비기한·보관조건·표시·회수상태', '소비기한 임박·표시 누락·회수·폐기비용'],
-  ['현대리바트', 'livart_product_profile', '가로·세로·높이·중량·색상·옵션·배송권역·설치슬롯', '보관공간·배송·설치·파손·반품·AS'],
-  ['현대그린푸드', 'greenfood_product_profile', '로트·소비기한·온도구분·검사·이력추적·채널·콜드체인', '소비기한·냉장/냉동·검사·폐기비용'],
+  ['현대리바트', 'livart_product_profile', '옵션·판매채널·배송권역·설치여부·비용정책', '배송·설치·보관·예상 파손·반품·AS 비용'],
+  ['현대그린푸드', 'greenfood_product_profile', '로트·소비기한·온도구분·검사·이력추적·채널·콜드체인', '보관·배송·검사·폐기·반품 비용'],
+];
+
+const costProfileRows = [
+  ['sku_cost_profile', '상품별 비용', 'sku_id·보관비 일단가·배송비·무료배송 기준금액·설치비·예상 파손비·예상 반품비·폐기비·할인 한도', '특정 상품만 다른 비용을 저장합니다.'],
+  ['affiliate_policy_profile', '계열사·카테고리 기본 비용', 'affiliate_id·category_id·기본 배송비·기본 설치비·기본 보관비·기본 파손비·기본 반품비·무료배송 기준·적용기간·정책 버전', 'SKU별 값이 없을 때 사용할 기본값입니다.'],
+  ['strategy_cost_snapshot', '계산 당시 비용 복사본', 'snapshot_id·sku_id·배송비·설치비·보관비·예상 파손비·예상 반품비·폐기비·적용 정책 버전', '정책이 바뀌어도 과거 전략 결과를 다시 계산할 수 있게 합니다.'],
+];
+
+const costCalculationRows = [
+  ['배송비', '주문금액 ≥ 무료배송 기준금액이면 0원, 아니면 기본 배송비 + 지역 추가비', '할인 전략에서 무료배송 비용까지 이익에 반영'],
+  ['설치비', '설치가 필요하면 설치비, 필요하지 않으면 0원', '현대리바트의 할인·묶음 전략에 반영'],
+  ['보관비', '보관비 일단가 × 보관일수', '빠른 처리로 줄일 수 있는 비용은 회피비용으로 반영'],
+  ['예상 파손·반품비', '예상 파손비 + 예상 반품비', '과거 비율을 쓰더라도 최종 계산에는 금액으로 변환'],
+  ['최종 전략 이익', '할인 후 매출 − 배송비 − 설치비 − 보관비 − 파손·반품비 − 프로모션비 + 회피 폐기비용', '기준선과 비교해 목적별 전략 순위를 계산'],
 ];
 
 const guideFormulaRows = [
@@ -107,7 +121,13 @@ export default function AiBlueprintPage() {
         <div className="blueprint-guide-table-wrap blueprint-ai-function-table-wrap"><table className="blueprint-guide-table"><caption className="sr-only">AI 기능별 입력·결과·사용 방식</caption><thead><tr><th scope="col">ID</th><th scope="col">기능</th><th scope="col">하는 일</th><th scope="col">필요 자료</th><th scope="col">결과</th><th scope="col">팀원이 기억할 점</th></tr></thead><tbody>{aiFunctionRows.map((row) => <tr key={row[0]}>{row.map((cell, index) => <td key={`${row[0]}-${index}`}>{index === 0 ? <code>{cell}</code> : index === 1 ? <strong>{cell}</strong> : cell}</td>)}</tr>)}</tbody></table></div>
 
         <div className="blueprint-guide-section-heading"><span>계열사별 상품 프로필</span><h3>공통 상품 테이블에<br /><em>각 계열사 필드를 덧붙입니다.</em></h3><p>실제 상품군이 다르기 때문에 소비기한·설치·콜드체인 같은 값은 계열사 확장 프로필에 저장합니다.</p></div>
-        <div className="blueprint-source-layout"><div className="blueprint-source-main"><div className="blueprint-guide-table-wrap"><table className="blueprint-guide-table"><caption className="sr-only">계열사별 확장 프로필과 위험 요소</caption><thead><tr><th scope="col">계열사</th><th scope="col">확장 프로필</th><th scope="col">저장할 핵심 필드</th><th scope="col">전략에서 먼저 보는 위험</th></tr></thead><tbody>{profileRows.map((row) => <tr key={row[0]}>{row.map((cell, index) => <td key={`${row[0]}-${index}`}>{index === 0 ? <strong>{cell}</strong> : index === 1 ? <code>{cell}</code> : cell}</td>)}</tr>)}</tbody></table></div></div><SourceRail ids={['affiliate-wellness', 'affiliate-livart-product', 'affiliate-greenfood', 'food-label-law']} note="공식 계열사 상품·사업 자료를 기준으로 필요한 필드를 나눈 이유입니다." /></div>
+        <div className="blueprint-source-layout"><div className="blueprint-source-main"><div className="blueprint-guide-table-wrap"><table className="blueprint-guide-table"><caption className="sr-only">계열사별 확장 프로필과 위험 요소</caption><thead><tr><th scope="col">계열사</th><th scope="col">확장 프로필</th><th scope="col">저장할 핵심 필드</th><th scope="col">전략에서 먼저 보는 위험</th></tr></thead><tbody>{profileRows.map((row) => <tr key={row[0]}>{row.map((cell, index) => <td key={`${row[0]}-${index}`}>{index === 0 ? <strong>{cell}</strong> : index === 1 ? <code>{cell}</code> : cell}</td>)}</tr>)}</tbody></table></div><div className="blueprint-guide-rule blueprint-guide-rule-green"><strong>MVP에서 가구 크기 필드는 저장하지 않습니다.</strong><p>가로·세로·높이·부피를 계산하기보다, 전략에 직접 필요한 배송비·설치비·보관비·예상 파손비·반품비·무료배송 기준금액을 비용 프로필에 저장합니다. 나중에 실제 배송 연동에서 크기가 필요해질 때만 별도 필드로 확장합니다.</p></div></div><SourceRail ids={['affiliate-wellness', 'affiliate-livart-product', 'affiliate-greenfood', 'food-label-law']} note="공식 계열사 상품·사업 자료를 기준으로 필요한 필드를 나눈 이유입니다." /></div>
+
+        <div className="blueprint-guide-section-heading"><span>비용 프로필 저장 방식</span><h3>원인을 추측하기보다<br /><em>계산에 쓸 비용을 저장합니다.</em></h3><p>상품별 비용이 다르면 SKU 값으로 저장하고, 공통 비용은 계열사·카테고리 기본 정책으로 저장합니다.</p></div>
+        <div className="blueprint-guide-table-wrap"><table className="blueprint-guide-table"><caption className="sr-only">비용 프로필 DB 저장 방식</caption><thead><tr><th scope="col">저장 영역</th><th scope="col">뜻</th><th scope="col">저장할 컬럼 후보</th><th scope="col">사용 방식</th></tr></thead><tbody>{costProfileRows.map((row) => <tr key={row[0]}>{row.map((cell, index) => <td key={`${row[0]}-${index}`}>{index === 0 ? <code>{cell}</code> : index === 1 ? <strong>{cell}</strong> : cell}</td>)}</tr>)}</tbody></table></div>
+
+        <div className="blueprint-guide-section-heading"><span>비용이 계산되는 방식</span><h3>DB 값이 전략 점수로<br /><em>어떻게 연결되는지</em></h3></div>
+        <div className="blueprint-guide-table-wrap"><table className="blueprint-guide-table"><caption className="sr-only">비용 항목별 계산 방식</caption><thead><tr><th scope="col">비용 항목</th><th scope="col">계산 방식</th><th scope="col">전략에서 쓰는 이유</th></tr></thead><tbody>{costCalculationRows.map((row) => <tr key={row[0]}>{row.map((cell, index) => <td key={`${row[0]}-${index}`}>{index === 0 ? <strong>{cell}</strong> : cell}</td>)}</tr>)}</tbody></table></div>
 
         <div className="blueprint-guide-two-column"><div><div className="blueprint-guide-section-heading"><span>공통 ID 기준</span><h3>DB는 이 키로<br /><em>끝까지 연결합니다.</em></h3></div><div className="blueprint-key-list"><div><code>product_id</code><span>공통 상품 단위</span><p>계열사가 달라도 같은 상품 개념으로 묶는 ID입니다.</p></div><div><code>sku_id</code><span>실제 재고·판매 단위</span><p>용량·색상·사이즈·로트가 다르면 별도 SKU로 관리합니다.</p></div><div><code>source_sku_id</code><span>원천 시스템 코드</span><p>각 계열사의 ERP·POS·WMS 원본을 추적하는 코드입니다.</p></div><div><code>policy_profile</code><span>계열사·카테고리 정책</span><p>가중치·임계값·허용 전략·비용 계산 조건을 버전으로 저장합니다.</p></div></div></div><div><div className="blueprint-guide-section-heading"><span>개발자가 보는 입력·결과</span><h3>계산을 바꿔도<br /><em>근거가 남아야 합니다.</em></h3></div><div className="blueprint-rule-card"><p><b>입력</b> 상품·SKU·재고·판매·가격·프로모션·트렌드·계열사 정책·비용</p><p><b>결과</b> 예측수요·위험점수·차단사유·전략 후보·예상 매출·마진·잔여재고</p><p><b>필수 기록</b> 기준시각·데이터 상태·model_version·formula_version·policy_version·snapshot_id</p><p><b>보류 조건</b> 데이터가 부족하거나 법규·기한·설치·검사·콜드체인 확인이 안 되면 “확인 필요”로 표시</p></div></div></div>
 

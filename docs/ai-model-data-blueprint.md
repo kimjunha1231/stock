@@ -138,7 +138,7 @@ LLM 입력에는 계산된 숫자, 데이터 기간, 모델 버전, 정책 버�
 공식 자료에서 확인되는 대표 상품·사업 맥락은 다음과 같습니다.
 
 - 현대웰니스 공식몰에는 비타민·마그네슘·오메가3·콜라겐 등 영양제와 세트 상품, 임박 표시가 보입니다. 따라서 `ingredient`, `function_claim`, `target_group`, `lot`, `expiry_at`, `storage_condition`, `claim_review_status`가 중요합니다. [현대웰니스 공식몰](https://www.hyundaiwellness.com/)
-- 현대리바트 상품은 거실·침실·주방 등 공간별 제품, 옵션·사이즈·컬러와 배송·설치·반품/AS가 결합된 구조입니다. 따라서 `dimension`, `weight`, `option_set`, `warehouse_location`, `delivery_zone`, `install_required`, `install_slot_available`, `damage_rate`, `as_cost`가 필요합니다. [리바트 상품 페이지](https://living.hyundailivart.co.kr/p/P100022920), [리바트 고객센터](https://www.hyundailivart.co.kr/csCenter/main)
+- 현대리바트 상품은 거실·침실·주방 등 공간별 제품, 옵션·사이즈·컬러와 배송·설치·반품/AS가 결합된 구조입니다. 이번 MVP에서는 크기·창고 적재 여부를 직접 계산하지 않고 `delivery_fee`, `free_shipping_threshold`, `install_fee`, `storage_cost_per_day`, `expected_damage_cost`, `expected_return_cost`, `as_cost`처럼 전략에 직접 들어가는 비용을 저장합니다. [리바트 상품 페이지](https://living.hyundailivart.co.kr/p/P100022920), [리바트 고객센터](https://www.hyundailivart.co.kr/csCenter/main)
 - 현대그린푸드는 식자재 유통, 리테일, 건강식 등 다양한 채널과 농산물·수산물·축산물·글로벌상품을 운영합니다. 따라서 `lot`, `expiry_at`, `temperature_class`, `traceability_id`, `inspection_status`, `channel`, `delivery_window`, `cold_chain_capacity`가 중요합니다. [식자재 유통](https://www.hyundaigreenfood.com/po/fb/fdb/FBFDB01L.hgc), [리테일 사업](https://hyundaigreenfood.com/po/fb/rtb/FBRTB01L.hgc)
 
 식품·건강기능식품은 소비기한·보관방법·표시·주의사항을 판매 가능 여부와 분리해 검증해야 합니다. [식품 등의 표시·광고에 관한 법률](https://law.go.kr/lsInfoP.do?lsiSeq=202703), [식품안전나라 소비기한 안내](https://www.foodsafetykorea.go.kr/portal/board/boardDetail.do?bbs_no=bbs001&menu_grp=MENU_NEW01&menu_no=3120&ntctxt_no=1093173)
@@ -181,16 +181,47 @@ wellness_sku_profile(sku_id, ingredient_json, function_claim_json,
                      target_group, expiry_alert_days, storage_condition,
                      claim_review_status, supplier_recovery_rate)
 
-livart_sku_profile(sku_id, dimension_json, weight, warehouse_location,
-                   delivery_zone, lead_time_days, install_required,
-                   install_capacity, damage_rate, return_rate, as_cost)
+livart_sku_profile(sku_id, option_group, delivery_zone, install_required,
+                   delivery_fee, free_shipping_threshold, install_fee,
+                   storage_cost_per_day, expected_damage_cost,
+                   expected_return_cost, as_cost)
 
 greenfood_sku_profile(sku_id, temperature_class, storage_condition,
                       origin, traceability_id, inspection_status,
                       delivery_window, cold_chain_capacity, waste_rate)
 ```
 
-확장 테이블은 `sku_id`를 외래키로 사용하고, 조회·집계에 자주 쓰는 값은 컬럼으로, 자주 바뀌거나 계열사만 쓰는 상세 속성은 JSON으로 둡니다. 원천 상품 코드와 공통 `product_id/sku_id` 매핑은 반드시 보존합니다.
+확장 테이블은 `sku_id`를 외래키로 사용하고, 조회·집계에 자주 쓰는 비용 값은 컬럼으로 둡니다. 이번 MVP에서는 가로·세로·높이·부피를 저장하지 않고, 상품별로 직접 적용할 배송·설치·보관·파손·반품 비용을 저장합니다. 원천 상품 코드와 공통 `product_id/sku_id` 매핑은 반드시 보존합니다.
+
+### 4.4 비용 프로필과 기본값
+
+상품마다 비용이 다르면 `sku_cost_profile`에 저장하고, 같은 계열사·카테고리에서 공통으로 쓰는 값은 `affiliate_policy_profile`에 기본값으로 저장합니다. SKU 값이 없을 때만 기본 정책을 사용합니다.
+
+```text
+sku_cost_profile(
+  sku_id, storage_cost_per_day, delivery_fee,
+  free_shipping_threshold, install_fee,
+  expected_damage_cost, expected_return_cost,
+  disposal_cost, discount_limit,
+  effective_from, effective_to, policy_version
+)
+
+affiliate_policy_profile(
+  affiliate_id, category_id, default_delivery_fee,
+  default_install_fee, default_storage_cost_per_day,
+  default_damage_cost, default_return_cost,
+  free_shipping_threshold, effective_from, effective_to,
+  policy_version
+)
+
+strategy_cost_snapshot(
+  snapshot_id, sku_id, delivery_cost, install_cost,
+  storage_cost, expected_damage_cost, expected_return_cost,
+  disposal_cost, policy_version
+)
+```
+
+배송비는 `주문금액 >= 무료배송 기준금액`이면 0원, 그렇지 않으면 기본 배송비와 지역 추가비를 사용합니다. 최종 전략 이익에는 할인 후 매출에서 배송·설치·보관·예상 파손·예상 반품·프로모션 비용을 빼고, 줄어든 보관·폐기 비용을 더합니다. 계산 당시 값을 `strategy_cost_snapshot`에 복사해 정책이 바뀌어도 과거 결과를 재현합니다.
 
 ## 5. 통합 재고 화면에서 보여줄 컬럼
 
@@ -213,7 +244,7 @@ greenfood_sku_profile(sku_id, temperature_class, storage_condition,
 
 ### 공통 입력
 
-`sku_id`, 현재 가용수량, 판매가, 원가(서버 전용), 최근 순판매량, 예측수요, 트렌드 신호, 채널 수수료, 배송·처리비, 반품률, 보관비, 폐기비, 정책 버전, 기준선 snapshot.
+`sku_id`, 현재 가용수량, 판매가, 원가(서버 전용), 최근 순판매량, 예측수요, 트렌드 신호, 채널 수수료, 배송비, 무료배송 기준금액, 설치비, 보관비, 예상 파손비, 예상 반품비, 폐기비, 정책 버전, 기준선 snapshot.
 
 ### 현대웰니스
 
@@ -221,7 +252,7 @@ greenfood_sku_profile(sku_id, temperature_class, storage_condition,
 
 ### 현대리바트
 
-가격 할인보다 공간·설치·배송·파손 비용을 함께 봅니다. 같은 모델이라도 옵션·크기·지역·설치 슬롯이 다르면 별도 SKU 전략을 만들고, 설치 가능량을 넘는 수요 증대 후보는 차단합니다.
+가격 할인보다 배송·설치·보관·파손·반품 비용을 함께 봅니다. 같은 모델이라도 옵션·판매채널·배송권역·비용 정책이 다르면 별도 비용 프로필을 적용하고, 무료배송 조건이나 설치비를 반영해 전략을 비교합니다.
 
 ### 현대그린푸드
 
