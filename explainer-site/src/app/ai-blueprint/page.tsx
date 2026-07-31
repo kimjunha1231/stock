@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Reveal, Stagger } from '@/components/reveal';
+import { Reveal } from '@/components/reveal';
 import { SourceNote } from '@/components/source-note';
 import { sources } from '@/lib/content';
 
@@ -62,19 +62,101 @@ const aiRows = [
   ['AI-05', '결과 설명', '생성형 AI', '계산된 후보와 근거를 담당자가 이해하는 문장으로 변환', '가격·수량·점수를 새로 만들거나 변경하지 않음'],
 ];
 
-const formulaRows = [
-  ['트렌드 신호', '검색관심도 변화 + SNS 언급량 변화 + 판매량 변화 + 조회·찜·장바구니 변화', '신호별 출처와 수집시각을 함께 저장'],
-  ['수요예측', '기본수요 + 트렌드 효과 + 가격 효과 + 프로모션 효과 + 계절·요일 효과', '기준모델보다 좋아지는지 시간순으로 검증'],
-  ['실행 가능 여부', '소유권 확인 ∧ 판매 가능 ∧ 법적 제한 없음 ∧ 데이터 정상', '하나라도 모르면 추천·승인하지 않음'],
-  ['비용 계산', '배송비 + 설치비 + 보관비 + 예상 파손비 + 예상 반품비 + 프로모션비', 'SKU 비용이 없으면 계열사 기본 정책을 사용'],
-  ['전략 이익', '할인 후 매출 − 비용 + 회피한 보관·폐기비용 − 잠식 − 위험손실', '기준선과 비교해 목적별 전략을 순위화'],
+const formulaCards = [
+  {
+    id: 'feasible',
+    label: '01 · 먼저 막을 것부터 확인',
+    title: '실행 가능 여부',
+    formula: `feasible(s) = ownership_ok
+  ∧ legal_ok
+  ∧ freshness_ok
+  ∧ capacity_ok
+  ∧ data_quality_ok`,
+    plain: '돈이 될 것 같아도 판매 권한·법적 제한·기한·배송/설치 여유·데이터 품질을 모두 확인한 뒤에만 다음 계산을 합니다.',
+    inputs: '소유권, 판매 가능 여부, 소비기한·검사 상태, 배송·설치·콜드체인 여유, 데이터 누락 여부',
+    affiliate: '웰니스·그린푸드는 기한·표시·검사, 리바트는 배송권역·설치 슬롯을 먼저 봅니다.',
+  },
+  {
+    id: 'trend',
+    label: '02 · 외부 관심을 숫자로 변환',
+    title: '트렌드 점수',
+    formula: `TrendScore_i = Σ(w_k × z_ik)
+Σw_k = 1
+
+z_ik = 검색·SNS·조회·판매 변화의 0~1 점수`,
+    plain: '검색량만 보지 않고 SNS 언급, 상품 조회·찜·장바구니, 실제 판매 변화가 같은 방향인지 함께 봅니다.',
+    inputs: '신호별 변화율, 출처, 수집시각, 신호별 신뢰도, 계열사·카테고리 가중치',
+    affiliate: '웰니스는 성분·건강 관심, 리바트는 인테리어·시즌 검색, 그린푸드는 메뉴·식품 유행 신호를 상품 카테고리와 연결합니다.',
+  },
+  {
+    id: 'demand',
+    label: '03 · 얼마나 팔릴지 계산',
+    title: '트렌드를 반영한 수요예측',
+    formula: `Q̂_i,t = min(Q_available,
+  max(0, Q_base_i,t
+    × F_trend × F_price
+    × F_promo × F_season
+    × confidence))`,
+    plain: '평소 판매량에 트렌드·가격·프로모션·계절 효과를 반영하되, 실제로 팔 수 있는 수량과 예측 신뢰도 안에서만 잡습니다.',
+    inputs: '정상 판매량, 품절 보정값, 트렌드 점수, 가격·할인율, 행사 효과, 요일·계절, 판매 가능 재고',
+    affiliate: '웰니스·그린푸드는 로트별 판매 가능 수량, 리바트는 옵션·배송·설치 가능 수량을 상한으로 사용합니다.',
+  },
+  {
+    id: 'cost',
+    label: '04 · 판매 때문에 더 드는 돈 계산',
+    title: '매출과 변동비',
+    formula: `Revenue_s = Q_s × P_list × (1 - discount)
+  - Q_s × (coupon + point + subsidy)
+
+VariableCost_s = Q_s × (channel_fee
+  + payment_fee + fulfillment_fee
+  + expected_return_cost)
+  + campaign_fixed_cost`,
+    plain: '할인 후 고객 결제금액에서 쿠폰·포인트·수수료·배송·설치·반품처럼 이 전략 때문에 추가로 생기는 금액을 뺍니다.',
+    inputs: '정상가, 할인율, 쿠폰·포인트 부담, 채널 수수료, 결제비, 배송비, 설치비, 반품·재배송비, 행사 고정비',
+    affiliate: '리바트는 설치·재배송, 그린푸드는 냉장·냉동 배송·보냉재, 웰니스는 포장·검수·회수 비용을 포함합니다.',
+  },
+  {
+    id: 'risk',
+    label: '05 · 위험도를 같은 척도로 비교',
+    title: '위험점수',
+    formula: `RiskScore_i = 100 × Σ(w_k × z_ik)
+Σw_k = 1
+
+등급 = 정상 / 주의 / 위험`,
+    plain: '소비기한 압박, 느린 판매, 높은 보관·폐기비, 배송·설치 실패 가능성처럼 서로 다른 위험 신호를 0~100점으로 합칩니다.',
+    inputs: '기한 압박, 판매속도, 재고금액, 보관일, 예상 폐기·파손·반품비, capacity 부족, 예측 불확실성',
+    affiliate: '기본 수식은 같지만 웰니스·그린푸드는 기한과 폐기, 리바트는 보관·설치·파손, 그린푸드는 콜드체인과 폐기 가중치를 높입니다.',
+  },
+  {
+    id: 'objective',
+    label: '06 · 전략 후보를 최종 비교',
+    title: '증분 기여현금이익',
+    formula: `M_inc(s) = feasible(s) × [
+  Revenue_s - VariableCost_s
+  + AvoidedCost_s
+  - Cannibalization_s
+  - RiskPenalty_s
+  - AI_CaseCost_s
+  - M_baseline
+]`,
+    plain: '아무것도 하지 않을 때보다 이번 전략이 실제로 더 남기는 돈을 계산합니다. 실행 불가 후보는 처음부터 0점입니다.',
+    inputs: '앞의 실행 가능 여부·수요·매출·변동비·회피비용·실패확률·기준선 결과',
+    affiliate: '계열사별 비용 프로필을 읽어 같은 목적함수로 비교하므로, 서로 다른 상품도 공통 기준으로 순위를 낼 수 있습니다.',
+  },
 ];
 
-const strategyRows = [
-  ['최대 마진', '기준선보다 추가 이익이 가장 큰 전략', '판매가·할인·배송·설치·보관·반품·폐기 비용', '최소 마진 미만 제외'],
-  ['빠른 소진', '정해진 기간 안에 재고를 가장 빨리 줄이는 전략', '예상 판매량·처리기한·보관비·폐기비', '기한 안에 처리 불가하면 제외'],
-  ['최대 매출', '전체 판매 금액이 가장 커지는 전략', '가격·수량·기간·채널·프로모션', '마진 하한·법적 제한 확인'],
-  ['위험 최소화', '폐기·보관·파손·반품 손실을 가장 많이 줄이는 전략', '회피비용·위험손실·처리기한', '실제로 줄어드는 비용만 반영'],
+const affiliateFormulaRows = [
+  ['현대웰니스', '건강기능식품·영양제', 'product → sku → lot', 'Q_available = 판매 가능한 로트 수량(최소 잔여기한 충족)', '기한 압박·판매속도·폐기비·표시/회수 상태', '배송·포장·검수·반품·폐기비', '성분·기능 관심 상승 + 실제 판매 상승이면 입고·프로모션 후보. 기한·표시·회수 문제가 있으면 차단'],
+  ['현대리바트', '가구·리빙·옵션·모듈', 'product → option → sku', 'Q_available = min(재고−예약, 배송 가능량, 설치 가능량)', '보관일·납기·설치 슬롯·파손/AS·반품 비용', '배송·설치·보관·파손·재배송·반품비·무료배송 기준', '인테리어 관심과 판매가 함께 오르면 노출·할인 후보. 설치 슬롯·정책이 없으면 차단'],
+  ['현대그린푸드', '농산물·수산물·축산물·가공·케어푸드', 'product → sku → lot', 'Q_available = 판매 가능한 로트 수량과 냉장·냉동 처리량 중 작은 값', '소비기한·주문마감·온도·검사·이력추적·폐기량', '콜드체인·피킹·포장·보냉재·폐기·반품비', '메뉴·검색·판매가 함께 오르면 추가 입고 후보. 소비기한·검사·콜드체인 문제가 있으면 차단'],
+];
+
+const strategyBuildRows = [
+  ['최대 마진', 'M_inc가 가장 큰 후보를 선택', '할인율을 낮게 시작하고 배송·설치·반품 비용을 모두 차감', '최소 마진율·최소 판매량 미만은 제외'],
+  ['빠른 소진', '처리기한 안의 예상 잔여재고가 가장 작은 후보를 선택', '할인·채널 노출·기간을 조합하고 보관·폐기 회피비용을 반영', '기한 안에 처리되지 않으면 제외'],
+  ['최대 매출', '예상 판매수량 × 할인 후 가격이 가장 큰 후보를 선택', '트렌드·프로모션·채널 효과를 크게 반영', '마진 하한과 법적 제한은 유지'],
+  ['위험 최소화', '위험점수·예상 손실·폐기량이 가장 많이 줄어드는 후보를 선택', '기한·파손·콜드체인·설치 실패 비용에 가중치', '실제로 줄어드는 비용만 계산'],
 ];
 
 const forecastSteps = [
@@ -125,7 +207,7 @@ export default function AiBlueprintPage() {
         <Reveal><span className="eyebrow">AI 기능·데이터·개발 가이드</span></Reveal>
         <Reveal><h1>처음 읽는 팀원도<br /><em>순서대로 이해하는 AI 재고 전략</em></h1></Reveal>
         <Reveal><p>자료를 왜 참고했는지, 어떤 데이터를 DB에 넣는지, AI가 어떤 순서로 계산하는지, 화면에서 무엇을 보여주는지 한 흐름으로 정리했습니다.</p></Reveal>
-        <div className="actions" style={{ marginTop: 26 }}><Link className="button primary" href="/capabilities">기능 명세 보기 →</Link><Link className="button secondary" href="/formulas">수식 상세 보기</Link></div>
+        <div className="actions" style={{ marginTop: 26 }}><Link className="button primary" href="/capabilities">기능 명세 보기 →</Link><Link className="button secondary" href="#formula-engine">수식 바로 보기</Link></div>
       </div>
     </section>
 
@@ -171,12 +253,42 @@ export default function AiBlueprintPage() {
       </div>
     </section>
 
-    <section className="section">
+    <section className="section blueprint-formula-section" id="formula-engine">
       <div className="container">
-        <div className="section-heading"><span className="eyebrow">05 · 수식·전략</span><h2>신호를 모아<br /><em>비용과 이익으로 비교합니다.</em></h2><p>검색량 하나로 결론을 내리지 않고, 예측·위험·직접 비용·회피 비용을 같은 기준선과 비교합니다.</p></div>
-        <SimpleTable caption="계산 영역별 구조" headers={['계산 영역', '쉽게 말한 구조', '적용 원칙']} rows={formulaRows} />
-        <div className="blueprint-guide-section-heading"><span>목표별 순위</span><h3>담당자가 목표를 고르면<br /><em>순위 기준이 바뀝니다.</em></h3></div>
-        <SimpleTable caption="전략 목표별 판단 기준" headers={['목표', '쉬운 뜻', '중요하게 보는 값', '제외 기준']} rows={strategyRows} />
+        <div className="section-heading"><span className="eyebrow">05 · 수식·전략</span><h2>신호를 모아<br /><em>비용과 이익으로 비교합니다.</em></h2><p>검색량 하나로 결론을 내리지 않습니다. 실행 가능 여부를 먼저 확인하고, 트렌드를 반영한 수요·비용·위험을 계산한 뒤 기준선과 비교합니다.</p></div>
+        <div className="blueprint-formula-order" aria-label="전략 계산 순서">
+          <span><b>1</b> 차단</span><i aria-hidden="true">→</i><span><b>2</b> 트렌드</span><i aria-hidden="true">→</i><span><b>3</b> 수요</span><i aria-hidden="true">→</i><span><b>4</b> 비용</span><i aria-hidden="true">→</i><span><b>5</b> 위험</span><i aria-hidden="true">→</i><span><b>6</b> 이익·순위</span>
+        </div>
+        <div className="blueprint-formula-card-grid">
+          {formulaCards.map((card) => <details className="blueprint-formula-card" key={card.id} open={card.id === 'objective'}>
+            <summary><span>{card.label}</span><strong>{card.title}</strong><em>수식과 적용 방법 보기</em></summary>
+            <div className="blueprint-formula-card-body">
+              <pre><code>{card.formula}</code></pre>
+              <p className="blueprint-formula-plain"><b>쉽게 말하면</b>{card.plain}</p>
+              <div className="blueprint-formula-meta"><div><span>필요한 입력값</span><p>{card.inputs}</p></div><div><span>계열사별 적용</span><p>{card.affiliate}</p></div></div>
+            </div>
+          </details>)}
+        </div>
+        <div className="blueprint-guide-rule blueprint-guide-rule-green"><strong>계산의 핵심 원칙</strong><p>수식 자체는 공통으로 유지하고, <b>계열사·카테고리·SKU의 입력값과 가중치·비용 프로필</b>만 바꿉니다. 그래서 같은 상품이 같은 기준시각과 같은 데이터로 계산되면 누구나 같은 결과를 재현할 수 있습니다.</p></div>
+        <SourceRail ids={['project-policy', 'google-trends-help', 'social-demand-informs', 'markdown-paper', 'markdown-perishable']} note="프로젝트 정책과 수요·재고·가격 연구를 실행 순서와 수식으로 합친 기준안입니다." />
+      </div>
+    </section>
+
+    <section className="section-tight band blueprint-affiliate-formula-section">
+      <div className="container">
+        <div className="section-heading"><span className="eyebrow">05-B · 계열사·상품별 적용</span><h2>공통 수식에<br /><em>상품 특성만 다르게 넣습니다.</em></h2><p>계열사마다 AI 모델을 따로 만드는 것이 아니라, 상품의 재고 단위·처리기한·비용·하드 차단을 프로필로 바꿔 같은 계산 흐름에 넣습니다.</p></div>
+        <SimpleTable caption="계열사와 상품 유형별 수식 입력 차이" headers={['계열사', '대표 상품 유형', '재고 단위', '판매 가능 수량 상한', '위험 신호', '비용 프로필', '전략 적용 예시']} rows={affiliateFormulaRows} className="blueprint-affiliate-formula-table" />
+        <div className="blueprint-guide-rule"><strong>가구 크기 필드에 대한 결정</strong><p>이번 MVP는 가로·세로·높이·부피 자체를 재고 전략의 핵심 필드로 저장하지 않습니다. 대신 배송비·무료배송 기준금액·설치비·보관비·예상 파손비·예상 반품비처럼 <b>비용을 직접 발생시키는 수치</b>를 SKU 비용 프로필에 저장합니다. 실제 물류 시스템에서 크기가 필요해지는 경우에도 전략 DB에는 비용으로 환산된 값만 우선 사용합니다.</p></div>
+        <div className="blueprint-guide-section-heading"><span>상품별 입력 규칙</span><h3>어떤 상품이든<br /><em>먼저 이 네 가지를 채웁니다.</em></h3></div>
+        <div className="blueprint-product-rule-grid"><article><span>01</span><strong>무엇을 한 단위로 셀까?</strong><p>웰니스·그린푸드는 로트, 리바트는 옵션이 반영된 SKU를 기준으로 재고·판매를 연결합니다.</p></article><article><span>02</span><strong>언제까지 팔아야 할까?</strong><p>식품은 소비기한·주문마감, 가구는 납기·설치일, 웰니스는 최소 잔여기한을 사용합니다.</p></article><article><span>03</span><strong>팔 때 어떤 비용이 생길까?</strong><p>배송·설치·콜드체인·포장·반품·파손·폐기처럼 전략을 실행할 때 실제로 변하는 값만 넣습니다.</p></article><article><span>04</span><strong>팔면 안 되는 경우는?</strong><p>법적 제한·표시·검사·회수·소유권·capacity가 확인되지 않으면 이익 계산 전에 차단합니다.</p></article></div>
+      </div>
+    </section>
+
+    <section className="section blueprint-strategy-build-section">
+      <div className="container">
+        <div className="section-heading"><span className="eyebrow">05-C · 목표별 전략 만들기</span><h2>담당자가 목표를 고르면<br /><em>후보 순위 기준이 바뀝니다.</em></h2><p>하드 차단은 항상 먼저 적용하고, 그 다음 담당자가 선택한 목표에 맞춰 같은 후보들의 순위를 다시 계산합니다.</p></div>
+        <SimpleTable caption="목표별 전략 수식 적용 방법" headers={['목표', '선택 기준', '수식에서 더 크게 보는 값', '제외 기준']} rows={strategyBuildRows} />
+        <div className="blueprint-operation-flow blueprint-strategy-flow"><article><span>01</span><strong>기준선 저장</strong><p>아무것도 하지 않을 때의 예상 판매·비용·잔여재고를 고정합니다.</p></article><article><span>02</span><strong>조건 입력</strong><p>할인율·쿠폰·기간·수량·채널·번들 여부를 담당자가 바꿉니다.</p></article><article><span>03</span><strong>수식 재계산</strong><p>같은 데이터 snapshot으로 수요·비용·위험·이익을 다시 계산합니다.</p></article><article><span>04</span><strong>후보 비교</strong><p>보수·기본·낙관 시나리오와 목표별 순위를 비교합니다.</p></article><article><span>05</span><strong>설명·승인</strong><p>AI는 근거를 쉬운 문장으로 설명하고 담당자가 승인합니다.</p></article><article><span>06</span><strong>실제 결과 저장</strong><p>판매량·매출·잔여재고를 저장해 다음 예측을 검증합니다.</p></article></div>
       </div>
     </section>
 

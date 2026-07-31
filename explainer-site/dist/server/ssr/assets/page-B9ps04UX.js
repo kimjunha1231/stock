@@ -1,6 +1,6 @@
 import { t as require_jsx_runtime, w as __toESM, y as require_react } from "../index.js";
 import { n as Stagger, t as Reveal } from "./reveal-ASYv3BuO.js";
-import { r as mvpMenu } from "./content-dTZIMMT4.js";
+import { r as mvpMenu } from "./content-bmnt8j64.js";
 //#region src/app/capabilities/page.tsx
 var import_react = /* @__PURE__ */ __toESM(require_react(), 1);
 var import_jsx_runtime = require_jsx_runtime();

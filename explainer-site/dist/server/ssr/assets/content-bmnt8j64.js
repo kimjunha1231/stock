@@ -551,10 +551,6 @@ var navItems = [
 		label: "AI 기능·데이터 가이드"
 	},
 	{
-		href: "/formulas",
-		label: "수식 및 계산"
-	},
-	{
 		href: "/capabilities",
 		label: "기능 명세"
 	},

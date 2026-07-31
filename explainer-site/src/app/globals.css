@@ -607,6 +607,47 @@ main { position: relative; }
 .blueprint-ai-function-table-wrap .blueprint-guide-table td:nth-child(4) { min-width: 205px; }
 .blueprint-ai-function-table-wrap .blueprint-guide-table td:nth-child(5) { min-width: 190px; }
 .blueprint-ai-function-table-wrap .blueprint-guide-table td:nth-child(6) { min-width: 220px; }
+.blueprint-formula-section { background: linear-gradient(180deg, #fff 0, #f8fbff 100%); }
+.blueprint-formula-order { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px; margin: 0 0 21px; padding: 14px 16px; border: 1px solid #d5e3f0; border-radius: 15px; background: #fff; box-shadow: 0 10px 22px #11243d05; }
+.blueprint-formula-order span { display: inline-flex; align-items: center; gap: 6px; color: #3e5b7c; font-size: 11px; font-weight: 750; }
+.blueprint-formula-order b { display: inline-grid; place-items: center; width: 22px; height: 22px; color: #fff; border-radius: 7px; background: var(--blue); font: 10px ui-monospace, SFMono-Regular, Menlo, monospace; }
+.blueprint-formula-order i { color: #9ab4d2; font-style: normal; }
+.blueprint-formula-card-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.blueprint-formula-card { min-width: 0; border: 1px solid #d5e3f0; border-radius: 16px; background: #fff; box-shadow: 0 12px 26px #11243d06; overflow: hidden; }
+.blueprint-formula-card[open] { border-color: #9fc0ed; box-shadow: 0 16px 30px #1d5db018; }
+.blueprint-formula-card summary { display: grid; grid-template-columns: 1fr auto; gap: 6px 12px; padding: 17px 18px; cursor: pointer; list-style: none; }
+.blueprint-formula-card summary::-webkit-details-marker { display: none; }
+.blueprint-formula-card summary:focus-visible { outline: 3px solid #9fc0ed; outline-offset: -3px; }
+.blueprint-formula-card summary > span { grid-column: 1 / -1; color: var(--blue); font-size: 9px; font-weight: 850; letter-spacing: .08em; text-transform: uppercase; }
+.blueprint-formula-card summary strong { color: var(--ink); font-size: 16px; letter-spacing: -.045em; }
+.blueprint-formula-card summary em { align-self: center; color: #7e93ab; font-size: 10px; font-style: normal; }
+.blueprint-formula-card summary em:after { content: '＋'; display: inline-block; margin-left: 6px; color: var(--blue); font-size: 15px; }
+.blueprint-formula-card[open] summary em:after { content: '−'; }
+.blueprint-formula-card-body { padding: 0 18px 18px; }
+.blueprint-formula-card-body pre { overflow-x: auto; margin: 0; padding: 14px 15px; color: #dceaff; border: 1px solid #2f4d71; border-radius: 12px; background: #142a49; font: 11px/1.7 ui-monospace, SFMono-Regular, Menlo, monospace; white-space: pre-wrap; }
+.blueprint-formula-card-body pre code { color: inherit; font: inherit; }
+.blueprint-formula-plain { margin: 13px 0 0; padding: 12px 14px; color: #536d91; border-left: 3px solid var(--blue); border-radius: 8px; background: #eef5ff; font-size: 11px; line-height: 1.65; }
+.blueprint-formula-plain b { display: block; margin-bottom: 3px; color: var(--blue-dark); font-size: 10px; }
+.blueprint-formula-meta { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-top: 10px; }
+.blueprint-formula-meta > div { padding: 11px 12px; border: 1px solid #e1ebf4; border-radius: 10px; background: #fbfdff; }
+.blueprint-formula-meta span { display: block; color: #7890ac; font-size: 9px; font-weight: 850; }
+.blueprint-formula-meta p { margin: 5px 0 0; color: #627892; font-size: 10px; line-height: 1.55; }
+.blueprint-affiliate-formula-section { background: #f8fbff; }
+.blueprint-affiliate-formula-table .blueprint-guide-table { min-width: 1580px; }
+.blueprint-affiliate-formula-table .blueprint-guide-table td:first-child { min-width: 110px; }
+.blueprint-affiliate-formula-table .blueprint-guide-table td:nth-child(2) { min-width: 170px; }
+.blueprint-affiliate-formula-table .blueprint-guide-table td:nth-child(3) { min-width: 155px; }
+.blueprint-affiliate-formula-table .blueprint-guide-table td:nth-child(4) { min-width: 250px; }
+.blueprint-affiliate-formula-table .blueprint-guide-table td:nth-child(5) { min-width: 240px; }
+.blueprint-affiliate-formula-table .blueprint-guide-table td:nth-child(6) { min-width: 260px; }
+.blueprint-affiliate-formula-table .blueprint-guide-table td:nth-child(7) { min-width: 310px; }
+.blueprint-product-rule-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+.blueprint-product-rule-grid article { min-width: 0; padding: 17px; border: 1px solid #d8e5f0; border-radius: 15px; background: #fff; box-shadow: 0 10px 22px #11243d05; }
+.blueprint-product-rule-grid article > span { display: inline-grid; place-items: center; width: 26px; height: 26px; color: var(--blue); border-radius: 8px; background: #e7f0ff; font: 10px ui-monospace, SFMono-Regular, Menlo, monospace; }
+.blueprint-product-rule-grid article strong { display: block; margin-top: 12px; color: var(--ink); font-size: 13px; letter-spacing: -.035em; }
+.blueprint-product-rule-grid article p { margin: 7px 0 0; color: #627892; font-size: 10px; line-height: 1.6; }
+.blueprint-strategy-build-section { background: linear-gradient(180deg, #fff 0, #fbfdff 100%); }
+.blueprint-strategy-flow { margin-top: 18px; }
 .blueprint-guide-two-column { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; margin-top: 6px; }
 .blueprint-erd-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
 .blueprint-erd-grid article { min-width: 0; padding: 15px; border: 1px solid #dbe7f1; border-radius: 13px; background: #fff; }
@@ -748,6 +789,7 @@ main { position: relative; }
   .blueprint-operation-flow { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .blueprint-sequence-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .blueprint-erd-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .blueprint-formula-card-grid, .blueprint-product-rule-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .glossary-layout { grid-template-columns: 1fr; gap: 25px; }
   .glossary-intro { position: static; }
   .formula-help-layout { grid-template-columns: 1fr; }
@@ -796,5 +838,11 @@ main { position: relative; }
   .blueprint-operation-flow { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .blueprint-key-list > div { grid-template-columns: minmax(105px, .45fr) 1fr; }
   .blueprint-sequence-grid, .blueprint-erd-grid { grid-template-columns: 1fr; }
+  .blueprint-formula-card-grid, .blueprint-product-rule-grid { grid-template-columns: 1fr; }
+  .blueprint-formula-order { justify-content: flex-start; overflow-x: auto; flex-wrap: nowrap; }
+  .blueprint-formula-order span, .blueprint-formula-order i { flex: 0 0 auto; }
+  .blueprint-formula-card summary { grid-template-columns: 1fr; }
+  .blueprint-formula-card summary em { justify-self: start; }
+  .blueprint-formula-meta { grid-template-columns: 1fr; }
   .site-footer { align-items: flex-start; flex-direction: column; }
 }
