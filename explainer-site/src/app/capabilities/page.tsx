@@ -267,6 +267,31 @@ const formulaRows = [
   ['위험점수', '100 × Σ(신호별 가중치 × 상품별 위험값)', '가중치·임계값은 계열사·카테고리별 버전 관리'],
 ];
 
+const inventoryColumns = [
+  ['계열사', '상품이 어느 계열사에 속하는지', '필터와 권한 범위를 판단합니다.'],
+  ['상품 코드', '통합 상품 코드와 계열사 원천 코드', '상품 상세·원천 데이터 추적에 사용합니다.'],
+  ['상품명·카테고리', '상품명, 브랜드, 공통 카테고리, 옵션 요약', '같은 이름의 상품을 구분하고 상세로 이동합니다.'],
+  ['판매 채널·운영 단위', '온라인·오프라인·식자재·배송권역·설치권역', '판매 가능 범위와 처리 capacity를 확인합니다.'],
+  ['재고 상태·가용수량', '현재고에서 예약·보류 수량을 뺀 판매 가능 수량', '실제로 처리할 수 있는 수량을 판단합니다.'],
+  ['판매가·소진예상', '판매가, 최근 판매속도, 예상 소진일', '할인·추가입고·처리 우선순위를 정합니다.'],
+  ['위험 태그·추천 행동', '위험 등급, 판단 이유, 다음 검토 행동', '담당자가 바로 확인할 대상을 찾습니다.'],
+];
+
+const inventoryMockRows = [
+  ['현대웰니스', 'WEL-VIT-001', '멀티비타민 데일리', '건강기능식품 · 영양', '판매중', '320개', '18일', '위험', '소비기한 임박 · 할인 검토'],
+  ['현대리바트', 'LIV-SOF-204', '모듈형 패브릭 소파', '가구 · 거실 · 설치', '판매중', '12개', '74일', '주의', '설치 슬롯 확인'],
+  ['현대그린푸드', 'GFD-SEA-031', '손질 고등어 800g', '식품 · 수산 · 냉동', '판매 제한', '86개', '4일', '위험', '검사 결과 확인'],
+];
+
+const detailFields = [
+  ['상단 요약', '상품명·계열사·카테고리·SKU·판매 상태·위험 태그', '현재 어떤 상품을 보고 있는지 즉시 이해'],
+  ['핵심 지표', '판매가·가용재고·최근 판매속도·예상 소진일·처리기한', '재고를 얼마나 빨리 처리해야 하는지 판단'],
+  ['옵션·로트', '색상·사이즈·용량·로트별 수량·소비기한·보관조건', '상품 전체가 아닌 실제 SKU·로트 단위로 확인'],
+  ['AI 위험 분석', '위험점수·등급·판단 이유·사용한 기준시각·데이터 상태', '추천이 나온 이유와 부족한 자료를 확인'],
+  ['판매·재고 이력', '입고·판매·반품·조정·프로모션 이력과 추이', '예측과 실제 흐름을 비교하고 원인을 찾음'],
+  ['다음 행동', '할인 검토·추가입고 검토·전략 시뮬레이션·승인 요청', '상세 화면에서 다음 단계로 바로 이동'],
+];
+
 const stateRows = [
   ['데이터', 'received', 'validating', 'accepted / warning / quarantined / rejected'],
   ['위험 진단', 'detected', 'acknowledged', 'in_review → strategy_requested → resolved / suppressed'],
@@ -512,6 +537,40 @@ export default function CapabilitiesPage() {
           <div className="section-heading"><span className="eyebrow">MVP screen map</span><h2>메뉴는 역할별로 나누고,<br /><em>대시보드와 재고표는 분리합니다.</em></h2><p>대시보드는 처음 들어왔을 때 핵심 지표와 우선 처리 대상을 보여줍니다. 통합 재고는 상품과 SKU를 찾아보고 필터링하는 작업 화면입니다.</p></div>
           <div className="mvp-menu-table-wrap"><table className="mvp-menu-table"><caption className="sr-only">MVP 메뉴별 역할과 세부 기능</caption><thead><tr><th scope="col">메뉴</th><th scope="col">화면 역할</th><th scope="col">이 메뉴에서 하는 일</th></tr></thead><tbody>{mvpMenu.map((menu) => <tr key={menu.id} className={menu.id === '01' || menu.id === '02' ? 'mvp-menu-emphasis' : undefined}><td><span className="mvp-menu-number">{menu.id}</span><strong>{menu.label}</strong><small>{menu.kind}</small></td><td><p>{menu.purpose}</p></td><td><ul>{menu.features.map((feature) => <li key={feature}>{feature}</li>)}</ul></td></tr>)}</tbody></table></div>
           <div className="mvp-menu-note"><strong>화면을 나누는 기준</strong><span><b>대시보드</b>는 숫자를 요약해 “무엇을 볼지” 결정하고, <b>통합 재고</b>는 표·검색·필터로 “어떤 상품을 처리할지” 찾습니다.</span></div>
+        </div>
+      </section>
+
+      <section className="section capability-section inventory-design-section">
+        <div className="container">
+          <div className="section-heading"><span className="eyebrow">재고 화면 설계</span><h2>통합 재고 표와<br /><em>상품 상세 화면을 이렇게 구성합니다.</em></h2><p>첨부해주신 재고표·상세 화면의 흐름을 참고하되, 현재 프로젝트 기준인 3개 계열사 통합·원가 비노출·SKU 단위 조회로 다시 정리한 목업입니다.</p></div>
+          <div className="inventory-design-grid">
+            <article className="inventory-design-card">
+              <div className="inventory-mockup inventory-mockup-table" role="img" aria-label="3개 계열사 통합 재고 조회 화면 목업">
+                <div className="inventory-mock-top"><strong>통합 재고 조회</strong><span>기준시각 2026.06.10 09:00</span></div>
+                <div className="inventory-mock-filters"><span>전체 계열사⌄</span><span>전체 상품군⌄</span><span>전체 위험도⌄</span><b>상품명·코드 검색</b></div>
+                <div className="inventory-mock-table-wrap"><table className="inventory-mock-table"><thead><tr>{['계열사', '상품 코드', '상품명·카테고리', '판매 채널·운영', '상태', '가용재고', '소진예상', '위험', '추천 행동'].map((head) => <th key={head}>{head}</th>)}</tr></thead><tbody>{inventoryMockRows.map((row) => <tr key={row[1]}>{row.map((cell, index) => <td key={`${row[1]}-${index}`} className={index === 7 ? `inventory-mock-risk inventory-mock-risk-${cell === '위험' ? 'danger' : cell === '주의' ? 'warning' : 'safe'}` : undefined}>{index === 1 ? <code>{cell}</code> : index === 7 ? <span>{cell}</span> : cell}</td>)}</tr>)}</tbody></table></div>
+                <div className="inventory-mock-foot"><span>원가·취득원가는 기본 화면에 표시하지 않음</span><b>행을 누르면 상품 상세 →</b></div>
+              </div>
+              <div className="screen-copy"><span className="screen-meta">화면 01 · 목록 화면</span><h3>통합 재고 조회</h3><p>계열사·상품·SKU를 한 표에서 비교하고, 위험도·소진예상일·추천 행동으로 처리 우선순위를 찾습니다.</p></div>
+            </article>
+
+            <article className="inventory-design-card">
+              <div className="inventory-mockup inventory-mockup-detail" role="img" aria-label="상품 상세 조회 화면 목업">
+                <div className="inventory-detail-header"><div className="inventory-detail-icon">H</div><div><span>WEL-VIT-001 · 현대웰니스</span><strong>멀티비타민 데일리</strong><small>건강기능식품 · 영양 · 판매중</small></div><i>×</i></div>
+                <div className="inventory-detail-tabs"><b>상품 기본정보</b><span>AI 위험 분석·기준선</span><span>판매·재고 이력</span></div>
+                <div className="inventory-detail-stats"><div><small>판매가</small><strong>₩39,000</strong></div><div><small>가용재고</small><strong>320개</strong></div><div><small>예상 소진</small><strong>18일</strong></div><div><small>위험 등급</small><strong className="text-danger">위험</strong></div></div>
+                <div className="inventory-detail-panels"><div className="inventory-detail-panel"><div><b>옵션·로트별 재고</b><span>총 320개</span></div><ul><li><span>기본형 · 30정</span><strong>210개</strong></li><li><span>기본형 · 60정</span><strong>110개</strong></li></ul></div><div className="inventory-detail-panel"><div><b>최근 흐름</b><span>최근 30일</span></div><ul><li><span>순판매량</span><strong>17개 소진</strong></li><li><span>입고 이력</span><strong>+189개</strong></li><li><span>위험 이유</span><strong className="text-danger">소비기한 임박</strong></li></ul></div></div>
+                <div className="inventory-detail-action"><span>추천: 할인 전략 검토</span><button type="button">AI 전략 수립으로 이동</button></div>
+              </div>
+              <div className="screen-copy"><span className="screen-meta">화면 02 · 상세 화면</span><h3>상품 상세 조회</h3><p>목록에서 선택한 SKU의 옵션·로트·판매 흐름·위험 이유를 확인하고, 전략 시뮬레이션으로 바로 이동합니다.</p></div>
+            </article>
+          </div>
+
+          <div className="inventory-design-spec-grid">
+            <div><div className="section-heading"><span className="eyebrow">목록 컬럼</span><h3>통합 재고 표에<br /><em>보여줄 항목</em></h3></div><div className="functional-spec-table-wrap"><table className="functional-spec-table"><caption className="sr-only">통합 재고 표 컬럼 설명</caption><thead><tr><th scope="col">컬럼</th><th scope="col">무엇을 보여주나</th><th scope="col">왜 필요한가</th></tr></thead><tbody>{inventoryColumns.map((row) => <tr key={row[0]}><td><strong>{row[0]}</strong></td><td>{row[1]}</td><td>{row[2]}</td></tr>)}</tbody></table></div></div>
+            <div><div className="section-heading"><span className="eyebrow">상세 구성</span><h3>상품 상세에서<br /><em>확인할 항목</em></h3></div><div className="functional-spec-table-wrap"><table className="functional-spec-table"><caption className="sr-only">상품 상세 화면 구성 설명</caption><thead><tr><th scope="col">영역</th><th scope="col">표시 내용</th><th scope="col">사용 목적</th></tr></thead><tbody>{detailFields.map((row) => <tr key={row[0]}><td><strong>{row[0]}</strong></td><td>{row[1]}</td><td>{row[2]}</td></tr>)}</tbody></table></div></div>
+          </div>
+          <div className="capability-callout inventory-design-rule"><strong>공통 화면 규칙</strong><p><b>원가·취득원가</b>는 기본 목록과 상세 화면에 표시하지 않고 서버 계산에만 사용합니다. 계열사마다 다른 값은 같은 컬럼 안에서 배지·상세 필드로 나누어 보여주며, 모든 수량·위험·추천에는 기준시각과 데이터 상태를 함께 표시합니다.</p></div>
         </div>
       </section>
 

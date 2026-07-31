@@ -812,6 +812,110 @@ var formulaRows = [
 		"가중치·임계값은 계열사·카테고리별 버전 관리"
 	]
 ];
+var inventoryColumns = [
+	[
+		"계열사",
+		"상품이 어느 계열사에 속하는지",
+		"필터와 권한 범위를 판단합니다."
+	],
+	[
+		"상품 코드",
+		"통합 상품 코드와 계열사 원천 코드",
+		"상품 상세·원천 데이터 추적에 사용합니다."
+	],
+	[
+		"상품명·카테고리",
+		"상품명, 브랜드, 공통 카테고리, 옵션 요약",
+		"같은 이름의 상품을 구분하고 상세로 이동합니다."
+	],
+	[
+		"판매 채널·운영 단위",
+		"온라인·오프라인·식자재·배송권역·설치권역",
+		"판매 가능 범위와 처리 capacity를 확인합니다."
+	],
+	[
+		"재고 상태·가용수량",
+		"현재고에서 예약·보류 수량을 뺀 판매 가능 수량",
+		"실제로 처리할 수 있는 수량을 판단합니다."
+	],
+	[
+		"판매가·소진예상",
+		"판매가, 최근 판매속도, 예상 소진일",
+		"할인·추가입고·처리 우선순위를 정합니다."
+	],
+	[
+		"위험 태그·추천 행동",
+		"위험 등급, 판단 이유, 다음 검토 행동",
+		"담당자가 바로 확인할 대상을 찾습니다."
+	]
+];
+var inventoryMockRows = [
+	[
+		"현대웰니스",
+		"WEL-VIT-001",
+		"멀티비타민 데일리",
+		"건강기능식품 · 영양",
+		"판매중",
+		"320개",
+		"18일",
+		"위험",
+		"소비기한 임박 · 할인 검토"
+	],
+	[
+		"현대리바트",
+		"LIV-SOF-204",
+		"모듈형 패브릭 소파",
+		"가구 · 거실 · 설치",
+		"판매중",
+		"12개",
+		"74일",
+		"주의",
+		"설치 슬롯 확인"
+	],
+	[
+		"현대그린푸드",
+		"GFD-SEA-031",
+		"손질 고등어 800g",
+		"식품 · 수산 · 냉동",
+		"판매 제한",
+		"86개",
+		"4일",
+		"위험",
+		"검사 결과 확인"
+	]
+];
+var detailFields = [
+	[
+		"상단 요약",
+		"상품명·계열사·카테고리·SKU·판매 상태·위험 태그",
+		"현재 어떤 상품을 보고 있는지 즉시 이해"
+	],
+	[
+		"핵심 지표",
+		"판매가·가용재고·최근 판매속도·예상 소진일·처리기한",
+		"재고를 얼마나 빨리 처리해야 하는지 판단"
+	],
+	[
+		"옵션·로트",
+		"색상·사이즈·용량·로트별 수량·소비기한·보관조건",
+		"상품 전체가 아닌 실제 SKU·로트 단위로 확인"
+	],
+	[
+		"AI 위험 분석",
+		"위험점수·등급·판단 이유·사용한 기준시각·데이터 상태",
+		"추천이 나온 이유와 부족한 자료를 확인"
+	],
+	[
+		"판매·재고 이력",
+		"입고·판매·반품·조정·프로모션 이력과 추이",
+		"예측과 실제 흐름을 비교하고 원인을 찾음"
+	],
+	[
+		"다음 행동",
+		"할인 검토·추가입고 검토·전략 시뮬레이션·승인 요청",
+		"상세 화면에서 다음 단계로 바로 이동"
+	]
+];
 var stateRows = [
 	[
 		"데이터",
@@ -2034,6 +2138,255 @@ function CapabilitiesPage() {
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: "통합 재고" }),
 							"는 표·검색·필터로 “어떤 상품을 처리할지” 찾습니다."
 						] })]
+					})
+				]
+			})
+		}),
+		/* @__PURE__ */ (0, import_jsx_runtime.jsx)("section", {
+			className: "section capability-section inventory-design-section",
+			children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				className: "container",
+				children: [
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						className: "section-heading",
+						children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+								className: "eyebrow",
+								children: "재고 화면 설계"
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("h2", { children: [
+								"통합 재고 표와",
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("br", {}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("em", { children: "상품 상세 화면을 이렇게 구성합니다." })
+							] }),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "첨부해주신 재고표·상세 화면의 흐름을 참고하되, 현재 프로젝트 기준인 3개 계열사 통합·원가 비노출·SKU 단위 조회로 다시 정리한 목업입니다." })
+						]
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						className: "inventory-design-grid",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("article", {
+							className: "inventory-design-card",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								className: "inventory-mockup inventory-mockup-table",
+								role: "img",
+								"aria-label": "3개 계열사 통합 재고 조회 화면 목업",
+								children: [
+									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+										className: "inventory-mock-top",
+										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "통합 재고 조회" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "기준시각 2026.06.10 09:00" })]
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+										className: "inventory-mock-filters",
+										children: [
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "전체 계열사⌄" }),
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "전체 상품군⌄" }),
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "전체 위험도⌄" }),
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: "상품명·코드 검색" })
+										]
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+										className: "inventory-mock-table-wrap",
+										children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("table", {
+											className: "inventory-mock-table",
+											children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("thead", { children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("tr", { children: [
+												"계열사",
+												"상품 코드",
+												"상품명·카테고리",
+												"판매 채널·운영",
+												"상태",
+												"가용재고",
+												"소진예상",
+												"위험",
+												"추천 행동"
+											].map((head) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", { children: head }, head)) }) }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("tbody", { children: inventoryMockRows.map((row) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("tr", { children: row.map((cell, index) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", {
+												className: index === 7 ? `inventory-mock-risk inventory-mock-risk-${cell === "위험" ? "danger" : cell === "주의" ? "warning" : "safe"}` : void 0,
+												children: index === 1 ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("code", { children: cell }) : index === 7 ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: cell }) : cell
+											}, `${row[1]}-${index}`)) }, row[1])) })]
+										})
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+										className: "inventory-mock-foot",
+										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "원가·취득원가는 기본 화면에 표시하지 않음" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: "행을 누르면 상품 상세 →" })]
+									})
+								]
+							}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								className: "screen-copy",
+								children: [
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+										className: "screen-meta",
+										children: "화면 01 · 목록 화면"
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", { children: "통합 재고 조회" }),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "계열사·상품·SKU를 한 표에서 비교하고, 위험도·소진예상일·추천 행동으로 처리 우선순위를 찾습니다." })
+								]
+							})]
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("article", {
+							className: "inventory-design-card",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								className: "inventory-mockup inventory-mockup-detail",
+								role: "img",
+								"aria-label": "상품 상세 조회 화면 목업",
+								children: [
+									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+										className: "inventory-detail-header",
+										children: [
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+												className: "inventory-detail-icon",
+												children: "H"
+											}),
+											/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+												/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "WEL-VIT-001 · 현대웰니스" }),
+												/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "멀티비타민 데일리" }),
+												/* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: "건강기능식품 · 영양 · 판매중" })
+											] }),
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("i", { children: "×" })
+										]
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+										className: "inventory-detail-tabs",
+										children: [
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: "상품 기본정보" }),
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "AI 위험 분석·기준선" }),
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "판매·재고 이력" })
+										]
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+										className: "inventory-detail-stats",
+										children: [
+											/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: "판매가" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "₩39,000" })] }),
+											/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: "가용재고" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "320개" })] }),
+											/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: "예상 소진" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "18일" })] }),
+											/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: "위험 등급" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", {
+												className: "text-danger",
+												children: "위험"
+											})] })
+										]
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+										className: "inventory-detail-panels",
+										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+											className: "inventory-detail-panel",
+											children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: "옵션·로트별 재고" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "총 320개" })] }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("ul", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("li", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "기본형 · 30정" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "210개" })] }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("li", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "기본형 · 60정" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "110개" })] })] })]
+										}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+											className: "inventory-detail-panel",
+											children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: "최근 흐름" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "최근 30일" })] }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("ul", { children: [
+												/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("li", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "순판매량" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "17개 소진" })] }),
+												/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("li", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "입고 이력" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "+189개" })] }),
+												/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("li", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "위험 이유" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", {
+													className: "text-danger",
+													children: "소비기한 임박"
+												})] })
+											] })]
+										})]
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+										className: "inventory-detail-action",
+										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "추천: 할인 전략 검토" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
+											type: "button",
+											children: "AI 전략 수립으로 이동"
+										})]
+									})
+								]
+							}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								className: "screen-copy",
+								children: [
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+										className: "screen-meta",
+										children: "화면 02 · 상세 화면"
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", { children: "상품 상세 조회" }),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "목록에서 선택한 SKU의 옵션·로트·판매 흐름·위험 이유를 확인하고, 전략 시뮬레이션으로 바로 이동합니다." })
+								]
+							})]
+						})]
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						className: "inventory-design-spec-grid",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							className: "section-heading",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+								className: "eyebrow",
+								children: "목록 컬럼"
+							}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("h3", { children: [
+								"통합 재고 표에",
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("br", {}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("em", { children: "보여줄 항목" })
+							] })]
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+							className: "functional-spec-table-wrap",
+							children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("table", {
+								className: "functional-spec-table",
+								children: [
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("caption", {
+										className: "sr-only",
+										children: "통합 재고 표 컬럼 설명"
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("thead", { children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("tr", { children: [
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", {
+											scope: "col",
+											children: "컬럼"
+										}),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", {
+											scope: "col",
+											children: "무엇을 보여주나"
+										}),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", {
+											scope: "col",
+											children: "왜 필요한가"
+										})
+									] }) }),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("tbody", { children: inventoryColumns.map((row) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("tr", { children: [
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", { children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: row[0] }) }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", { children: row[1] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", { children: row[2] })
+									] }, row[0])) })
+								]
+							})
+						})] }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							className: "section-heading",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+								className: "eyebrow",
+								children: "상세 구성"
+							}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("h3", { children: [
+								"상품 상세에서",
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("br", {}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("em", { children: "확인할 항목" })
+							] })]
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+							className: "functional-spec-table-wrap",
+							children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("table", {
+								className: "functional-spec-table",
+								children: [
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("caption", {
+										className: "sr-only",
+										children: "상품 상세 화면 구성 설명"
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("thead", { children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("tr", { children: [
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", {
+											scope: "col",
+											children: "영역"
+										}),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", {
+											scope: "col",
+											children: "표시 내용"
+										}),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", {
+											scope: "col",
+											children: "사용 목적"
+										})
+									] }) }),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("tbody", { children: detailFields.map((row) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("tr", { children: [
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", { children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: row[0] }) }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", { children: row[1] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", { children: row[2] })
+									] }, row[0])) })
+								]
+							})
+						})] })]
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						className: "capability-callout inventory-design-rule",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "공통 화면 규칙" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: "원가·취득원가" }), "는 기본 목록과 상세 화면에 표시하지 않고 서버 계산에만 사용합니다. 계열사마다 다른 값은 같은 컬럼 안에서 배지·상세 필드로 나누어 보여주며, 모든 수량·위험·추천에는 기준시각과 데이터 상태를 함께 표시합니다."] })]
 					})
 				]
 			})

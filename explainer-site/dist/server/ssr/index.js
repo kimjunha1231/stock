@@ -11680,7 +11680,7 @@ var client_references_default = {
 		};
 	},
 	"9cc0f627b052": async () => {
-		const m = await import("./assets/page-pu21PLAJ.js");
+		const m = await import("./assets/page-D9SxBXJY.js");
 		return { get "default"() {
 			return m["default"];
 		} };
