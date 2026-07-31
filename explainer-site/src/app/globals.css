@@ -567,6 +567,19 @@ main { position: relative; }
 .blueprint-guide-rule p { margin: 6px 0 0; color: #536d91; font-size: 11px; line-height: 1.65; }
 .blueprint-guide-rule-green { margin: 24px 0 0; border-left-color: var(--green); background: #effbf6; }
 .blueprint-guide-rule-green strong { color: #17734f; }
+.blueprint-methodology-section { background: linear-gradient(180deg, #fff 0, #f8fbff 100%); }
+.blueprint-methodology-intro { margin-bottom: 20px; padding: 17px 19px; border-left: 3px solid var(--blue); border-radius: 9px; background: #eaf2ff; }
+.blueprint-methodology-intro strong { color: var(--blue-dark); font-size: 12px; }
+.blueprint-methodology-intro p { margin: 6px 0 0; color: #536d91; font-size: 11px; line-height: 1.7; }
+.blueprint-methodology-table { min-width: 1180px; }
+.blueprint-methodology-table td:first-child { min-width: 150px; }
+.blueprint-methodology-table td:nth-child(2) { min-width: 180px; }
+.blueprint-methodology-table td:nth-child(3) { min-width: 220px; }
+.blueprint-methodology-table td:nth-child(4) { min-width: 240px; }
+.blueprint-methodology-table td:nth-child(5) { min-width: 190px; }
+.blueprint-methodology-result { margin-top: 20px; padding: 18px 20px; border-left: 3px solid var(--green); border-radius: 9px; background: #effbf6; }
+.blueprint-methodology-result strong { color: #17734f; font-size: 12px; }
+.blueprint-methodology-result p { margin: 6px 0 0; color: #536d78; font-size: 11px; line-height: 1.7; }
 .blueprint-guide-section-heading { margin: 38px 0 17px; }
 .blueprint-guide-section-heading > span { color: var(--blue); font-size: 10px; font-weight: 850; letter-spacing: .09em; text-transform: uppercase; }
 .blueprint-guide-section-heading h3 { margin: 10px 0 0; color: var(--ink); font-size: clamp(23px, 3vw, 34px); letter-spacing: -.06em; line-height: 1.08; }

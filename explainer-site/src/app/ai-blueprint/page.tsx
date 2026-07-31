@@ -81,6 +81,23 @@ const forecastingSteps = [
   ['7. 실제 결과로 점검하기', '전략 실행 후 실제 판매·매출·잔여재고와 예측을 비교합니다. 검증 전 자동 재학습·자동 입고는 하지 않습니다.'],
 ];
 
+const methodologyRows = [
+  ['계열사 공식몰·사업 자료', '실제 상품군과 운영 방식이 맞는지 확인', '건강식품·가구·식품, 배송·설치·냉장/냉동·검사 같은 운영 조건', '계열사 확장 프로필·하드 차단·비용 항목으로 변환', '상품·재고 필드와 계열사별 전략 기준'],
+  ['법·정책·공공 안내', '판매 전에 반드시 지켜야 하는 조건인지 확인', '소비기한·보관방법·표시·주의사항·검사·회수', '수익 계산보다 먼저 통과시키는 규칙으로 적용', '판매 가능 여부·추천 차단 기준'],
+  ['검색 트렌드 자료·API 문서', '검색량의 의미와 수집 단위를 확인', '상대 검색 관심도·비교 기간·수집 시각·지역·일/주/월 추이', '판매·SNS·조회 신호와 합쳐 트렌드 신호로 저장', '트렌드 상승·하락과 수요예측 입력'],
+  ['SNS·검색 수요예측 연구', '외부 신호가 실제 판매예측에 도움 되는지 확인', 'SNS 언급량·검색지수·외생변수를 예측 피처로 쓰는 방법', '가중치를 그대로 복사하지 않고 내부 데이터로 개선 여부 검증', '트렌드 반영 수요예측 모델'],
+  ['시계열 예측 방법론', '미래 데이터를 섞지 않고 예측을 검증하는지 확인', '기준모델·시간순 검증·예측 범위·계층별 합계 보정', 'SKU→카테고리→계열사 합계가 맞는지 검증', '학습·검증 체크리스트와 모델 버전'],
+  ['재고·가격·폐기비용 연구', '가격과 재고를 함께 바꿀 때 어떤 비용을 봐야 하는지 확인', '할인·재고·보관·폐기·반품·매출 잠식·처분 비용', '증분이익 목적함수와 전략 후보 순위에 반영', '최대 마진·빠른 소진·최대 매출·위험 최소화'],
+  ['우리 프로젝트 요구사항', '실제 서비스에서 보여주고 실행할 범위를 확정', '3개 계열사 통합·원가 비노출·담당자 승인·비용 프로필·시뮬레이션', '공통 DB·정책 프로필·설명용 AI·사람 승인 구조로 조합', '사이트 기능명세·DB 설계·화면 컬럼'],
+];
+
+const methodologyRules = [
+  ['자료에서 사실로 확인된 것', '상품군·운영 조건·법적 제한·연구 방법을 출처와 함께 표시'],
+  ['우리 서비스에 적용한 해석', '공통 모델·정책 프로필·비용 프로필·하드 차단·수식 엔진으로 변환'],
+  ['아직 확정할 수 없는 값', '배송비·설치비·보관비·파손비·반품비·가중치·임계값은 내부 자료로 확정'],
+  ['개발 전 검증할 것', 'ERP·POS·WMS·재무 데이터의 실제 컬럼·단위·갱신 주기와 담당자 확인'],
+];
+
 const strategyRows = [
   ['최대 마진', '기준선보다 추가 이익(M_inc)이 가장 큰 후보', '판매가·할인·수수료·배송·반품·회피비용', '최소 마진 미만이면 제외'],
   ['빠른 소진', '처리기한 안의 소진기간·잔여재고', '예측 판매량·현재고·처리기한·입고 리드타임', '기한 안에 처리 불가하면 제외'],
@@ -186,6 +203,16 @@ export default function AiBlueprintPage() {
         <div className="section-heading"><span className="eyebrow">학습·검증 순서</span><h2>모델은 이 순서로<br /><em>검증하고 운영합니다.</em></h2><p>상품군마다 데이터 양과 리스크가 다르므로, 복잡한 모델보다 기준모델 대비 개선 여부를 먼저 봅니다.</p></div>
         <div className="blueprint-source-layout"><div className="blueprint-source-main"><Stagger className="stack">{[['01', '품절·반품 보정', '품절일을 판매 부진으로 학습하지 않고, 취소·반품과 정상 판매를 분리합니다.'], ['02', '기준모델 만들기', '계절 기준모델·가중 이동평균·지수평활(ETS) 중 성능이 좋은 기준모델을 둡니다.'], ['03', '트렌드 자료 추가', '검색·SNS·조회·판매 신호를 추가하고 상품군별 가중치와 지연 효과를 비교합니다.'], ['04', '시간 순서 검증', '미래 데이터를 섞지 않는 시간순 검증(rolling-origin)으로 예측 오차와 예측 범위를 측정합니다.'], ['05', '계층 보정', 'SKU 예측 합계가 카테고리·계열사·전체 집계와 맞는지 확인합니다.'], ['06', '운영·재학습', '모델 버전·계산 자료·예측 오차를 저장하고 실제 결과가 쌓인 뒤 재학습합니다.']].map(([num, title, body]) => <article className="stack-card" key={num}><div className="stack-icon">{num}</div><div><strong>{title}</strong><p>{body}</p></div><b>모델</b></article>)}</Stagger>
         <div className="capability-callout"><strong>보류 조건</strong><p>트렌드와 판매 데이터가 상품에 정확히 매핑되지 않거나, 소비기한·검사·설치·콜드체인 정보가 없으면 해당 추천을 “예측 부족/확인 필요”로 표시합니다. 자동 입고·자동 가격변경은 검증 이후 단계입니다.</p></div></div><SourceRail ids={['forecasting-tscv', 'forecasting-hierarchy', 'forecasting-predictors']} note="기준모델, 시간순 검증, 계층 보정을 정한 예측 방법론입니다." /></div>
+      </div>
+    </section>
+
+    <section className="section blueprint-methodology-section">
+      <div className="container">
+        <div className="section-heading"><span className="eyebrow">근거를 설계로 바꾸는 과정</span><h2>무엇을 참고했고,<br /><em>어떻게 우리 서비스로 만들었나</em></h2><p>출처의 내용을 그대로 복사한 것이 아닙니다. 공식 자료에서 사실을 확인하고, 연구에서 계산 방법을 확인한 뒤, 우리 프로젝트의 범위와 내부 데이터로 구현 가능한 구조로 합쳤습니다.</p></div>
+        <div className="blueprint-methodology-intro"><strong>자료를 합치는 기준</strong><p><b>공식 자료</b>는 “무엇을 관리해야 하는가”를 정하고, <b>법·정책 자료</b>는 “무엇을 먼저 차단해야 하는가”를 정합니다. <b>연구·방법론</b>은 “어떻게 계산하고 검증할 것인가”를 정하며, <b>프로젝트 요구사항과 내부 데이터</b>는 실제 화면·DB·비용값을 확정합니다.</p></div>
+        <div className="blueprint-guide-table-wrap"><table className="blueprint-guide-table blueprint-methodology-table"><caption className="sr-only">자료 종류별 참고 기준과 서비스 적용 방법</caption><thead><tr><th scope="col">참고 자료 묶음</th><th scope="col">검토한 기준</th><th scope="col">가져온 정보</th><th scope="col">우리 서비스에 합친 방식</th><th scope="col">최종 결과</th></tr></thead><tbody>{methodologyRows.map((row) => <tr key={row[0]}>{row.map((cell, index) => <td key={`${row[0]}-${index}`}>{index === 0 ? <strong>{cell}</strong> : cell}</td>)}</tr>)}</tbody></table></div>
+        <div className="blueprint-source-layout" style={{ marginTop: 20 }}><div className="blueprint-source-main"><div className="blueprint-guide-section-heading" style={{ marginTop: 0 }}><span>자료를 읽는 방법</span><h3>확정된 사실과<br /><em>우리의 설계안을 구분합니다.</em></h3></div><div className="blueprint-guide-table-wrap"><table className="blueprint-guide-table"><caption className="sr-only">근거 자료와 설계 결정의 구분</caption><thead><tr><th scope="col">구분</th><th scope="col">사이트에서의 의미</th></tr></thead><tbody>{methodologyRules.map((row) => <tr key={row[0]}><td><strong>{row[0]}</strong></td><td>{row[1]}</td></tr>)}</tbody></table></div></div><SourceRail ids={['affiliate-wellness', 'affiliate-livart-product', 'affiliate-greenfood', 'food-label-law', 'google-trends-help', 'social-demand-informs', 'forecasting-tscv', 'markdown-paper']} note="이 페이지의 입력·계산·정책·검증 기준을 만든 참고 자료입니다." /></div>
+        <div className="blueprint-methodology-result"><strong>결론</strong><p>현재 사이트의 DB·수식·화면은 외부 자료를 근거로 만든 <b>설계 기준</b>입니다. 실제 운영에 넣기 전에는 각 계열사의 원천 데이터와 비용 정책을 받아 필드명·단위·금액·가중치·임계값을 확정해야 합니다.</p></div>
       </div>
     </section>
 
