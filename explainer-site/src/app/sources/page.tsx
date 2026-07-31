@@ -4,7 +4,7 @@ import { sources } from '@/lib/content';
 
 export const metadata = {
   title: '출처 및 학술 근거 | InventoryOS',
-  description: '4개 계열사 공식 자료와 법·정책·학술 근거를 연결한 통합 재고 수식 출처',
+  description: '3개 계열사 공식 자료와 법·정책·학술 근거를 연결한 통합 재고 수식 출처',
 };
 
 export default function SourcesPage() {
@@ -23,7 +23,7 @@ export default function SourcesPage() {
           </Reveal>
           <Reveal>
             <p>
-              현대웰니스·더현대트래블·현대리바트·현대그린푸드의 공식 자료, 법·정책, 재고 최적화 학술 논문을
+              현대웰니스·현대리바트·현대그린푸드의 공식 자료, 법·정책, 재고 최적화 학술 논문을
               수식의 입력 요소와 하드 차단 근거로 연결했습니다.
             </p>
           </Reveal>
@@ -60,7 +60,7 @@ export default function SourcesPage() {
               <h2>출처 및 학술 문헌 목록</h2>
             </div>
             <p>
-              프로젝트 내부 손익 정책, 네 계열사 공개 자료, 식약처·법제처·공정위 법·정책,
+              프로젝트 내부 손익 정책, 3개 계열사 공개 자료, 식약처·법제처·공정위 법·정책,
               그리고 INFORMS 리테일 최적화 논문을 투명하게 구분하여 표기합니다.
             </p>
           </div>

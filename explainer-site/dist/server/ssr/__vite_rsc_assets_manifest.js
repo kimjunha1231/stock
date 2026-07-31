@@ -1,9 +1,9 @@
 export default {
-  "bootstrapScriptContent": "import(\"/assets/index-DFqsRs6u.js\")",
+  "bootstrapScriptContent": "import(\"/assets/index-BN8o9VRH.js\")",
   "clientReferenceDeps": {
     "593f344dc510": {
       "js": [
-        "/assets/index-DFqsRs6u.js",
+        "/assets/index-BN8o9VRH.js",
         "/assets/rolldown-runtime-S-ySWqyJ.js",
         "/assets/framework-CXnKph_e.js"
       ],
@@ -14,31 +14,31 @@ export default {
         "/assets/image-CFgqE4Ha.js",
         "/assets/rolldown-runtime-S-ySWqyJ.js",
         "/assets/framework-CXnKph_e.js",
-        "/assets/index-DFqsRs6u.js"
+        "/assets/index-BN8o9VRH.js"
       ],
       "css": []
     },
     "15c18cfaeeff": {
       "js": [
-        "/assets/layout-segment-context-CYqYXU_V.js",
+        "/assets/layout-segment-context-CB2UyEeZ.js",
         "/assets/rolldown-runtime-S-ySWqyJ.js",
-        "/assets/index-DFqsRs6u.js",
+        "/assets/index-BN8o9VRH.js",
         "/assets/framework-CXnKph_e.js"
       ],
       "css": []
     },
     "c2747888630f": {
       "js": [
-        "/assets/link-CSoiU_Va.js",
+        "/assets/link-6hMBJGMx.js",
         "/assets/rolldown-runtime-S-ySWqyJ.js",
-        "/assets/index-DFqsRs6u.js",
+        "/assets/index-BN8o9VRH.js",
         "/assets/framework-CXnKph_e.js"
       ],
       "css": []
     },
     "8c0f216c4604": {
       "js": [
-        "/assets/index-DFqsRs6u.js",
+        "/assets/index-BN8o9VRH.js",
         "/assets/rolldown-runtime-S-ySWqyJ.js",
         "/assets/framework-CXnKph_e.js"
       ],
@@ -46,66 +46,66 @@ export default {
     },
     "9cc0f627b052": {
       "js": [
-        "/assets/page-CEok-ybT.js",
+        "/assets/page-D7sGRY-G.js",
         "/assets/rolldown-runtime-S-ySWqyJ.js",
         "/assets/framework-CXnKph_e.js",
         "/assets/reveal-YOJmgnTk.js",
-        "/assets/content-Bws_h17l.js",
-        "/assets/index-DFqsRs6u.js"
+        "/assets/content-RD3I6AlL.js",
+        "/assets/index-BN8o9VRH.js"
       ],
       "css": []
     },
     "372050548a1b": {
       "js": [
-        "/assets/page-D9WtZcaC.js",
+        "/assets/page-DJNhXPn0.js",
         "/assets/rolldown-runtime-S-ySWqyJ.js",
         "/assets/framework-CXnKph_e.js",
-        "/assets/link-CSoiU_Va.js",
-        "/assets/index-DFqsRs6u.js",
+        "/assets/link-6hMBJGMx.js",
+        "/assets/index-BN8o9VRH.js",
         "/assets/reveal-YOJmgnTk.js",
-        "/assets/content-Bws_h17l.js"
+        "/assets/content-RD3I6AlL.js"
       ],
       "css": []
     },
     "ca88aed2258a": {
       "js": [
-        "/assets/page-BYXau4Iv.js",
+        "/assets/page-DK-vw55Q.js",
         "/assets/rolldown-runtime-S-ySWqyJ.js",
         "/assets/framework-CXnKph_e.js",
         "/assets/reveal-YOJmgnTk.js",
-        "/assets/index-DFqsRs6u.js"
+        "/assets/index-BN8o9VRH.js"
       ],
       "css": []
     },
     "fa4438e99613": {
       "js": [
-        "/assets/glossary-browser-lR1ATw03.js",
+        "/assets/glossary-browser-CPuW1YJj.js",
         "/assets/rolldown-runtime-S-ySWqyJ.js",
         "/assets/framework-CXnKph_e.js",
-        "/assets/content-Bws_h17l.js",
-        "/assets/index-DFqsRs6u.js"
+        "/assets/content-RD3I6AlL.js",
+        "/assets/index-BN8o9VRH.js"
       ],
       "css": []
     },
     "e0b926a333ff": {
       "js": [
-        "/assets/site-shell-PEXena00.js",
+        "/assets/site-shell-CHwnyci5.js",
         "/assets/rolldown-runtime-S-ySWqyJ.js",
         "/assets/framework-CXnKph_e.js",
-        "/assets/link-CSoiU_Va.js",
-        "/assets/index-DFqsRs6u.js",
-        "/assets/content-Bws_h17l.js"
+        "/assets/link-6hMBJGMx.js",
+        "/assets/index-BN8o9VRH.js",
+        "/assets/content-RD3I6AlL.js"
       ],
       "css": []
     },
     "f30fcd25c92f": {
       "js": [
-        "/assets/term-hint-CQ0E31iN.js",
+        "/assets/term-hint-CPA3Hc0f.js",
         "/assets/rolldown-runtime-S-ySWqyJ.js",
         "/assets/framework-CXnKph_e.js",
-        "/assets/link-CSoiU_Va.js",
-        "/assets/index-DFqsRs6u.js",
-        "/assets/content-Bws_h17l.js"
+        "/assets/link-6hMBJGMx.js",
+        "/assets/index-BN8o9VRH.js",
+        "/assets/content-RD3I6AlL.js"
       ],
       "css": []
     }

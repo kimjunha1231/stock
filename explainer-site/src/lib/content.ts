@@ -45,29 +45,24 @@ export const sources: SourceItem[] = [
   "url": "https://www.oracle.com/retail/"
 },
   { id: 'project-policy', kind: '프로젝트', title: 'decision-policy.md', location: '기준선·증분 기여현금이익·하드 차단', note: '승인 전에 지켜야 할 손익과 안전 규칙', url: '/prd' },
-  { id: 'project-simulation', kind: '프로젝트', title: 'src/lib/simulation.ts', location: 'SimulationControls·SimulationResult·simulateOption·fallback', note: '현재 화면에서 조정하고 계산하는 값', url: '/product-tour' },
-  { id: 'project-types', kind: '프로젝트', title: 'src/lib/types.ts', location: 'InventoryItem·StrategyOption·OptimizationCase', note: '재고 상태·소유권·기한·전략 타입', url: '/product-tour' },
+  { id: 'project-simulation', kind: '프로젝트', title: 'src/lib/simulation.ts', location: 'SimulationControls·SimulationResult·simulateOption·fallback', note: '전략 조건을 조정하고 계산하는 값', url: '/formulas' },
+  { id: 'project-types', kind: '프로젝트', title: 'src/lib/types.ts', location: 'InventoryItem·StrategyOption·OptimizationCase', note: '재고 상태·소유권·기한·전략 타입', url: '/capabilities' },
   { id: 'mfds-useby', kind: '법·정책', title: '식품 소비기한 정책브리핑', location: '소비기한과 유통기한·보관조건 준수', note: '식품은 날짜 숫자만이 아니라 보관조건과 품질을 함께 봐야 하는 근거', url: 'https://www.korea.kr/news/healthView.do?newsId=148911057' },
   { id: 'allbaro', kind: '법·정책', title: '올바로시스템', location: '사업장폐기물 전자관리', note: '폐기 실행과 증빙을 별도 기록해야 하는 근거', url: 'https://www3.allbaro.or.kr/01_wsi/wsi_system_intro.vm' },
   { id: 'pipc-genai', kind: '법·정책', title: '개인정보위 생성형 AI 개인정보 처리 기준', location: '생성형 AI 전 과정의 적법성·안전성·내부관리', note: '고객 데이터를 최소화하고 로그·권한을 분리하는 근거', url: 'https://www.korea.kr/news/policyNewsView.do?newsId=148947194' },
   { id: 'openai-pricing', kind: '기술', title: 'OpenAI API 가격 안내', location: '입력·출력·캐시·Batch 사용량', note: '공급자 가격 자체보다 usage 원장을 남기는 방식의 참고', url: 'https://openai.com/index/introducing-gpt-5-for-developers/' },
   { id: 'affiliate-wellness', kind: '계열사', title: '현대웰니스 공식몰', location: '건강기능식품·영양제·브랜드·성분·기능·대상별 상품 분류', note: '상품 페이지에서 수량, 판매가, 소비기한, 임박 태그를 분리해 입력해야 하는 근거', url: 'https://www.hyundaiwellness.com/' },
-  { id: 'affiliate-travel', kind: '계열사', title: '현대드림투어 더현대트래블', location: '항공·호텔·해외 패키지·여행자보험·렌터카·와이파이', note: '물리 재고가 아닌 출발일·예약 좌석/객실·취소 규정·공급사 비용을 capacity로 계산해야 하는 근거', url: 'https://home.hyundaidreamtour.com/jsp/web/sub03_01.jsp' },
   { id: 'affiliate-livart-product', kind: '계열사', title: '현대리바트 공식 상품 페이지', location: '배송·설치 예정일, 설치기사 연락, 배송 연기 조건', note: '가구 전략에 제품 수량뿐 아니라 설치 슬롯·배송·반품·AS 비용을 넣어야 하는 근거', url: 'https://company.hyundailivart.co.kr/p/P200086559?buyNow=P200086559' },
   { id: 'affiliate-livart-catalog', kind: '계열사', title: '현대리바트 오피스 카탈로그', location: '제품군·배송·설치·AS', note: '가구가 배송과 설치가 결합된 서비스 상품이라는 공식 카탈로그 근거', url: 'https://www.hyundailivart.co.kr/UserFiles/home/ko/brand/2020_OFFICE.pdf' },
   { id: 'affiliate-greenfood', kind: '계열사', title: '현대그린푸드 식자재 유통', location: '급식·외식·유통 고객 대상 식재료 공급', note: '식품 전략의 대상이 리테일 상품뿐 아니라 B2B 식자재·서비스 수요일 수 있음을 확인하는 공식 자료', url: 'https://www.hyundaigreenfood.com/po/fb/fdb/FBFDB01L.hgc' },
   { id: 'affiliate-greenfood-reservation', kind: '계열사', title: '현대그린푸드 사전예약 서비스', location: '제철 농·수·축산물 사전예약·배송', note: '식품의 주문 마감일, 배송일, 소비기한과 남은 물량을 연결해 계산해야 하는 근거', url: 'https://www.hyundaigreenfood.com/po/pr/ntn/PRNTN02V.hg?bbsSqPk=193712' },
   { id: 'food-label-law', kind: '법·정책', title: '식품 등의 표시·광고에 관한 법률', location: '소비기한·보관방법·건강기능식품 주의사항', note: '식품·건강기능식품은 날짜와 보관조건을 하드 차단 입력으로 관리해야 하는 법적 근거', url: 'https://www.law.go.kr/lsLinkCommonInfo.do?chrClsCd=010202&lsJoLnkSeq=1030102807' },
   { id: 'mfds-storage', kind: '법·정책', title: '식약처 소비기한 보관방법 안내', location: '냉장·냉동 식품 취급요령', note: '소비기한 숫자만이 아니라 보관조건을 함께 검증해야 하는 공공 안내', url: 'https://www.mfds.go.kr/brd/m_1105/view.do?seq=33674' },
-  { id: 'travel-dispute', kind: '법·정책', title: '공정거래위원회 소비자분쟁해결기준', location: '여행업 취소·환급 기준', note: '여행상품은 출발일까지 남은 기간과 계약별 환불·위약금 조건을 손익 계산에 넣어야 하는 근거', url: 'https://www.law.go.kr/admRulInfoP.do?admRulSeq=2100000270136&chrClsCd=010202&urlMode=admRulRvsInfoR' },
   { id: 'markdown-paper', kind: '기술', title: 'Smith & Agrawal (2017), INFORMS', location: 'Inventory-dependent markdown pricing and allocation', note: '재고 수준·가격·점포 배분을 함께 최적화하는 수식의 학술 근거', url: 'https://pubsonline.informs.org/doi/abs/10.1287/msom.2016.0609' },
   { id: 'markdown-perishable', kind: '기술', title: 'Chen, Pang & Pan (2014), INFORMS', location: 'Pricing, inventory and disposition for perishable products', note: '부패성 상품의 가격·재고·처분과 보관비·처분비를 함께 최적화하는 근거', url: 'https://pubsonline.informs.org/doi/10.1287/opre.2014.1261' },
   { id: 'markdown-cannibalization', kind: '기술', title: 'Hu, Shum & Yu (2016), INFORMS', location: 'Markdown, strategic consumers and residual inventory', note: '할인이 정상판매를 잠식할 수 있어 잠식손실을 별도 항목으로 둬야 하는 근거', url: 'https://pubsonline.informs.org/doi/10.1287/opre.2015.1439' },
   { id: 'wellness-foodsafety', kind: '법·정책', title: '식품안전나라 건강기능식품 안내', location: '기능성 표시·섭취방법·주의사항·유통기한', note: '현대웰니스 건강기능식품의 표시·클레임 하드 차단 입력 근거', url: 'https://www.foodsafetykorea.go.kr/portal/board/boardDetail.do?bbs_no=bbs001&menu_grp=MENU_NEW01&menu_no=3120&ntctxt_no=21776' },
   { id: 'wellness-law', kind: '법·정책', title: '건강기능식품에 관한 법률', location: '안전성·품질·건전한 유통·소비자 보호', note: '현대웰니스 상품의 승인·리콜·표시 검토 상태를 판매전략보다 먼저 확인하는 근거', url: 'https://www.law.go.kr/LSW/lsInfoP.do?ancYnChk=0&lsId=009353' },
-  { id: 'travel-exhibition', kind: '계열사', title: '더현대트래블 공식 기획전', location: '항공·호텔·패키지·쿠폰·H.Point·제휴 혜택', note: '예약형 상품의 고객 조건·부가서비스·쿠폰 변수를 분리해야 하는 근거', url: 'https://www.thehyundaitravel.com/exhibition/all/index.do' },
-  { id: 'travel-cancel', kind: '계열사', title: '더현대트래블 고객센터 안내', location: '항공 부가서비스 취소·환불', note: '보험·좌석·수하물·기내식 등 ancillary SKU의 환불 가능 여부를 별도 계산해야 하는 근거', url: 'https://www.thehyundaitravel.com/customer-center/notify/view.do?detailsKey=2740' },
-  { id: 'travel-easylaw', kind: '법·정책', title: '법제처 해외여행자 안내', location: '국외여행 표준약관·안전정보·중요 계약내용', note: '출발일·특별약관·목적지 안전정보·변경 동의 상태를 버전으로 저장하는 근거', url: 'https://easylaw.go.kr/CSP/CnpClsMainBtr.laf?ccfNo=2&cciNo=3&cnpClsNo=2&csmSeq=894&popMenu=ov' },
   { id: 'livart-corporation', kind: '계열사', title: '현대리바트 법인사업', location: '대량 납품·자체 배송·계약별 납기', note: 'B2B/프로젝트 주문은 MOQ·계약가격·납기·배송 capacity를 별도 입력해야 하는 근거', url: 'https://company.hyundailivart.co.kr/ko/corporation' },
   { id: 'livart-smart-factory', kind: '계열사', title: '현대리바트 스마트워크센터', location: '스마트팩토리·자동화 공정·물류센터', note: '원자재·WIP·공정 capacity·출고 상태를 가구 전략 입력으로 고려하는 근거', url: 'https://company.hyundailivart.co.kr/ko/smartWorkCenter' },
   { id: 'greenfood-retail', kind: '계열사', title: '현대그린푸드 리테일 사업', location: '오프라인·온라인·홈쇼핑·케어푸드 채널', note: '식품의 채널·점포·상품군별 재고와 수수료를 구분하는 근거', url: 'https://hyundaigreenfood.com/po/fb/rtb/FBRTB01L.hgc' },
@@ -98,7 +93,7 @@ export const glossary: GlossaryTerm[] = [
   "term": "Cash_AI (AI 전략 순현금 손익)",
   "category": "재무 기준",
   "short": "AI 최적화 전략 실행 후 실제로 들어오고 나가는 순현금 흐름",
-  "definition": "할인 판매로 유입된 현금 매출에서 계열사별 가변 이행·마케팅비를 빼고, 회피한 보관·폐기·위약금 비용을 더한 뒤 AI 결정원가(C_AI_case)를 차감한 최종 현금 성과입니다.",
+  "definition": "할인 판매로 유입된 현금 매출에서 계열사별 가변 이행·마케팅비를 빼고, 회피한 보관·폐기 비용을 더한 뒤 AI 결정원가(C_AI_case)를 차감한 최종 현금 성과입니다.",
   "formula": "Cash_AI = Revenue_ai − Cost_var + AvoidedCost − C_AI_case",
   "example": "매출 4,680만원 − 변동비 24만원 + 회피폐기비 172만원 − AI원가 15원 = 순현금 손익 4,828만원.",
   "related": [
@@ -133,9 +128,9 @@ export const glossary: GlossaryTerm[] = [
   "term": "ROS (Rate of Sale / 판매속도)",
   "category": "재고·물류",
   "short": "일일 또는 주간 단위 평균 판매 수량",
-  "definition": "특정 기간 동안 하루 평균 몇 개가 판매되거나, 서비스형 상품이면 하루 평균 몇 건이 예약되는지 측정하는 속도 지표입니다.",
+  "definition": "특정 기간 동안 하루 평균 몇 개가 판매되는지 측정하는 속도 지표입니다.",
   "formula": "ROS = 총 판매 수량 ÷ 기간 일수 (또는 주수)",
-  "example": "최근 7일간 특정 SKU 70개가 팔렸다면 ROS = 10개/일입니다. 여행 상품은 예약 건/일로 같은 방식으로 계산합니다.",
+  "example": "최근 7일간 특정 SKU 70개가 팔렸다면 ROS = 10개/일입니다.",
   "related": [
     "wos",
     "sell-through-rate"
@@ -246,7 +241,7 @@ export const glossary: GlossaryTerm[] = [
   {
     id: 'return-rate', term: '반품률', category: '마케팅·고객', short: '판매 후 되돌아오는 비율',
     definition: '온라인 비중이 늘면 매출만큼 반품·검수·재판매 가능성·환불 시점이 중요해집니다. 상품군과 채널별로 따로 계산합니다.',
-    formula: '반품률 = 반품 수량 ÷ 판매 수량', example: '여행 부가서비스, 건강기능식품, 가구, 식품의 반품·취소 조건을 같은 값으로 두지 않습니다.', related: ['contribution-cash', 'delivery-capacity'], sourceIds: ['travel-cancel', 'project-simulation'],
+    formula: '반품률 = 반품 수량 ÷ 판매 수량', example: '건강기능식품, 가구, 식품의 반품·취소 조건을 같은 값으로 두지 않습니다.', related: ['contribution-cash', 'delivery-capacity'], sourceIds: ['project-simulation'],
   },
   {
     id: 'delivery-capacity', term: '배송 capacity', category: '마케팅·고객', short: '특정 시간에 처리할 수 있는 배송·포장·픽업의 최대량',
@@ -277,22 +272,12 @@ export const glossary: GlossaryTerm[] = [
 
 export const navItems = [
   { href: '/problem', label: '문제' },
-  { href: '/workflow', label: '작동 방식' },
-  { href: '/ai-judgment', label: 'AI 판단' },
+  { href: '/ai-guide', label: 'AI 기능 길라잡이' },
   { href: '/formulas', label: '수식 및 계산' },
   { href: '/capabilities', label: '기능 명세' },
   { href: '/tech-stack', label: '기술 스택 & 아키텍처' },
-  { href: '/product-tour', label: '제품 화면' },
   { href: '/glossary', label: '용어 사전' },
   { href: '/sources', label: '출처·근거' },
-];
-
-export const screenshots = [
-  { src: '/screens/dashboard.png', label: '대시보드', title: '위험의 크기를 한눈에 파악합니다', body: '전체 재고·예약 capacity, 위험 비중, 회피 가능한 보관·폐기·위약금 비용을 한 화면에서 비교합니다.' },
-  { src: '/screens/inventory-all.png', label: '통합 재고 관제', title: '우선 처리할 재고를 좁힙니다', body: '상품별 보관일수와 위험도 점수를 확인하고, 담당자가 검토할 후보를 선택합니다.' },
-  { src: '/screens/strategy-history.png', label: '전략 기록', title: '선택한 전략의 이유를 남깁니다', body: '과거 전략과 실제 성과를 비교해 계열사·채널별 판단 패턴을 축적합니다.' },
-  { src: '/screens/strategy-simulate.png', label: '시뮬레이션', title: '기준선 대비 결과를 비교합니다', body: '할인·타임세일·아울렛·기부·폐기 대안을 처리율, 비용, 증분이익과 함께 비교합니다.' },
-  { src: '/screens/strategy-execution.png', label: '실행 관제', title: '승인 이후 결과까지 추적합니다', body: 'AI는 추천 근거를 남기고, 담당자는 승인·실행·결과 회수를 책임집니다.' },
 ];
 
 export const mvpMenu = [
@@ -303,13 +288,13 @@ export const mvpMenu = [
   },
   {
     id: '02', label: '통합 재고', kind: '검색·필터 작업 화면',
-    purpose: '네 계열사의 상품과 SKU를 표로 찾아봅니다.',
+    purpose: '3개 계열사의 상품과 SKU를 표로 찾아봅니다.',
     features: ['계열사·카테고리·브랜드 필터', '상품·SKU별 재고·판매속도·보관기간', '위험등급·소진예상일 정렬', '페이지네이션·CSV 내보내기', '상세에서 판매·재고 추이 확인'],
   },
   {
     id: '03', label: '위험재고 분석', kind: '위험 원인 확인 화면',
     purpose: '왜 위험한지 확인하고 처리 대상을 고릅니다.',
-    features: ['위험점수·등급', '판단 이유와 사용한 항목', '장기보관·판매부진 목록', '소비기한·출발일·설치 슬롯 차단 사유', '과거 판매·재고 추이'],
+    features: ['위험점수·등급', '판단 이유와 사용한 항목', '장기보관·판매부진 목록', '소비기한·설치·검사 차단 사유', '과거 판매·재고 추이'],
   },
   {
     id: '04', label: 'AI 전략', kind: '추천 생성 화면',

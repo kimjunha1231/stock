@@ -6,11 +6,14 @@
 
 **Architecture:** `/strategy/[id]`는 전략 카드와 비교 선택만 담당하고, `/strategy/[id]/simulate`는 URL의 선택 전략 1~3개를 받아 조정 패널·비용 브레이크다운·다중 결과 차트·사후 대처를 렌더링한다. 조정값은 클라이언트 상태로 관리하며, AI 추천 원본과 사용자 조정안을 분리해 비교한다. 모든 계산은 더미 판매 반응 곡선과 비용 가정으로 결정론적으로 수행한다.
 
-**Tech Stack:** Next.js App Router, React 19, TypeScript, Tailwind CSS, Lucide React, Recharts.
+**Tech Stack (target):** JavaScript, HTML/CSS, React 19, Tailwind CSS, shadcn/ui, TanStack Query, Zustand, React-Router (`react-router-dom`), TanStack Table, Vite, pnpm, Vitest, Playwright.
+
+> 이 문서의 `src/app/...` 경로와 `/strategy/[id]` 표기는 현재 프로토타입의 화면 개념을 설명하기 위한 것입니다. 신규 운영 서비스에서는 Vite + React Router 라우트로 매핑합니다.
 
 ## Global Constraints
 
-- 제품 범위는 현대백화점 더현대 서울 2F·3F·B1·1F 직매입 재고 중심으로 유지한다.
+- 제품 범위는 현대웰니스·현대리바트·현대그린푸드의 통합 상품·재고 중심으로 유지한다.
+- 계열사별 정책·처리기한·보관 조건은 공통 화면 안에서도 분리해 적용한다.
 - 실제 가격·쿠폰·배송·재고를 실행하지 않고 시뮬레이션과 승인 UI만 제공한다.
 - 결과의 1순위 지표는 기준선 대비 증분 기여현금이익이며, 최소마진율을 단독 최적화 기준으로 사용하지 않는다.
 - 카드 본문 클릭과 차트 비교 체크박스는 서로 다른 동작으로 유지한다.
@@ -69,9 +72,9 @@
 
   전략 카탈로그 하단에는 선택된 카드 수와 `비교 시뮬레이션 시작` 버튼만 표시해 정보 과밀을 줄인다.
 
-- [ ] **Step 4: TypeScript와 프로덕션 빌드로 라우팅 변경을 검증한다.**
+- [ ] **Step 4: JavaScript와 프로덕션 빌드로 라우팅 변경을 검증한다.**
 
-  Run: `npm run build`
+  Run: `pnpm build`
 
   Expected: `/strategy/[id]`와 새 동적 경로가 타입 오류 없이 빌드된다.
 
@@ -148,7 +151,7 @@
 
 - [ ] **Step 1: 타입 및 프로덕션 빌드를 실행한다.**
 
-  Run: `npm run build`
+  Run: `pnpm build`
 
   Expected: Compiled successfully, 타입 오류 0개.
 

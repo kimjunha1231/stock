@@ -1,19 +1,19 @@
-# 4개 계열사 통합 AI 판매전략·시뮬레이션 조사 메모
+# 3개 계열사 통합 AI 판매전략·시뮬레이션 조사 메모
 
 작성 기준: 2026-07-30
-범위: 현대웰니스, 더현대트래블(현대드림투어), 현대리바트, 현대그린푸드
+범위: 현대웰니스, 현대리바트, 현대그린푸드
 목적: 서로 다른 상품·서비스를 하나의 위험재고 탐지와 AI 판매전략 계산에 넣기 위한 입력 계약과 수식의 기준선 정의
 
 ## 1. 먼저 고정할 원칙
 
-네 계열사의 계산 구조는 하나로 통일하되, `재고 단위`, `처리기한`, `판매 capacity`, `변동비`, `하드 차단 조건`은 계열사별로 다르게 입력한다. 따라서 “같은 수식”은 목적함수와 계산 순서가 같다는 뜻이지, 모든 계열사가 같은 변수와 임계값을 쓴다는 뜻은 아니다.
+3개 계열사의 계산 구조는 하나로 통일하되, `재고 단위`, `처리기한`, `판매 capacity`, `변동비`, `하드 차단 조건`과 트렌드 신호 가중치는 계열사별로 다르게 입력한다. 따라서 “같은 수식”은 목적함수와 계산 순서가 같다는 뜻이지, 모든 계열사가 같은 변수와 임계값을 쓴다는 뜻은 아니다.
 
 다음 항목은 현재 공개 자료만으로 확정할 수 없는 내부 데이터다.
 
 - 계열사별 소유권·정산 구조와 원가/수수료 부담률
-- ERP·POS·예약·WMS의 canonical 상품키와 배치 주기
+- ERP·POS·WMS와 검색·SNS 데이터의 canonical 상품키·배치 주기
 - 실제 할인 한도, 쿠폰·포인트 부담 주체, 프로모션 승인권자
-- 공급사별 반품·회수·폐기 계약, 여행 공급사의 취소·위약금 계약
+- 공급사별 반품·회수·폐기 계약
 - 상품별 수요 탄력성, 판매예측 모델 버전, AI 호출 단가
 
 위 값은 문서의 예시값으로 넣지 않고, 데이터 계약이 연결되기 전까지 `미확정` 또는 `입력 필요` 상태로 둔다.
@@ -32,7 +32,7 @@ feasible(s) = 1
 else 0
 ```
 
-하드 차단 조건이 0이면 예상 이익이 높아도 전략 후보에서 제외한다. 식품 소비기한·보관방법, 건강기능식품 표시·주의사항, 여행상품의 출발일·취소 규정, 리바트의 설치 가능 슬롯처럼 비용보다 먼저 확인하는 값이다.
+하드 차단 조건이 0이면 예상 이익이 높아도 전략 후보에서 제외한다. 식품 소비기한·보관방법, 건강기능식품 표시·주의사항, 리바트의 설치 가능 슬롯처럼 비용보다 먼저 확인하는 값이다.
 
 ### 2.2 수요·판매량
 
@@ -41,15 +41,15 @@ Q_s = min(Q_available, max(0,
       Q_base × F_time × F_price × F_channel × F_bundle × confidence))
 ```
 
-- `Q_available`: 물리 재고 수량 또는 예약 가능한 좌석·객실·서비스 슬롯
+- `Q_available`: 판매 가능한 물리 재고 수량 또는 배송·설치 가능량
 - `Q_base`: 동일 상품·채널·기간의 기준 판매량
-- `F_time`: 남은 판매일/출발일까지의 시간 효과
+- `F_time`: 남은 판매일/처리기한까지의 시간 효과
 - `F_price`: 할인·쿠폰·포인트가 만드는 가격 반응
 - `F_channel`: 앱·매장·B2B·제휴채널별 노출 효과
 - `F_bundle`: 묶음 구성으로 인한 보완/대체 효과. 교차 계열사 번들은 현재 P2로 둔다.
 - `confidence`: 예측 신뢰도와 하방 시나리오를 반영하는 보수 계수
 
-수요함수의 재고·가격 의존성은 Smith & Agrawal의 INFORMS 논문을 공통 이론 근거로 삼는다. 다만 논문의 일반 리테일 가정이 네 계열사의 계약·규제·서비스 capacity를 자동으로 보장하지는 않으므로, 실제 운영 제약은 별도 하드 차단으로 적용한다.
+수요함수의 재고·가격 의존성은 Smith & Agrawal의 INFORMS 논문을 공통 이론 근거로 삼는다. 다만 논문의 일반 리테일 가정이 3개 계열사의 계약·규제·배송·설치 capacity를 자동으로 보장하지는 않으므로, 실제 운영 제약은 별도 하드 차단으로 적용한다.
 
 ### 2.3 증분 기여현금이익
 
@@ -63,7 +63,6 @@ VariableCost_s = Q_s × (commission + payment + fulfillment
 
 AvoidedCost_s = avoided_holding
               + avoided_disposal
-              + avoided_supplier_penalty
               + avoided_capacity_loss
 
 M_s = Revenue_s - VariableCost_s
@@ -118,39 +117,7 @@ z_claim_or_storage_gap = 1 if required claim/storage data missing else 0
 
 `z_claim_or_storage_gap = 1`이면 점수와 무관하게 `판매전략 생성 불가`로 표시한다.
 
-### 3.2 더현대트래블(현대드림투어)
-
-#### 공개 자료에서 확인한 사실
-
-- [현대드림투어 더현대트래블 안내](https://home.hyundaidreamtour.com/jsp/web/sub03_01.jsp)는 항공, 호텔, 해외 패키지여행, 여행자보험, 와이파이 도시락, 렌터카 등을 상품·제휴 범위로 제시한다.
-- [더현대트래블 공식 기획전](https://www.thehyundaitravel.com/exhibition/all/index.do)은 항공·호텔·패키지와 쿠폰·H.Point·카드 혜택을 별도 운영한다. [항공 부가서비스 취소 안내](https://www.thehyundaitravel.com/customer-center/notify/view.do?detailsKey=2740)는 보험·좌석·수하물·기내식의 환불 가능 여부가 기본 항공권과 다를 수 있음을 보여준다.
-- 이 상품들은 물리 수량을 보관하는 재고가 아니라 출발일·예약 가능 좌석/객실·공급사 allotment가 소진되는 서비스 capacity다.
-- [공정거래위원회 소비자분쟁해결기준](https://www.law.go.kr/admRulInfoP.do?admRulSeq=2100000270136&chrClsCd=010202&urlMode=admRulRvsInfoR)은 여행업 취소·환급 기준을 별도로 다룬다. 개별 계약과 공급사 조건을 함께 저장해야 한다.
-- [법제처 해외여행자 안내](https://easylaw.go.kr/CSP/CnpClsMainBtr.laf?ccfNo=2&cciNo=3&cnpClsNo=2&csmSeq=894&popMenu=ov)를 통해 표준약관·안전정보·중요 계약내용을 버전 관리한다.
-
-#### 상품·capacity 입력
-
-`offer_id`, `supplier_id`, `travel_type`, `departure_at`, `booking_cutoff_at`, `capacity_total`, `capacity_booked`, `capacity_available`, `sell_price`, `commission_rate`, `supplier_cost`, `cancellation_rule_id`, `fx_rate_snapshot`, `channel`, `service_level`.
-
-#### 전략에 반영할 비용·제약
-
-- `days_to_departure`와 예약 마감: 유통기한 대신 출발일·발권/예약 마감이 핵심 시간축이다.
-- 좌석·객실·차량·가이드 등의 capacity와 공급사 취소/노쇼 위약금.
-- 환율, 결제수수료, 제휴수수료, 상담·발권·변경 처리비.
-- “폐기비”는 0으로 두고, 미판매 capacity의 회피 가능한 공급사 위약금·기회비용을 `AvoidedCost`로 모델링한다.
-
-#### 계열사별 위험 신호
-
-```text
-z_departure = max(0, 1 - days_to_departure / booking_alert_window)
-z_fill = capacity_booked / capacity_total
-z_cancel_cost = normalized(expected_supplier_penalty)
-z_data_gap = 1 if supplier_rule_or_cutoff_missing else 0
-```
-
-여행 상품에는 식품식 `소비기한`과 `폐기비`를 적용하지 않는다. 동일한 공통 목적함수에 `capacity_available`, `departure_at`, `cancellation_rule_id`를 넣어 서비스형 재고로 계산한다.
-
-### 3.3 현대리바트
+### 3.2 현대리바트
 
 #### 공개 자료에서 확인한 사실
 
@@ -179,7 +146,7 @@ z_install = 1 - min(1, install_slot_available / expected_install_demand)
 z_damage = normalized(expected_damage_and_return_cost)
 ```
 
-### 3.4 현대그린푸드
+### 3.3 현대그린푸드
 
 #### 공개 자료에서 확인한 사실
 
@@ -211,10 +178,10 @@ z_cold_chain = 1 - min(1, cold_chain_capacity / expected_delivery_demand)
 
 ## 4. 통합 수식 페이지에서 보여줄 화면 구조
 
-1. `공통 목적함수`: 네 계열사에 공통 적용되는 `M_inc`와 하드 차단.
-2. `공통 수요식`: 물리 수량과 서비스 capacity를 `Q_available` 하나로 추상화.
-3. `비용 측정`: 판매 변동비, 이행/물류비, 보관비, 폐기·위약금, 반품·파손, 잠식, AI 원가.
-4. `계열사 탭`: 현대웰니스·더현대트래블·현대리바트·현대그린푸드별 입력값·위험 신호·차단 조건.
+1. `공통 목적함수`: 3개 계열사에 공통 적용되는 `M_inc`와 하드 차단.
+2. `공통 수요식`: 판매 가능한 수량과 배송·설치 가능량을 `Q_available` 하나로 추상화.
+3. `비용 측정`: 판매 변동비, 이행/물류비, 보관비, 폐기, 반품·파손, 잠식, AI 원가.
+4. `계열사 탭`: 현대웰니스·현대리바트·현대그린푸드별 입력값·위험 신호·차단 조건.
 5. `시뮬레이션 계약`: 할인율·쿠폰·포인트·기간·수량을 바꾸고, 예상 판매량·매출·증분 기여현금이익·잔여 capacity를 다시 계산.
 6. `근거 링크`: 각 계열사 카드의 공식 자료, 법령, 학술 논문을 화면에서 바로 연다. 데이터 계약으로 확인되지 않은 값은 “내부 계약 필요”로 표시.
 
@@ -230,7 +197,6 @@ z_cold_chain = 1 - min(1, cold_chain_capacity / expected_delivery_demand)
 공개 자료상 브랜드와 운영 법인이 항상 같은 문자열은 아니다. 따라서 권한·정산·감사 키를 화면 브랜드명으로만 만들지 않는다.
 
 - 현대웰니스 브랜드는 [현대웰니스 공식몰](https://www.hyundaiwellness.com/)과 footer의 [현대바이오랜드 법인정보](https://www.rexremall.com/)를 함께 확인한다. canonical 모델에는 `brand_id=HYUNDAI_WELLNESS`, `legal_entity_id=HYUNDAI_BIOLAND`처럼 분리된 키를 둔다.
-- 더현대트래블 브랜드는 [공식 기획전](https://www.thehyundaitravel.com/exhibition/all/index.do)과 운영 주체인 [현대드림투어 그룹 소개](https://www.ehyundai.com/newPortal/group/CO/CO000012.do?locale=ko)를 매핑한다.
 - 리바트의 B2B·프로젝트 주문은 [법인사업](https://company.hyundailivart.co.kr/ko/corporation)과 [스마트워크센터](https://company.hyundailivart.co.kr/ko/smartWorkCenter)의 배송·생산·물류 capacity를 별도 입력으로 둔다.
 - 그린푸드의 [리테일 사업](https://hyundaigreenfood.com/po/fb/rtb/FBRTB01L.hgc)과 [식품위생연구소](https://hyundaigreenfood.com/po/is/fdr/ISFDR02L.hgc)는 채널별 재고와 검사·보류 상태를 분리하는 근거로 사용한다.
 

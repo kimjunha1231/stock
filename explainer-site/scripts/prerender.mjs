@@ -8,16 +8,15 @@ async function generateStaticPages() {
 
   const routes = [
     '/',
-    '/ai-judgment',
+    '/ai-guide',
+    '/capabilities',
     '/formulas',
     '/glossary',
     '/prd',
     '/problem',
-    '/product-tour',
     '/roles',
     '/sources',
     '/tech-stack',
-    '/workflow'
   ];
 
   for (const route of routes) {

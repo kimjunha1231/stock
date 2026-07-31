@@ -25,7 +25,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
       <main>{children}</main>
       <footer className="site-footer">
         <div><span className="brand-mark small">I</span><strong>InventoryOS</strong></div>
-        <p>네 계열사의 담당자가 스스로 판단하고, 통합 서비스는 더 나은 결정을 확산합니다.</p>
+        <p>3개 계열사의 담당자가 같은 기준으로 비교하고, 각자의 상품 특성에 맞게 결정합니다.</p>
         <Link href="/glossary">용어 사전 열기 →</Link>
       </footer>
     </div>
