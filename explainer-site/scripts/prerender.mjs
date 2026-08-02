@@ -17,6 +17,7 @@ async function generateStaticPages() {
     '/problem',
     '/roles',
     '/sources',
+    '/crawling-data',
     '/tech-stack',
   ];
 

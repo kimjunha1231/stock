@@ -541,6 +541,22 @@ var navItems = [
 		label: "기능 명세"
 	},
 	{
+		href: "/crawling-data",
+		label: "크롤링 & ERD"
+	},
+	{
+		href: "/problem",
+		label: "문제"
+	},
+	{
+		href: "/ai-guide",
+		label: "AI 설계·운영 가이드"
+	},
+	{
+		href: "/capabilities",
+		label: "기능 명세"
+	},
+	{
 		href: "/tech-stack",
 		label: "기술 스택 & 아키텍처"
 	},
