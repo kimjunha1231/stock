@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { greenfoodData, wellnessData, livartData, AffiliateCrawlSummary } from '@/lib/crawling-data';
 
 export function CrawlingExplorer() {
-  const [activeTab, setActiveTab] = useState<'data' | 'erd' | 'mapping' | 'docs'>('data');
+  const [activeTab, setActiveTab] = useState<'data' | 'erd' | 'mapping' | 'docs'>('erd');
   const [selectedAffiliate, setSelectedAffiliate] = useState<'all' | 'greenfood' | 'wellness' | 'livart'>('all');
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -26,39 +26,355 @@ export function CrawlingExplorer() {
 
   return (
     <div className="crawling-explorer">
-      {/* Top Tabs */}
+      {/* Top Navigation Tabs */}
       <div className="filter-row" style={{ marginBottom: '24px', justifyContent: 'center' }}>
-        <button
-          className={`filter-button ${activeTab === 'data' ? 'active' : ''}`}
-          onClick={() => setActiveTab('data')}
-          style={{ padding: '10px 20px', fontSize: '13px', fontWeight: 700 }}
-        >
-          📊 3개 계열사 크롤링 원본 데이터 (2,690건)
-        </button>
         <button
           className={`filter-button ${activeTab === 'erd' ? 'active' : ''}`}
           onClick={() => setActiveTab('erd')}
           style={{ padding: '10px 20px', fontSize: '13px', fontWeight: 700 }}
         >
-          📐 InventoryOS 추천 ERD 설계
+          📐 추천 데이터베이스 구조 (ERD 설계)
         </button>
         <button
           className={`filter-button ${activeTab === 'mapping' ? 'active' : ''}`}
           onClick={() => setActiveTab('mapping')}
           style={{ padding: '10px 20px', fontSize: '13px', fontWeight: 700 }}
         >
-          🔄 크롤링 컬럼 ➔ DB 엔티티 매핑표
+          🔄 수집 데이터 ➔ DB 항목 대응표 (매핑)
+        </button>
+        <button
+          className={`filter-button ${activeTab === 'data' ? 'active' : ''}`}
+          onClick={() => setActiveTab('data')}
+          style={{ padding: '10px 20px', fontSize: '13px', fontWeight: 700 }}
+        >
+          📊 3개 계열사 크롤링 수집 원본 (2,690건)
         </button>
         <button
           className={`filter-button ${activeTab === 'docs' ? 'active' : ''}`}
           onClick={() => setActiveTab('docs')}
           style={{ padding: '10px 20px', fontSize: '13px', fontWeight: 700 }}
         >
-          📑 시스템 명세 &amp; 정책 문서 연계
+          📑 재고 관리 정책 &amp; 규칙 연계
         </button>
       </div>
 
-      {/* TAB 1: CRAWLING RAW DATA */}
+      {/* TAB 1: ERD RECOMMENDATION (Default Focus) */}
+      {activeTab === 'erd' && (
+        <div>
+          <div className="callout" style={{ marginBottom: '28px', background: '#eff6ff', borderColor: '#bfdbfe' }}>
+            <strong style={{ fontSize: '16px', color: '#1e40af' }}>💡 InventoryOS 통합 데이터베이스 설계 방향</strong>
+            <p style={{ marginTop: '8px', color: '#334155', lineHeight: 1.65 }}>
+              현대백화점그룹 3개 계열사(현대그린푸드·현대웰니스·현대리바트)의 서로 다른 상품 및 재고 정보를 하나의 시스템에서 효율적으로 다루기 위한 
+              <strong>단일 스키마 다중 테넌트 구조 (Single Schema Multi-Tenant)</strong>입니다.<br />
+              모든 계열사가 함께 쓰는 <strong>공통 핵심 테이블 6개</strong>를 중심으로 구성하고, 각 계열사만의 고유 정보(식단 패키지, 건강기능식품 섭취법/1일가격, 가구 크기/설치비)는 
+              <strong>계열사 전용 확장 테이블 (Extension Table)</strong>로 연결해 확장성과 유지보수성을 극대화했습니다.
+            </p>
+          </div>
+
+          <h3 style={{ fontSize: '18px', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span>🏢 공통 핵심 테이블 (Core Tables)</span>
+            <span style={{ fontSize: '12px', color: 'var(--muted)', fontWeight: 400 }}>- 3개 계열사가 공통으로 사용하는 기본 데이터 구조</span>
+          </h3>
+
+          {/* Core Tables Visual Grid */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '20px', marginBottom: '36px' }}>
+
+            {/* Table 1: affiliate */}
+            <div className="term-entry" style={{ background: '#ffffff', borderColor: '#cbd5e1' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                <span className="pill" style={{ background: '#dbeafe', color: '#1e40af', fontSize: '11px' }}>1. 계열사 정보 (affiliate)</span>
+                <span style={{ fontSize: '11px', color: 'var(--muted)', fontFamily: 'monospace' }}>기본키(PK): 계열사 ID</span>
+              </div>
+              <p style={{ fontSize: '12px', color: 'var(--muted)', marginBottom: '12px' }}>현대웰니스, 현대리바트, 현대그린푸드 각 계열사의 기본 정보</p>
+              <div style={{ background: '#f8fafc', padding: '12px', borderRadius: '8px', fontSize: '11px', lineHeight: 1.7, fontFamily: 'monospace' }}>
+                <div>• <strong style={{ color: '#1e40af' }}>affiliate_id</strong> (문자형, 기본키) - 계열사 식별 ID</div>
+                <div>• <strong>name</strong> (문자형) - 계열사명 (현대그린푸드 등)</div>
+                <div>• <strong>code</strong> (문자형) - 식별 코드 (GREENFOOD / WELLNESS / LIVART)</div>
+                <div>• <strong>domain</strong> (문자형) - 공식 쇼핑몰 웹주소</div>
+                <div>• <strong>created_at</strong> (일시) - 등록 일시</div>
+              </div>
+            </div>
+
+            {/* Table 2: brand */}
+            <div className="term-entry" style={{ background: '#ffffff', borderColor: '#cbd5e1' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                <span className="pill" style={{ background: '#dbeafe', color: '#1e40af', fontSize: '11px' }}>2. 브랜드 정보 (brand)</span>
+                <span style={{ fontSize: '11px', color: 'var(--muted)', fontFamily: 'monospace' }}>기본키: 브랜드 ID | 외래키: 계열사 ID</span>
+              </div>
+              <p style={{ fontSize: '12px', color: 'var(--muted)', marginBottom: '12px' }}>솔가, 고헬씨, 리바트키즈, 그리팅 등 상품 브랜드 마스터</p>
+              <div style={{ background: '#f8fafc', padding: '12px', borderRadius: '8px', fontSize: '11px', lineHeight: 1.7, fontFamily: 'monospace' }}>
+                <div>• <strong style={{ color: '#1e40af' }}>brand_id</strong> (정수형, 기본키) - 브랜드 식별 ID</div>
+                <div>• <strong>affiliate_id</strong> (문자형, 외래키) - 소속 계열사 ID</div>
+                <div>• <strong>brand_name</strong> (문자형) - 브랜드 이름 (리바트 등)</div>
+                <div>• <strong>brand_category</strong> (문자형) - 브랜드 분류</div>
+              </div>
+            </div>
+
+            {/* Table 3: category */}
+            <div className="term-entry" style={{ background: '#ffffff', borderColor: '#cbd5e1' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                <span className="pill" style={{ background: '#dbeafe', color: '#1e40af', fontSize: '11px' }}>3. 카테고리 (category)</span>
+                <span style={{ fontSize: '11px', color: 'var(--muted)', fontFamily: 'monospace' }}>기본키: 카테고리 ID | 외래키: 상위 카테고리 ID</span>
+              </div>
+              <p style={{ fontSize: '12px', color: 'var(--muted)', marginBottom: '12px' }}>대분류 - 중분류 - 소분류 계층형 카테고리 구조</p>
+              <div style={{ background: '#f8fafc', padding: '12px', borderRadius: '8px', fontSize: '11px', lineHeight: 1.7, fontFamily: 'monospace' }}>
+                <div>• <strong style={{ color: '#1e40af' }}>category_id</strong> (정수형, 기본키) - 카테고리 식별 ID</div>
+                <div>• <strong>parent_id</strong> (정수형, 외래키) - 상위 카테고리 ID</div>
+                <div>• <strong>affiliate_id</strong> (문자형, 외래키) - 계열사 ID</div>
+                <div>• <strong>name</strong> (문자형) - 카테고리명 (소파, 식재료 등)</div>
+                <div>• <strong>category_depth</strong> (정수형) - 카테고리 단계 (1:대, 2:중, 3:소)</div>
+                <div>• <strong>full_path</strong> (문자형) - 전체 경로 (건강마켓 &gt; 간편식단)</div>
+              </div>
+            </div>
+
+            {/* Table 4: product Master */}
+            <div className="term-entry" style={{ background: '#ffffff', borderColor: '#2563eb', borderWidth: '2px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                <span className="pill" style={{ background: '#2563eb', color: '#ffffff', fontSize: '11px' }}>4. 통합 상품 마스터 (product) ★</span>
+                <span style={{ fontSize: '11px', color: 'var(--muted)', fontFamily: 'monospace' }}>기본키: 상품 ID</span>
+              </div>
+              <p style={{ fontSize: '12px', color: 'var(--muted)', marginBottom: '12px' }}>3개 계열사의 모든 상품이 통합 저장되는 메인 테이블</p>
+              <div style={{ background: '#f8fafc', padding: '12px', borderRadius: '8px', fontSize: '11px', lineHeight: 1.7, fontFamily: 'monospace' }}>
+                <div>• <strong style={{ color: '#2563eb' }}>product_id</strong> (정수형, 기본키) - 시스템 통합 상품 ID</div>
+                <div>• <strong>affiliate_id</strong> (문자형, 외래키) - 소속 계열사 ID</div>
+                <div>• <strong>external_item_id</strong> (문자형) - 원출처 상품코드 (itemId / goodsNo / goodsSn)</div>
+                <div>• <strong>brand_id</strong> (정수형, 외래키) - 브랜드 ID</div>
+                <div>• <strong>category_id</strong> (정수형, 외래키) - 카테고리 ID</div>
+                <div>• <strong>product_name</strong> (문자형) - 상품 이름</div>
+                <div>• <strong>description</strong> (긴 텍스트) - 상품 설명 / 특징</div>
+                <div>• <strong>status</strong> (문자형) - 판매 상태 (판매 중 / 일시 품절 등)</div>
+                <div>• <strong>badge</strong> (문자형) - 상품 배지 (소비기한 임박 / 냉동 / 클리어런스)</div>
+                <div>• <strong>product_url</strong> (문자형) - 상품 상세페이지 링크</div>
+                <div>• <strong>image_url</strong> (문자형) - 대표 이미지 링크</div>
+                <div>• <strong>created_at</strong> (일시) - 데이터 수집/생성 일시</div>
+              </div>
+            </div>
+
+            {/* Table 5: pricing */}
+            <div className="term-entry" style={{ background: '#ffffff', borderColor: '#cbd5e1' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                <span className="pill" style={{ background: '#dbeafe', color: '#1e40af', fontSize: '11px' }}>5. 가격 및 할인 정보 (pricing)</span>
+                <span style={{ fontSize: '11px', color: 'var(--muted)', fontFamily: 'monospace' }}>기본키: 가격 ID | 외래키: 상품 ID</span>
+              </div>
+              <p style={{ fontSize: '12px', color: 'var(--muted)', marginBottom: '12px' }}>정가, 판매가, 할인율 및 1일 단위 섭취 가격 변동 관리</p>
+              <div style={{ background: '#f8fafc', padding: '12px', borderRadius: '8px', fontSize: '11px', lineHeight: 1.7, fontFamily: 'monospace' }}>
+                <div>• <strong style={{ color: '#1e40af' }}>pricing_id</strong> (정수형, 기본키) - 가격 기록 ID</div>
+                <div>• <strong>product_id</strong> (정수형, 외래키) - 상품 ID</div>
+                <div>• <strong>original_price</strong> (금액/숫자형) - 정가 (원)</div>
+                <div>• <strong>selling_price</strong> (금액/숫자형) - 실판매가 (원)</div>
+                <div>• <strong>discount_pct</strong> (숫자형) - 할인율 (%)</div>
+                <div>• <strong>daily_price_text</strong> (문자형) - 1일 가격 (예: 하루당 450원)</div>
+                <div>• <strong>is_active</strong> (논리형) - 현재 적용 중인 가격 여부</div>
+                <div>• <strong>updated_at</strong> (일시) - 가격 변경 일시</div>
+              </div>
+            </div>
+
+            {/* Table 6: inventory */}
+            <div className="term-entry" style={{ background: '#ffffff', borderColor: '#10b981', borderWidth: '2px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                <span className="pill" style={{ background: '#10b981', color: '#ffffff', fontSize: '11px' }}>6. 재고 및 소비기한 (inventory) ★</span>
+                <span style={{ fontSize: '11px', color: 'var(--muted)', fontFamily: 'monospace' }}>기본키: 재고 ID | 외래키: 상품 ID</span>
+              </div>
+              <p style={{ fontSize: '12px', color: 'var(--muted)', marginBottom: '12px' }}>재고 수량, 소비기한, 보관조건 및 위험재고 등급 관리</p>
+              <div style={{ background: '#f8fafc', padding: '12px', borderRadius: '8px', fontSize: '11px', lineHeight: 1.7, fontFamily: 'monospace' }}>
+                <div>• <strong style={{ color: '#10b981' }}>inventory_id</strong> (정수형, 기본키) - 재고 기록 ID</div>
+                <div>• <strong>product_id</strong> (정수형, 외래키) - 상품 ID</div>
+                <div>• <strong>stock_qty</strong> (정수형) - 현재 총 재고 수량</div>
+                <div>• <strong>remaining_qty</strong> (정수형) - 한정 수량 / 남은 수량 (웰니스)</div>
+                <div>• <strong>storage_condition</strong> (문자형) - 보관 조건 (냉동 / 냉장 / 상온)</div>
+                <div>• <strong>expiry_date</strong> (날짜) - 소비기한 / 유통기한 날짜</div>
+                <div>• <strong>d_day</strong> (정수형) - 소비기한 잔여 일수 (D-Day)</div>
+                <div>• <strong>risk_grade</strong> (문자형) - 위험 등급 (정상 / 주의 / 위험)</div>
+                <div>• <strong>updated_at</strong> (일시) - 재고 갱신 일시</div>
+              </div>
+            </div>
+
+          </div>
+
+          {/* Extension Tables for Affiliates */}
+          <h3 style={{ fontSize: '18px', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span>🧬 계열사별 전용 확장 테이블 (Extension Tables)</span>
+            <span style={{ fontSize: '12px', color: 'var(--muted)', fontWeight: 400 }}>- 각 계열사의 특수한 상품 정보를 보완하는 전용 스키마</span>
+          </h3>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '20px', marginBottom: '32px' }}>
+            
+            <div className="term-entry" style={{ background: '#f0fdf4', borderColor: '#86efac' }}>
+              <strong style={{ color: '#166534', fontSize: '14px' }}>🥗 greenfood_meal_plan (현대그린푸드 케어식단 특화)</strong>
+              <p style={{ fontSize: '11px', color: '#15803d', margin: '6px 0 10px' }}>식단 유형, 5일/7일 패키지 구성, 영양성분 정보</p>
+              <div style={{ fontSize: '11px', fontFamily: 'monospace', color: '#166534', lineHeight: 1.7 }}>
+                <div>• <strong>product_id</strong> (기본키 / 외래키 ➔ product)</div>
+                <div>• <strong>meal_type</strong> (문자형) - 식단 종류 (고혈압 / 당뇨 / 저속식단)</div>
+                <div>• <strong>package_days</strong> (정수형) - 패키지 구성 일수 (5일 / 7일)</div>
+                <div>• <strong>is_frozen</strong> (논리형) - 냉동 보관 식단 여부</div>
+                <div>• <strong>nutrition_summary</strong> (문자형) - 주요 영양성분 요약</div>
+              </div>
+            </div>
+
+            <div className="term-entry" style={{ background: '#fefce8', borderColor: '#fde047' }}>
+              <strong style={{ color: '#854d0e', fontSize: '14px' }}>💊 wellness_product_detail (현대웰니스 건강기능식품 특화)</strong>
+              <p style={{ fontSize: '11px', color: '#a16207', margin: '6px 0 10px' }}>캡슐 수, 1일 섭취 원가, 유통기한 임박 표시</p>
+              <div style={{ fontSize: '11px', fontFamily: 'monospace', color: '#854d0e', lineHeight: 1.7 }}>
+                <div>• <strong>product_id</strong> (기본키 / 외래키 ➔ product)</div>
+                <div>• <strong>capsule_count</strong> (정수형) - 총 용량/캡슐 수 (60캡슐 등)</div>
+                <div>• <strong>daily_price_amount</strong> (금액) - 1일 섭취 원가 수치 (450원)</div>
+                <div>• <strong>is_expiring_soon</strong> (논리형) - 소비기한 임박 여부 (예/아니오)</div>
+                <div>• <strong>expiry_note</strong> (문자형) - 유통기한 표기 (27.05.01까지 등)</div>
+                <div>• <strong>functional_claim</strong> (긴 텍스트) - 식약처 인증 기능성 내용</div>
+              </div>
+            </div>
+
+            <div className="term-entry" style={{ background: '#eff6ff', borderColor: '#93c5fd' }}>
+              <strong style={{ color: '#1e40af', fontSize: '14px' }}>🛋️ livart_furniture_spec (현대리바트 가구 규격 특화)</strong>
+              <p style={{ fontSize: '11px', color: '#1d4ed8', margin: '6px 0 10px' }}>가구 가로 크기, 소재, 사용 인원수, 전문 설치 필요 여부</p>
+              <div style={{ fontSize: '11px', fontFamily: 'monospace', color: '#1e40af', lineHeight: 1.7 }}>
+                <div>• <strong>product_id</strong> (기본키 / 외래키 ➔ product)</div>
+                <div>• <strong>width_mm</strong> (정수형) - 가로 크기 (mm 단위, 예: 3310mm)</div>
+                <div>• <strong>capacity_person</strong> (정수형) - 사용 인원 (4인용, 3인용 등)</div>
+                <div>• <strong>material_type</strong> (문자형) - 주요 소재 (패브릭 / 가죽 / 원목)</div>
+                <div>• <strong>requires_installation</strong> (논리형) - 전문 기사 설치 필요 여부</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      )}
+
+      {/* TAB 2: COLUMN MAPPING TABLE */}
+      {activeTab === 'mapping' && (
+        <div>
+          <div className="callout" style={{ marginBottom: '20px' }}>
+            <strong style={{ fontSize: '15px' }}>🔄 원본 크롤링 항목 ➔ 데이터베이스(DB) 매핑 상세표</strong>
+            <p style={{ marginTop: '6px', fontSize: '12px' }}>
+              수집된 51개 원본 컬럼이 9개 정규화 DB 테이블 및 3개 특화 확장 테이블로 변환되는 표준 매핑 명세입니다.
+            </p>
+          </div>
+
+          <div style={{ overflowX: 'auto', borderRadius: '12px', border: '1px solid var(--line)', background: 'var(--white)' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12px', textAlign: 'left' }}>
+              <thead>
+                <tr style={{ background: '#f8fafc', borderBottom: '1px solid var(--line)' }}>
+                  <th style={{ padding: '10px 12px' }}>출처 계열사</th>
+                  <th style={{ padding: '10px 12px' }}>원본 컬럼명</th>
+                  <th style={{ padding: '10px 12px' }}>수집 샘플 값</th>
+                  <th style={{ padding: '10px 12px' }}>저장 대상 DB 테이블</th>
+                  <th style={{ padding: '10px 12px' }}>저장 대상 DB 필드명</th>
+                  <th style={{ padding: '10px 12px' }}>권장 데이터 타입</th>
+                  <th style={{ padding: '10px 12px' }}>설명 &amp; 변환 처리 규칙</th>
+                </tr>
+              </thead>
+              <tbody>
+                {/* Greenfood mappings */}
+                <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+                  <td style={{ padding: '8px 12px', fontWeight: 700, color: '#16a34a' }}>현대그린푸드</td>
+                  <td style={{ padding: '8px 12px', fontFamily: 'monospace' }}>상품_ID</td>
+                  <td style={{ padding: '8px 12px', color: 'var(--muted)' }}>175695</td>
+                  <td style={{ padding: '8px 12px', fontWeight: 600 }}>product (통합 상품)</td>
+                  <td style={{ padding: '8px 12px', fontFamily: 'monospace', color: 'var(--blue)' }}>external_item_id</td>
+                  <td style={{ padding: '8px 12px', color: 'var(--muted)' }}>문자형 VARCHAR(64)</td>
+                  <td style={{ padding: '8px 12px' }}>그린푸드 공식 몰 고유 상품 번호 (itemId)</td>
+                </tr>
+                <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+                  <td style={{ padding: '8px 12px', fontWeight: 700, color: '#16a34a' }}>현대그린푸드</td>
+                  <td style={{ padding: '8px 12px', fontFamily: 'monospace' }}>대분류 / 소분류</td>
+                  <td style={{ padding: '8px 12px', color: 'var(--muted)' }}>간편식단 / 고혈압식단</td>
+                  <td style={{ padding: '8px 12px', fontWeight: 600 }}>category (카테고리)</td>
+                  <td style={{ padding: '8px 12px', fontFamily: 'monospace', color: 'var(--blue)' }}>category_id</td>
+                  <td style={{ padding: '8px 12px', color: 'var(--muted)' }}>정수형 BIGINT (외래키)</td>
+                  <td style={{ padding: '8px 12px' }}>계층형 카테고리 트리에 자동 매핑 생성</td>
+                </tr>
+                <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+                  <td style={{ padding: '8px 12px', fontWeight: 700, color: '#16a34a' }}>현대그린푸드</td>
+                  <td style={{ padding: '8px 12px', fontFamily: 'monospace' }}>정가_원 / 판매가_원</td>
+                  <td style={{ padding: '8px 12px', color: 'var(--muted)' }}>10,500원</td>
+                  <td style={{ padding: '8px 12px', fontWeight: 600 }}>pricing (가격 정보)</td>
+                  <td style={{ padding: '8px 12px', fontFamily: 'monospace', color: 'var(--blue)' }}>original_price / selling_price</td>
+                  <td style={{ padding: '8px 12px', color: 'var(--muted)' }}>금액형 DECIMAL(12,2)</td>
+                  <td style={{ padding: '8px 12px' }}>숫자 변환 및 할인율 자동 산출 파이프라인</td>
+                </tr>
+                <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+                  <td style={{ padding: '8px 12px', fontWeight: 700, color: '#16a34a' }}>현대그린푸드</td>
+                  <td style={{ padding: '8px 12px', fontFamily: 'monospace' }}>상품_배지</td>
+                  <td style={{ padding: '8px 12px', color: 'var(--muted)' }}>냉동 | 고단백</td>
+                  <td style={{ padding: '8px 12px', fontWeight: 600 }}>inventory / greenfood_ext</td>
+                  <td style={{ padding: '8px 12px', fontFamily: 'monospace', color: 'var(--blue)' }}>storage_condition / is_frozen</td>
+                  <td style={{ padding: '8px 12px', color: 'var(--muted)' }}>문자형 / 불리언(논리형)</td>
+                  <td style={{ padding: '8px 12px' }}>냉동 보관 조건 파싱 (상온 대비 보관비 가중치 부여)</td>
+                </tr>
+
+                {/* Wellness mappings */}
+                <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+                  <td style={{ padding: '8px 12px', fontWeight: 700, color: '#d97706' }}>현대웰니스</td>
+                  <td style={{ padding: '8px 12px', fontFamily: 'monospace' }}>상품_ID</td>
+                  <td style={{ padding: '8px 12px', color: 'var(--muted)' }}>1000000904</td>
+                  <td style={{ padding: '8px 12px', fontWeight: 600 }}>product (통합 상품)</td>
+                  <td style={{ padding: '8px 12px', fontFamily: 'monospace', color: 'var(--blue)' }}>external_item_id</td>
+                  <td style={{ padding: '8px 12px', color: 'var(--muted)' }}>문자형 VARCHAR(64)</td>
+                  <td style={{ padding: '8px 12px' }}>고도몰 원천 상품 번호 (goodsNo)</td>
+                </tr>
+                <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+                  <td style={{ padding: '8px 12px', fontWeight: 700, color: '#d97706' }}>현대웰니스</td>
+                  <td style={{ padding: '8px 12px', fontFamily: 'monospace' }}>남은수량</td>
+                  <td style={{ padding: '8px 12px', color: 'var(--muted)' }}>32개</td>
+                  <td style={{ padding: '8px 12px', fontWeight: 600 }}>inventory (재고)</td>
+                  <td style={{ padding: '8px 12px', fontFamily: 'monospace', color: 'var(--blue)' }}>remaining_qty</td>
+                  <td style={{ padding: '8px 12px', color: 'var(--muted)' }}>정수형 INT</td>
+                  <td style={{ padding: '8px 12px' }}>'32개' ➔ 32 정수 파싱 (재고 위험도 계산 입력)</td>
+                </tr>
+                <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+                  <td style={{ padding: '8px 12px', fontWeight: 700, color: '#d97706' }}>현대웰니스</td>
+                  <td style={{ padding: '8px 12px', fontFamily: 'monospace' }}>1일_가격</td>
+                  <td style={{ padding: '8px 12px', color: 'var(--muted)' }}>하루당 450원</td>
+                  <td style={{ padding: '8px 12px', fontWeight: 600 }}>wellness_ext (웰니스 특화)</td>
+                  <td style={{ padding: '8px 12px', fontFamily: 'monospace', color: 'var(--blue)' }}>daily_price_amount</td>
+                  <td style={{ padding: '8px 12px', color: 'var(--muted)' }}>금액형 DECIMAL(10,2)</td>
+                  <td style={{ padding: '8px 12px' }}>1일 섭취 단가 수치 파싱 (고객 마케팅 시뮬레이션용)</td>
+                </tr>
+                <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+                  <td style={{ padding: '8px 12px', fontWeight: 700, color: '#d97706' }}>현대웰니스</td>
+                  <td style={{ padding: '8px 12px', fontFamily: 'monospace' }}>상품_배지 (임박)</td>
+                  <td style={{ padding: '8px 12px', color: 'var(--muted)' }}>임박 [27.05.01까지]</td>
+                  <td style={{ padding: '8px 12px', fontWeight: 600 }}>inventory / wellness_ext</td>
+                  <td style={{ padding: '8px 12px', fontFamily: 'monospace', color: 'var(--blue)' }}>expiry_date / is_expiring_soon</td>
+                  <td style={{ padding: '8px 12px', color: 'var(--muted)' }}>날짜 DATE / 불리언(논리형)</td>
+                  <td style={{ padding: '8px 12px' }}>소비기한 날짜(2027-05-01) 파싱 ➔ D-Day 계산 및 차단 정책 연동</td>
+                </tr>
+
+                {/* Livart mappings */}
+                <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+                  <td style={{ padding: '8px 12px', fontWeight: 700, color: '#2563eb' }}>현대리바트</td>
+                  <td style={{ padding: '8px 12px', fontFamily: 'monospace' }}>goodsSn</td>
+                  <td style={{ padding: '8px 12px', color: 'var(--muted)' }}>P200165385</td>
+                  <td style={{ padding: '8px 12px', fontWeight: 600 }}>product (통합 상품)</td>
+                  <td style={{ padding: '8px 12px', fontFamily: 'monospace', color: 'var(--blue)' }}>external_item_id</td>
+                  <td style={{ padding: '8px 12px', color: 'var(--muted)' }}>문자형 VARCHAR(64)</td>
+                  <td style={{ padding: '8px 12px' }}>리바트몰 공식 goodsSn 코드</td>
+                </tr>
+                <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+                  <td style={{ padding: '8px 12px', fontWeight: 700, color: '#2563eb' }}>현대리바트</td>
+                  <td style={{ padding: '8px 12px', fontFamily: 'monospace' }}>상품명 규격 파싱</td>
+                  <td style={{ padding: '8px 12px', color: 'var(--muted)' }}>w3310 패브릭 소파(4인용)</td>
+                  <td style={{ padding: '8px 12px', fontWeight: 600 }}>livart_ext (리바트 특화)</td>
+                  <td style={{ padding: '8px 12px', fontFamily: 'monospace', color: 'var(--blue)' }}>width_mm / material / capacity</td>
+                  <td style={{ padding: '8px 12px', color: 'var(--muted)' }}>정수형 / 문자형 / 정수형</td>
+                  <td style={{ padding: '8px 12px' }}>상품명에서 가로 크기(3310mm), 소재(패브릭), 인용수(4인용) 추출 정규화</td>
+                </tr>
+                <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+                  <td style={{ padding: '8px 12px', fontWeight: 700, color: '#2563eb' }}>현대리바트</td>
+                  <td style={{ padding: '8px 12px', fontFamily: 'monospace' }}>대분류 / 중분류</td>
+                  <td style={{ padding: '8px 12px', color: 'var(--muted)' }}>소파 / 패브릭소파</td>
+                  <td style={{ padding: '8px 12px', fontWeight: 600 }}>category (카테고리)</td>
+                  <td style={{ padding: '8px 12px', fontFamily: 'monospace', color: 'var(--blue)' }}>category_id</td>
+                  <td style={{ padding: '8px 12px', color: 'var(--muted)' }}>정수형 BIGINT (외래키)</td>
+                  <td style={{ padding: '8px 12px' }}>리바트 가구 카테고리 계층 매핑</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
+      {/* TAB 3: RAW CRAWLING DATA SAMPLES */}
       {activeTab === 'data' && (
         <div>
           {/* Sub-filters */}
@@ -226,311 +542,6 @@ export function CrawlingExplorer() {
         </div>
       )}
 
-      {/* TAB 2: ERD RECOMMENDATION */}
-      {activeTab === 'erd' && (
-        <div>
-          <div className="callout" style={{ marginBottom: '28px' }}>
-            <strong style={{ fontSize: '16px' }}>💡 InventoryOS 통합 데이터베이스 ERD 설계 방향</strong>
-            <p style={{ marginTop: '8px' }}>
-              현대백화점그룹 3개 계열사(그린푸드·웰니스·리바트)의 이종 상품 및 재고 데이터를 유연하게 통합 관리하기 위한 <strong>Single Schema Multi-Tenant Architecture</strong>입니다.
-              공통 도메인(계열사, 브랜드, 카테고리, 통합상품, 가격, 재고, 배송, 수집로그)을 코어로 분리하고, 계열사별 고유 특성(식단패키지, 건기식 주의사항/1일가격, 가구 규격/설치비)은 <strong>Extension 테이블</strong>로 확장합니다.
-            </p>
-          </div>
-
-          {/* Core Tables Visual Grid */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '20px', marginBottom: '32px' }}>
-
-            {/* Table 1: affiliate */}
-            <div className="term-entry" style={{ background: '#ffffff', borderColor: '#cbd5e1' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-                <span className="pill" style={{ background: '#dbeafe', color: '#1e40af' }}>1. 계열사 (affiliate)</span>
-                <span style={{ fontSize: '11px', color: 'var(--muted)', fontFamily: 'monospace' }}>PK: affiliate_id</span>
-              </div>
-              <p style={{ fontSize: '12px', color: 'var(--muted)', marginBottom: '12px' }}>현대웰니스, 현대리바트, 현대그린푸드 계열사 테넌트 정의</p>
-              <div style={{ background: '#f8fafc', padding: '10px', borderRadius: '8px', fontSize: '11px', fontFamily: 'monospace' }}>
-                <div>• affiliate_id (VARCHAR, PK)</div>
-                <div>• name (VARCHAR) - 현대그린푸드 등</div>
-                <div>• code (VARCHAR) - GREENFOOD / WELLNESS / LIVART</div>
-                <div>• domain (VARCHAR)</div>
-                <div>• created_at (TIMESTAMP)</div>
-              </div>
-            </div>
-
-            {/* Table 2: brand */}
-            <div className="term-entry" style={{ background: '#ffffff', borderColor: '#cbd5e1' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-                <span className="pill" style={{ background: '#dbeafe', color: '#1e40af' }}>2. 브랜드 (brand)</span>
-                <span style={{ fontSize: '11px', color: 'var(--muted)', fontFamily: 'monospace' }}>PK: brand_id | FK: affiliate_id</span>
-              </div>
-              <p style={{ fontSize: '12px', color: 'var(--muted)', marginBottom: '12px' }}>솔가, 고헬씨, 리바트키즈, 그리팅 등 브랜드 마스터</p>
-              <div style={{ background: '#f8fafc', padding: '10px', borderRadius: '8px', fontSize: '11px', fontFamily: 'monospace' }}>
-                <div>• brand_id (BIGINT, PK)</div>
-                <div>• affiliate_id (VARCHAR, FK)</div>
-                <div>• brand_name (VARCHAR)</div>
-                <div>• brand_category (VARCHAR)</div>
-              </div>
-            </div>
-
-            {/* Table 3: category */}
-            <div className="term-entry" style={{ background: '#ffffff', borderColor: '#cbd5e1' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-                <span className="pill" style={{ background: '#dbeafe', color: '#1e40af' }}>3. 카테고리 (category)</span>
-                <span style={{ fontSize: '11px', color: 'var(--muted)', fontFamily: 'monospace' }}>PK: category_id | Self-FK: parent_id</span>
-              </div>
-              <p style={{ fontSize: '12px', color: 'var(--muted)', marginBottom: '12px' }}>대분류-중분류-소분류 계층형 카테고리 트리</p>
-              <div style={{ background: '#f8fafc', padding: '10px', borderRadius: '8px', fontSize: '11px', fontFamily: 'monospace' }}>
-                <div>• category_id (BIGINT, PK)</div>
-                <div>• parent_id (BIGINT, FK NULLABLE)</div>
-                <div>• affiliate_id (VARCHAR, FK)</div>
-                <div>• name (VARCHAR) - 소파, 식재료 등</div>
-                <div>• category_depth (INT) - 1, 2, 3</div>
-                <div>• full_path (VARCHAR)</div>
-              </div>
-            </div>
-
-            {/* Table 4: product Master */}
-            <div className="term-entry" style={{ background: '#ffffff', borderColor: '#2563eb', borderWidth: '2px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-                <span className="pill" style={{ background: '#2563eb', color: '#ffffff' }}>4. 통합 상품 (product) ★</span>
-                <span style={{ fontSize: '11px', color: 'var(--muted)', fontFamily: 'monospace' }}>PK: product_id</span>
-              </div>
-              <p style={{ fontSize: '12px', color: 'var(--muted)', marginBottom: '12px' }}>3개 계열사 공통 상품 마스터 테이블</p>
-              <div style={{ background: '#f8fafc', padding: '10px', borderRadius: '8px', fontSize: '11px', fontFamily: 'monospace' }}>
-                <div>• product_id (BIGINT, PK)</div>
-                <div>• affiliate_id (VARCHAR, FK)</div>
-                <div>• external_item_id (VARCHAR) - itemId / goodsNo / goodsSn</div>
-                <div>• brand_id (BIGINT, FK)</div>
-                <div>• category_id (BIGINT, FK)</div>
-                <div>• product_name (VARCHAR)</div>
-                <div>• description (TEXT)</div>
-                <div>• status (VARCHAR) - 판매중/일시품절</div>
-                <div>• badge (VARCHAR) - 임박/냉동/클리어런스</div>
-                <div>• product_url (VARCHAR)</div>
-                <div>• image_url (VARCHAR)</div>
-                <div>• created_at (TIMESTAMP)</div>
-              </div>
-            </div>
-
-            {/* Table 5: pricing */}
-            <div className="term-entry" style={{ background: '#ffffff', borderColor: '#cbd5e1' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-                <span className="pill" style={{ background: '#dbeafe', color: '#1e40af' }}>5. 가격 및 할인 (pricing)</span>
-                <span style={{ fontSize: '11px', color: 'var(--muted)', fontFamily: 'monospace' }}>PK: pricing_id | FK: product_id</span>
-              </div>
-              <p style={{ fontSize: '12px', color: 'var(--muted)', marginBottom: '12px' }}>정가, 판매가, 1일가격, 할인율 변동 이력</p>
-              <div style={{ background: '#f8fafc', padding: '10px', borderRadius: '8px', fontSize: '11px', fontFamily: 'monospace' }}>
-                <div>• pricing_id (BIGINT, PK)</div>
-                <div>• product_id (BIGINT, FK)</div>
-                <div>• original_price (DECIMAL) - 정가(원)</div>
-                <div>• selling_price (DECIMAL) - 판매가(원)</div>
-                <div>• discount_pct (DECIMAL) - 할인율(%)</div>
-                <div>• daily_price_text (VARCHAR) - 하루당 N원(웰니스)</div>
-                <div>• is_active (BOOLEAN)</div>
-                <div>• updated_at (TIMESTAMP)</div>
-              </div>
-            </div>
-
-            {/* Table 6: inventory */}
-            <div className="term-entry" style={{ background: '#ffffff', borderColor: '#10b981', borderWidth: '2px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-                <span className="pill" style={{ background: '#10b981', color: '#ffffff' }}>6. 재고 &amp; 기한 (inventory) ★</span>
-                <span style={{ fontSize: '11px', color: 'var(--muted)', fontFamily: 'monospace' }}>PK: inventory_id | FK: product_id</span>
-              </div>
-              <p style={{ fontSize: '12px', color: 'var(--muted)', marginBottom: '12px' }}>수량, 남은수량, 소비기한, 보관조건</p>
-              <div style={{ background: '#f8fafc', padding: '10px', borderRadius: '8px', fontSize: '11px', fontFamily: 'monospace' }}>
-                <div>• inventory_id (BIGINT, PK)</div>
-                <div>• product_id (BIGINT, FK)</div>
-                <div>• stock_qty (INT) - 현재 재고 수량</div>
-                <div>• remaining_qty (INT) - 남은 수량(웰니스)</div>
-                <div>• storage_condition (VARCHAR) - 냉동/냉장/상온</div>
-                <div>• expiry_date (DATE) - 소비기한/유통기한</div>
-                <div>• d_day (INT) - 남은 기한 일수</div>
-                <div>• risk_grade (VARCHAR) - NORMAL / WARNING / DANGER</div>
-                <div>• updated_at (TIMESTAMP)</div>
-              </div>
-            </div>
-
-          </div>
-
-          {/* Extension Tables for Affiliates */}
-          <h3 style={{ fontSize: '18px', marginBottom: '16px' }}>🧬 계열사 특화 확장 엔티티 (Affiliate Extension Tables)</h3>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '20px', marginBottom: '32px' }}>
-            
-            <div className="term-entry" style={{ background: '#f0fdf4', borderColor: '#86efac' }}>
-              <strong style={{ color: '#166534', fontSize: '14px' }}>🥗 greenfood_meal_plan (그린푸드 식단 특화)</strong>
-              <p style={{ fontSize: '11px', color: '#15803d', margin: '6px 0 10px' }}>식단 패키지, 영양성분, 저당/고혈압/당뇨 식단구분</p>
-              <div style={{ fontSize: '11px', fontFamily: 'monospace', color: '#166534' }}>
-                <div>• product_id (PK, FK → product)</div>
-                <div>• meal_type (VARCHAR) - 고혈압식단/당뇨식단 등</div>
-                <div>• package_days (INT) - 5일/7일 패키지</div>
-                <div>• is_frozen (BOOLEAN) - 냉동 여부</div>
-                <div>• nutrition_summary (VARCHAR)</div>
-              </div>
-            </div>
-
-            <div className="term-entry" style={{ background: '#fefce8', borderColor: '#fde047' }}>
-              <strong style={{ color: '#854d0e', fontSize: '14px' }}>💊 wellness_product_detail (웰니스 건기식 특화)</strong>
-              <p style={{ fontSize: '11px', color: '#a16207', margin: '6px 0 10px' }}>1일 섭취량, 캡슐수, 소비기한 임박 태그, 유통기한</p>
-              <div style={{ fontSize: '11px', fontFamily: 'monospace', color: '#854d0e' }}>
-                <div>• product_id (PK, FK → product)</div>
-                <div>• capsule_count (INT) - 60캡슐 등</div>
-                <div>• daily_price_amount (DECIMAL) - 하루당 원가</div>
-                <div>• is_expiring_soon (BOOLEAN) - 임박 여부</div>
-                <div>• expiry_note (VARCHAR) - 27.05.01까지 등</div>
-                <div>• functional_claim (TEXT) - 면역기능 등</div>
-              </div>
-            </div>
-
-            <div className="term-entry" style={{ background: '#eff6ff', borderColor: '#93c5fd' }}>
-              <strong style={{ color: '#1e40af', fontSize: '14px' }}>🛋️ livart_furniture_spec (리바트 가구 특화)</strong>
-              <p style={{ fontSize: '11px', color: '#1d4ed8', margin: '6px 0 10px' }}>시트 규격(w3310 등), 소재(패브릭/가죽), 인용수, 설치조건</p>
-              <div style={{ fontSize: '11px', fontFamily: 'monospace', color: '#1e40af' }}>
-                <div>• product_id (PK, FK → product)</div>
-                <div>• width_mm (INT) - 3310mm 등</div>
-                <div>• capacity_person (INT) - 4인용, 3인용 등</div>
-                <div>• material_type (VARCHAR) - 패브릭/가죽/원목</div>
-                <div>• requires_installation (BOOLEAN) - 설치가구 여부</div>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      )}
-
-      {/* TAB 3: COLUMN MAPPING TABLE */}
-      {activeTab === 'mapping' && (
-        <div>
-          <div className="callout" style={{ marginBottom: '20px' }}>
-            <strong style={{ fontSize: '15px' }}>🔄 원본 크롤링 CSV 컬럼 ➔ InventoryOS DB 매핑 상세표</strong>
-            <p style={{ marginTop: '6px', fontSize: '12px' }}>
-              수집된 51개 컬럼을 9개 정규화 DB 테이블 및 3개 특화 Extension 테이블로 매핑하는 표준 정의서입니다.
-            </p>
-          </div>
-
-          <div style={{ overflowX: 'auto', borderRadius: '12px', border: '1px solid var(--line)', background: 'var(--white)' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12px', textAlign: 'left' }}>
-              <thead>
-                <tr style={{ background: '#f8fafc', borderBottom: '1px solid var(--line)' }}>
-                  <th style={{ padding: '10px 12px' }}>출처 계열사</th>
-                  <th style={{ padding: '10px 12px' }}>원본 컬럼명</th>
-                  <th style={{ padding: '10px 12px' }}>샘플 값</th>
-                  <th style={{ padding: '10px 12px' }}>대상 DB 테이블</th>
-                  <th style={{ padding: '10px 12px' }}>대상 DB 필드명</th>
-                  <th style={{ padding: '10px 12px' }}>권장 데이터 타입</th>
-                  <th style={{ padding: '10px 12px' }}>설명 &amp; 처리 규칙</th>
-                </tr>
-              </thead>
-              <tbody>
-                {/* Greenfood mappings */}
-                <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-                  <td style={{ padding: '8px 12px', fontWeight: 700, color: '#16a34a' }}>그린푸드</td>
-                  <td style={{ padding: '8px 12px', fontFamily: 'monospace' }}>상품_ID</td>
-                  <td style={{ padding: '8px 12px', color: 'var(--muted)' }}>175695</td>
-                  <td style={{ padding: '8px 12px', fontWeight: 600 }}>product</td>
-                  <td style={{ padding: '8px 12px', fontFamily: 'monospace', color: 'var(--blue)' }}>external_item_id</td>
-                  <td style={{ padding: '8px 12px', color: 'var(--muted)' }}>VARCHAR(64)</td>
-                  <td style={{ padding: '8px 12px' }}>그린푸드 원천 상품 식별자 (itemId)</td>
-                </tr>
-                <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-                  <td style={{ padding: '8px 12px', fontWeight: 700, color: '#16a34a' }}>그린푸드</td>
-                  <td style={{ padding: '8px 12px', fontFamily: 'monospace' }}>대분류 / 소분류</td>
-                  <td style={{ padding: '8px 12px', color: 'var(--muted)' }}>간편식단 / 고혈압식단</td>
-                  <td style={{ padding: '8px 12px', fontWeight: 600 }}>category</td>
-                  <td style={{ padding: '8px 12px', fontFamily: 'monospace', color: 'var(--blue)' }}>category_id</td>
-                  <td style={{ padding: '8px 12px', color: 'var(--muted)' }}>BIGINT (FK)</td>
-                  <td style={{ padding: '8px 12px' }}>계층 구조 카테고리로 정규화 생성</td>
-                </tr>
-                <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-                  <td style={{ padding: '8px 12px', fontWeight: 700, color: '#16a34a' }}>그린푸드</td>
-                  <td style={{ padding: '8px 12px', fontFamily: 'monospace' }}>정가_원 / 판매가_원</td>
-                  <td style={{ padding: '8px 12px', color: 'var(--muted)' }}>10,500원</td>
-                  <td style={{ padding: '8px 12px', fontWeight: 600 }}>pricing</td>
-                  <td style={{ padding: '8px 12px', fontFamily: 'monospace', color: 'var(--blue)' }}>original_price / selling_price</td>
-                  <td style={{ padding: '8px 12px', color: 'var(--muted)' }}>DECIMAL(12,2)</td>
-                  <td style={{ padding: '8px 12px' }}>숫자 변환 및 할인율 계산 저장</td>
-                </tr>
-                <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-                  <td style={{ padding: '8px 12px', fontWeight: 700, color: '#16a34a' }}>그린푸드</td>
-                  <td style={{ padding: '8px 12px', fontFamily: 'monospace' }}>상품_배지</td>
-                  <td style={{ padding: '8px 12px', color: 'var(--muted)' }}>냉동|고단백</td>
-                  <td style={{ padding: '8px 12px', fontWeight: 600 }}>inventory / greenfood_ext</td>
-                  <td style={{ padding: '8px 12px', fontFamily: 'monospace', color: 'var(--blue)' }}>storage_condition / is_frozen</td>
-                  <td style={{ padding: '8px 12px', color: 'var(--muted)' }}>VARCHAR / BOOLEAN</td>
-                  <td style={{ padding: '8px 12px' }}>보관 조건(냉동)과 영양 배지 파싱</td>
-                </tr>
-
-                {/* Wellness mappings */}
-                <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-                  <td style={{ padding: '8px 12px', fontWeight: 700, color: '#d97706' }}>웰니스</td>
-                  <td style={{ padding: '8px 12px', fontFamily: 'monospace' }}>상품_ID</td>
-                  <td style={{ padding: '8px 12px', color: 'var(--muted)' }}>1000000904</td>
-                  <td style={{ padding: '8px 12px', fontWeight: 600 }}>product</td>
-                  <td style={{ padding: '8px 12px', fontFamily: 'monospace', color: 'var(--blue)' }}>external_item_id</td>
-                  <td style={{ padding: '8px 12px', color: 'var(--muted)' }}>VARCHAR(64)</td>
-                  <td style={{ padding: '8px 12px' }}>고도몰 원천 goodsNo ID</td>
-                </tr>
-                <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-                  <td style={{ padding: '8px 12px', fontWeight: 700, color: '#d97706' }}>웰니스</td>
-                  <td style={{ padding: '8px 12px', fontFamily: 'monospace' }}>남은수량</td>
-                  <td style={{ padding: '8px 12px', color: 'var(--muted)' }}>32개</td>
-                  <td style={{ padding: '8px 12px', fontWeight: 600 }}>inventory</td>
-                  <td style={{ padding: '8px 12px', fontFamily: 'monospace', color: 'var(--blue)' }}>remaining_qty</td>
-                  <td style={{ padding: '8px 12px', color: 'var(--muted)' }}>INT</td>
-                  <td style={{ padding: '8px 12px' }}>'32개' ➔ 32 정수 추출 저장 (위험재고 판단)</td>
-                </tr>
-                <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-                  <td style={{ padding: '8px 12px', fontWeight: 700, color: '#d97706' }}>웰니스</td>
-                  <td style={{ padding: '8px 12px', fontFamily: 'monospace' }}>1일_가격</td>
-                  <td style={{ padding: '8px 12px', color: 'var(--muted)' }}>하루당 450원</td>
-                  <td style={{ padding: '8px 12px', fontWeight: 600 }}>wellness_ext</td>
-                  <td style={{ padding: '8px 12px', fontFamily: 'monospace', color: 'var(--blue)' }}>daily_price_amount</td>
-                  <td style={{ padding: '8px 12px', color: 'var(--muted)' }}>DECIMAL(10,2)</td>
-                  <td style={{ padding: '8px 12px' }}>1일 단위 소모 비용 수치화</td>
-                </tr>
-                <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-                  <td style={{ padding: '8px 12px', fontWeight: 700, color: '#d97706' }}>웰니스</td>
-                  <td style={{ padding: '8px 12px', fontFamily: 'monospace' }}>상품_배지 (임박)</td>
-                  <td style={{ padding: '8px 12px', color: 'var(--muted)' }}>임박 [27.05.01까지]</td>
-                  <td style={{ padding: '8px 12px', fontWeight: 600 }}>inventory / wellness_ext</td>
-                  <td style={{ padding: '8px 12px', fontFamily: 'monospace', color: 'var(--blue)' }}>expiry_date / is_expiring_soon</td>
-                  <td style={{ padding: '8px 12px', color: 'var(--muted)' }}>DATE / BOOLEAN</td>
-                  <td style={{ padding: '8px 12px' }}>소비기한 날짜 추출 ➔ D-Day 계산 및 하드차단 정책 연결</td>
-                </tr>
-
-                {/* Livart mappings */}
-                <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-                  <td style={{ padding: '8px 12px', fontWeight: 700, color: '#2563eb' }}>리바트</td>
-                  <td style={{ padding: '8px 12px', fontFamily: 'monospace' }}>goodsSn</td>
-                  <td style={{ padding: '8px 12px', color: 'var(--muted)' }}>P200165385</td>
-                  <td style={{ padding: '8px 12px', fontWeight: 600 }}>product</td>
-                  <td style={{ padding: '8px 12px', fontFamily: 'monospace', color: 'var(--blue)' }}>external_item_id</td>
-                  <td style={{ padding: '8px 12px', color: 'var(--muted)' }}>VARCHAR(64)</td>
-                  <td style={{ padding: '8px 12px' }}>리바트몰 goodsSn 코드</td>
-                </tr>
-                <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-                  <td style={{ padding: '8px 12px', fontWeight: 700, color: '#2563eb' }}>리바트</td>
-                  <td style={{ padding: '8px 12px', fontFamily: 'monospace' }}>상품명 규격 파싱</td>
-                  <td style={{ padding: '8px 12px', color: 'var(--muted)' }}>w3310 패브릭 소파(4인용)</td>
-                  <td style={{ padding: '8px 12px', fontWeight: 600 }}>livart_ext</td>
-                  <td style={{ padding: '8px 12px', fontFamily: 'monospace', color: 'var(--blue)' }}>width_mm / material / capacity</td>
-                  <td style={{ padding: '8px 12px', color: 'var(--muted)' }}>INT / VARCHAR / INT</td>
-                  <td style={{ padding: '8px 12px' }}>상품명에서 너비(3310mm), 소재(패브릭), 4인용 파싱 정규화</td>
-                </tr>
-                <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-                  <td style={{ padding: '8px 12px', fontWeight: 700, color: '#2563eb' }}>리바트</td>
-                  <td style={{ padding: '8px 12px', fontFamily: 'monospace' }}>대분류 / 중분류</td>
-                  <td style={{ padding: '8px 12px', color: 'var(--muted)' }}>소파 / 패브릭소파</td>
-                  <td style={{ padding: '8px 12px', fontWeight: 600 }}>category</td>
-                  <td style={{ padding: '8px 12px', fontFamily: 'monospace', color: 'var(--blue)' }}>category_id</td>
-                  <td style={{ padding: '8px 12px', color: 'var(--muted)' }}>BIGINT (FK)</td>
-                  <td style={{ padding: '8px 12px' }}>리바트 가구 카테고리 계층 할당</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      )}
-
       {/* TAB 4: DOCS & POLICY INTEGRATION */}
       {activeTab === 'docs' && (
         <div>
@@ -548,9 +559,9 @@ export function CrawlingExplorer() {
                 1. `decision-policy.md` (손익 &amp; 하드 차단 정책 연계)
               </h3>
               <p style={{ fontSize: '13px', lineHeight: 1.6, color: 'var(--muted)' }}>
-                • <strong>웰니스 [임박] 태그:</strong> 크롤링 데이터의 `상품_배지: 임박` 및 `[27.05.01까지]` 속성은 소비기한 D-Day를 산출하여 D-14 이내 진입 시 <strong>하드 차단(Hard Stop)</strong> 규칙 및 긴급 프로모션/기부 시나리오로 자동 라우팅됩니다.<br />
-                • <strong>그린푸드 [냉동] 보관비용:</strong> `상품_배지: 냉동` 항목은 일반 상온 보관비 대비 3.2배 높은 보관비용(Holding Cost) 파라미터를 적용하여 회피비용(Avoided Cost) 산출 시 가중치를 부여합니다.<br />
-                • <strong>리바트 가구 [설치/배송]:</strong> 가구 특성상 단순 할인이 아닌 배송·설치비 및 반품 리스크 비용이 크므로 기여현금이익(Contribution Cash Margin) 계산 시 배송비용 모델을 결합합니다.
+                • <strong>현대웰니스 [소비기한 임박] 배지:</strong> 크롤링 데이터의 `상품_배지: 임박` 및 `[27.05.01까지]` 속성은 소비기한 잔여일(D-Day)을 산출하여 D-14 이내 진입 시 <strong>하드 차단(Hard Stop)</strong> 규칙 및 긴급 프로모션/기부 시나리오로 자동 라우팅됩니다.<br />
+                • <strong>현대그린푸드 [냉동 보관] 배지:</strong> `상품_배지: 냉동` 항목은 일반 상온 보관비 대비 3.2배 높은 보관비용(Holding Cost) 파라미터를 적용하여 회피비용(Avoided Cost) 산출 시 가중치를 부여합니다.<br />
+                • <strong>현대리바트 가구 [설치/배송]:</strong> 가구 특성상 단순 할인이 아닌 배송·설치비 및 반품 리스크 비용이 크므로 기여현금이익(Contribution Cash Margin) 계산 시 배송비용 모델을 결합합니다.
               </p>
             </div>
 
@@ -571,7 +582,7 @@ export function CrawlingExplorer() {
               </h3>
               <p style={{ fontSize: '13px', lineHeight: 1.6, color: 'var(--muted)' }}>
                 • <strong>Oracle RDBMS + Flyway:</strong> 매핑표에 정의된 12개 테이블을 버전 관리하여 배치 동기화 시 멱등성을 보장합니다.<br />
-                • <strong>Redis Caching Layer:</strong> 2,690개 상품의 위험도 계산 결과 및 일일 판매속도를 Redis Hash로 캐싱하여 프론트엔드 대시보드 조회의 응답속도를 50ms 이내로 보장합니다.<br />
+                • <strong>Redis 캐싱 레이어:</strong> 2,690개 상품의 위험도 계산 결과 및 일일 판매속도를 Redis Hash로 캐싱하여 프론트엔드 대시보드 조회의 응답속도를 50ms 이내로 보장합니다.<br />
                 • <strong>Spring Batch 수집 이력:</strong> `crawl_log` 테이블을 통해 일일 수집 성공률, 미수집 항목, 가격 변동 트래킹을 자동 수행합니다.
               </p>
             </div>
