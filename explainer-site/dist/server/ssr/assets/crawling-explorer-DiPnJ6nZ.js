@@ -1150,10 +1150,36 @@ function CrawlingExplorer() {
 							"에 수집·정규화합니다.",
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("br", {}),
 							"모든 계열사가 공유하는 ",
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "6개 공통 코어 마스터 테이블" }),
-							"과, 각 계열사의 독자적 비즈니스 속성을 수용하는 ",
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "8개 공통 코어 테이블" }),
+							"에 목록 화면용 의사결정 테이블과 상품 상세 화면용 이력 테이블을 분리하고, 각 계열사의 독자적 비즈니스 속성은 ",
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "3개 전용 확장 테이블(Extension Table)" }),
-							"로 구성됩니다."
+							"로 수용합니다."
+						]
+					})]
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					className: "callout",
+					style: {
+						marginBottom: "28px",
+						background: "#f8fafc",
+						borderColor: "#cbd5e1"
+					},
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", {
+						style: {
+							fontSize: "15px",
+							color: "#334155"
+						},
+						children: "🧭 목록 화면과 상세 화면을 함께 지원하는 분리 기준"
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
+						style: {
+							marginTop: "8px",
+							color: "#475569",
+							lineHeight: 1.65
+						},
+						children: [
+							"목록 화면은 ",
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "상품·계열사·카테고리·SKU·판매 상태·위험 태그·판매가·가용재고·추천 전략" }),
+							"을 빠르게 조회합니다. 상품 상세 화면은 옵션 조합과 로트, AI 판단 근거, 입출고·판매·반품·프로모션 이력, 승인 상태를 별도 테이블에서 조회하므로 상품 마스터가 비대해지지 않습니다."
 						]
 					})]
 				}),
@@ -1693,8 +1719,23 @@ function CrawlingExplorer() {
 										] }),
 										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
 											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "reserved_qty" }),
+											" (정수형) - 주문·프로모션 등으로 이미 할당된 수량"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "available_qty" }),
+											" (정수형, 계산값) - 실제 가용재고 (`stock_qty - reserved_qty`)"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "safety_stock_qty" }),
+											" (정수형) - 전략 계산에서 보호할 안전재고"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
 											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "remaining_qty" }),
-											" (정수형) - 남은 한정 수량 (웰니스)"
+											" (정수형) - 남은 한정 수량 (웰니스 원천값)"
 										] }),
 										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
 											"• ",
@@ -1710,11 +1751,6 @@ function CrawlingExplorer() {
 											"• ",
 											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "d_day" }),
 											" (정수형) - 소비기한 잔여 일수 (D-Day)"
-										] }),
-										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
-											"• ",
-											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "risk_grade" }),
-											" (문자형) - AI 위험 등급 (`NORMAL` / `WARNING` / `DANGER`)"
 										] }),
 										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
 											"• ",
@@ -1804,13 +1840,23 @@ function CrawlingExplorer() {
 										] }),
 										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
 											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "shipping_fee_amount" }),
+											" (금액) - 기본 배송료 수치 (무료이면 0)"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
 											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "return_fee_text" }),
-											" (문자형) - 반품/교환 배송비 (105,200원 / 38,000원)"
+											" (문자형) - 반품/교환 배송비 안내 (105,200원 / 38,000원)"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "installation_type" }),
+											" (문자형) - 직접 설치 / 기사 설치 / 설치 없음"
 										] }),
 										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
 											"• ",
 											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "return_condition_text" }),
-											" (문자형) - 조립 후 반품 불가 조건"
+											" (문자형) - 조립 후 반품 불가 등 교환·반품 조건"
 										] })
 									]
 								})
@@ -1897,6 +1943,442 @@ function CrawlingExplorer() {
 											"• ",
 											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "synced_at" }),
 											" (일시) - 동기화 완료 일시"
+										] })
+									]
+								})
+							]
+						})
+					]
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("h3", {
+					style: {
+						fontSize: "18px",
+						marginBottom: "16px",
+						display: "flex",
+						alignItems: "center",
+						gap: "8px"
+					},
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "📋 목록·상품 상세 화면 지원 테이블" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+						style: {
+							fontSize: "12px",
+							color: "var(--muted)",
+							fontWeight: 400
+						},
+						children: "- 조회용 요약과 상세 이력을 분리 저장"
+					})]
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					style: {
+						display: "grid",
+						gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
+						gap: "20px",
+						marginBottom: "36px"
+					},
+					children: [
+						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							className: "term-entry",
+							style: {
+								background: "#eef2ff",
+								borderColor: "#818cf8",
+								borderWidth: "2px"
+							},
+							children: [
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", {
+									style: {
+										color: "#3730a3",
+										fontSize: "14px"
+									},
+									children: "9. 판매 전략 추천 (strategy_recommendation) ★"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+									style: {
+										fontSize: "11px",
+										color: "#4338ca",
+										margin: "6px 0 10px"
+									},
+									children: "목록에서 바로 보여줄 추천 판매 방식과 전략 대상 수량"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+									style: {
+										fontSize: "11px",
+										fontFamily: "monospace",
+										color: "#3730a3",
+										lineHeight: 1.7
+									},
+									children: [
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "recommendation_id" }),
+											" (정수형, 기본키) - 추천 결과 ID"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "product_id" }),
+											" (정수형, 외래키) - 통합 상품 ID"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "recommended_strategy" }),
+											" (문자형) - 정상판매 / 할인 / 쿠폰 / 번들 / 외부 채널 / 기부"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "strategy_target_qty" }),
+											" (정수형) - 추천 전략을 적용할 수량"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "risk_score" }),
+											" (숫자형) - 추천 시점 위험 점수"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "next_action" }),
+											" (문자형) - 담당자가 다음에 할 일"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "status / generated_at" }),
+											" (문자형·일시) - 추천 상태와 생성 시각"
+										] })
+									]
+								})
+							]
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							className: "term-entry",
+							style: {
+								background: "#ecfeff",
+								borderColor: "#22d3ee",
+								borderWidth: "2px"
+							},
+							children: [
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", {
+									style: {
+										color: "#155e75",
+										fontSize: "14px"
+									},
+									children: "10. 상품 옵션·변형 (product_variant) ★"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+									style: {
+										fontSize: "11px",
+										color: "#0e7490",
+										margin: "6px 0 10px"
+									},
+									children: "가구 옵션과 웰니스·식품의 용량·구성별 SKU"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+									style: {
+										fontSize: "11px",
+										fontFamily: "monospace",
+										color: "#155e75",
+										lineHeight: 1.7
+									},
+									children: [
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "variant_id" }),
+											" (정수형, 기본키) - 통합 옵션 ID"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "product_id" }),
+											" (정수형, 외래키) - 상위 상품 ID"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "external_variant_id" }),
+											" (문자형) - 외부 세부 SKU (`subGoodsSn` 등)"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "option_name" }),
+											" (문자형) - 색상·타입·구성 조합명"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "color / size / volume" }),
+											" (문자형) - 공통 조회 속성"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "option_price_delta" }),
+											" (금액) - 옵션 추가 금액"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "is_active / updated_at" }),
+											" (논리형·일시) - 판매 가능 여부와 동기화 시각"
+										] })
+									]
+								})
+							]
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							className: "term-entry",
+							style: {
+								background: "#f0fdf4",
+								borderColor: "#34d399",
+								borderWidth: "2px"
+							},
+							children: [
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", {
+									style: {
+										color: "#166534",
+										fontSize: "14px"
+									},
+									children: "11. 로트별 재고 (lot_inventory) ★"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+									style: {
+										fontSize: "11px",
+										color: "#15803d",
+										margin: "6px 0 10px"
+									},
+									children: "소비기한·보관조건이 다른 재고를 SKU별로 추적"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+									style: {
+										fontSize: "11px",
+										fontFamily: "monospace",
+										color: "#166534",
+										lineHeight: 1.7
+									},
+									children: [
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "lot_inventory_id" }),
+											" (정수형, 기본키) - 로트 재고 ID"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "variant_id" }),
+											" (정수형, 외래키) - 옵션·SKU ID"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "lot_no" }),
+											" (문자형) - 원천 로트 번호"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "stock_qty / reserved_qty" }),
+											" (정수형) - 총량과 할당량"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "available_qty" }),
+											" (정수형, 계산값) - 로트별 가용량"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "expiry_date" }),
+											" (날짜) - 소비기한 / 유통기한"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "storage_condition / received_at" }),
+											" (문자형·일시) - 보관 조건과 입고 시각"
+										] })
+									]
+								})
+							]
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							className: "term-entry",
+							style: {
+								background: "#fff7ed",
+								borderColor: "#fb923c",
+								borderWidth: "2px"
+							},
+							children: [
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", {
+									style: {
+										color: "#9a3412",
+										fontSize: "14px"
+									},
+									children: "12. AI 위험 분석 (ai_risk_analysis) ★"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+									style: {
+										fontSize: "11px",
+										color: "#c2410c",
+										margin: "6px 0 10px"
+									},
+									children: "위험 점수뿐 아니라 추천 근거와 모델 버전까지 보존"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+									style: {
+										fontSize: "11px",
+										fontFamily: "monospace",
+										color: "#9a3412",
+										lineHeight: 1.7
+									},
+									children: [
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "risk_analysis_id" }),
+											" (정수형, 기본키) - 분석 결과 ID"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "product_id" }),
+											" (정수형, 외래키) - 통합 상품 ID"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "risk_score" }),
+											" (숫자형) - 0~100 위험 점수"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "risk_grade" }),
+											" (문자형) - 정상 / 주의 / 위험"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "risk_reasons" }),
+											" (JSON) - 소비기한·재고·판매속도 등 판단 근거"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "used_features" }),
+											" (JSON) - 분석에 사용한 입력값 요약"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "model_version / evaluated_at" }),
+											" (문자형·일시) - 재현 가능한 모델 정보"
+										] })
+									]
+								})
+							]
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							className: "term-entry",
+							style: {
+								background: "#f8fafc",
+								borderColor: "#94a3b8"
+							},
+							children: [
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", {
+									style: {
+										color: "#334155",
+										fontSize: "14px"
+									},
+									children: "13. 성과·재고 이력 (performance_history) ★"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+									style: {
+										fontSize: "11px",
+										color: "#475569",
+										margin: "6px 0 10px"
+									},
+									children: "입고부터 판매·반품·프로모션 결과까지 시계열로 보존"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+									style: {
+										fontSize: "11px",
+										fontFamily: "monospace",
+										color: "#334155",
+										lineHeight: 1.7
+									},
+									children: [
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "performance_id" }),
+											" (정수형, 기본키) - 성과 이력 ID"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "product_id / variant_id" }),
+											" (정수형, 외래키) - 상품·옵션 ID"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "recorded_date" }),
+											" (날짜) - 집계 기준일"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "inbound_qty / sales_qty / return_qty" }),
+											" (정수형) - 입고·판매·반품 수량"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "promotion_history" }),
+											" (JSON) - 할인·쿠폰·번들 등 실행 이력"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "sales_rate" }),
+											" (숫자형) - 일/주간 판매속도"
+										] })
+									]
+								})
+							]
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							className: "term-entry",
+							style: {
+								background: "#fdf4ff",
+								borderColor: "#d946ef",
+								borderWidth: "2px"
+							},
+							children: [
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", {
+									style: {
+										color: "#86198f",
+										fontSize: "14px"
+									},
+									children: "14. 승인·전산 이력 (approval_workflow) ★"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+									style: {
+										fontSize: "11px",
+										color: "#a21caf",
+										margin: "6px 0 10px"
+									},
+									children: "추천 실행 전 검토자와 전산 전파 상태를 추적"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+									style: {
+										fontSize: "11px",
+										fontFamily: "monospace",
+										color: "#86198f",
+										lineHeight: 1.7
+									},
+									children: [
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "approval_id" }),
+											" (정수형, 기본키) - 승인 이력 ID"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "product_id / recommendation_id" }),
+											" (정수형, 외래키) - 상품·추천 결과 ID"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "approval_status" }),
+											" (문자형) - 대기 / 승인 / 반려 / 실행완료"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "reviewer_id / reviewer_name" }),
+											" (문자형) - 검토 담당자"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "review_note" }),
+											" (긴 텍스트) - 승인·반려 사유"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "requested_at / reviewed_at / teams_sent_at" }),
+											" (일시) - 요청·검토·전산 전파 시각"
 										] })
 									]
 								})
@@ -2116,6 +2598,21 @@ function CrawlingExplorer() {
 											"• ",
 											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "on_site_extra_fee" }),
 											" (긴 텍스트) - 현장 추가 작업비 (옷장 3.5만~8만, 소파 1.6만~2.7만)"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "installation_type" }),
+											" (문자형) - 직접 설치 / 기사 설치 구분"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "return_shipping_fee" }),
+											" (금액) - 교환·반품 왕복 배송비"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "assembly_non_returnable_flag" }),
+											" (논리형) - 조립 후 반품 불가 여부"
 										] })
 									]
 								})
@@ -2865,7 +3362,7 @@ function CrawlingExplorer() {
 						marginTop: "6px",
 						fontSize: "12px"
 					},
-					children: "외부 계열사 DB의 61개 수집 필드가 통합 시스템 DB의 9개 공통 마스터 및 3개 특화 확장 테이블로 변환·저장되는 매핑 명세입니다."
+					children: "외부 계열사 DB의 61개 수집 필드가 통합 시스템 DB의 공통 마스터·목록 조회·상세 이력·계열사 확장 테이블로 변환·저장되는 매핑 명세입니다."
 				})]
 			}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 				style: {
@@ -3030,6 +3527,59 @@ function CrawlingExplorer() {
 									style: {
 										padding: "8px 12px",
 										fontWeight: 700,
+										color: "#16a34a"
+									},
+									children: "현대그린푸드 DB"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", {
+									style: {
+										padding: "8px 12px",
+										fontFamily: "monospace"
+									},
+									children: "gf_meal_detail.package_days / storage_temp"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", {
+									style: {
+										padding: "8px 12px",
+										color: "var(--muted)"
+									},
+									children: "5일 / 냉동"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", {
+									style: {
+										padding: "8px 12px",
+										fontWeight: 600
+									},
+									children: "product_variant / lot_inventory"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", {
+									style: {
+										padding: "8px 12px",
+										fontFamily: "monospace",
+										color: "var(--blue)"
+									},
+									children: "volume / storage_condition"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", {
+									style: {
+										padding: "8px 12px",
+										color: "var(--muted)"
+									},
+									children: "문자형 / 문자형"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", {
+									style: { padding: "8px 12px" },
+									children: "패키지 구성과 보관 조건을 상세 화면 필터로 사용"
+								})
+							]
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("tr", {
+							style: { borderBottom: "1px solid #f1f5f9" },
+							children: [
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", {
+									style: {
+										padding: "8px 12px",
+										fontWeight: 700,
 										color: "#d97706"
 									},
 									children: "현대웰니스 DB"
@@ -3136,6 +3686,112 @@ function CrawlingExplorer() {
 									style: {
 										padding: "8px 12px",
 										fontWeight: 700,
+										color: "#d97706"
+									},
+									children: "현대웰니스 DB"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", {
+									style: {
+										padding: "8px 12px",
+										fontFamily: "monospace"
+									},
+									children: "wl_goods_stock.stock_qty / remaining_qty"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", {
+									style: {
+										padding: "8px 12px",
+										color: "var(--muted)"
+									},
+									children: "120개 / 32개"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", {
+									style: {
+										padding: "8px 12px",
+										fontWeight: 600
+									},
+									children: "inventory / lot_inventory"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", {
+									style: {
+										padding: "8px 12px",
+										fontFamily: "monospace",
+										color: "var(--blue)"
+									},
+									children: "stock_qty / available_qty"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", {
+									style: {
+										padding: "8px 12px",
+										color: "var(--muted)"
+									},
+									children: "정수형 INT"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", {
+									style: { padding: "8px 12px" },
+									children: "예약 수량을 차감한 가용재고를 계산하고 로트별 소비기한과 연결"
+								})
+							]
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("tr", {
+							style: { borderBottom: "1px solid #f1f5f9" },
+							children: [
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", {
+									style: {
+										padding: "8px 12px",
+										fontWeight: 700,
+										color: "#d97706"
+									},
+									children: "현대웰니스 DB"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", {
+									style: {
+										padding: "8px 12px",
+										fontFamily: "monospace"
+									},
+									children: "wl_goods_price.daily_price_text"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", {
+									style: {
+										padding: "8px 12px",
+										color: "var(--muted)"
+									},
+									children: "하루당 450원"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", {
+									style: {
+										padding: "8px 12px",
+										fontWeight: 600
+									},
+									children: "pricing / performance_history"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", {
+									style: {
+										padding: "8px 12px",
+										fontFamily: "monospace",
+										color: "var(--blue)"
+									},
+									children: "daily_price_text / sales_rate"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", {
+									style: {
+										padding: "8px 12px",
+										color: "var(--muted)"
+									},
+									children: "문자형 / 숫자형"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", {
+									style: { padding: "8px 12px" },
+									children: "표시용 1일 단가와 기간별 판매속도를 분리 저장"
+								})
+							]
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("tr", {
+							style: { borderBottom: "1px solid #f1f5f9" },
+							children: [
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", {
+									style: {
+										padding: "8px 12px",
+										fontWeight: 700,
 										color: "#2563eb"
 									},
 									children: "현대리바트 DB"
@@ -3232,6 +3888,165 @@ function CrawlingExplorer() {
 								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", {
 									style: { padding: "8px 12px" },
 									children: "교환/반품 배송비 및 조립 후 반품 불가 조건 매핑"
+								})
+							]
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("tr", {
+							style: { borderBottom: "1px solid #f1f5f9" },
+							children: [
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", {
+									style: {
+										padding: "8px 12px",
+										fontWeight: 700,
+										color: "#2563eb"
+									},
+									children: "현대리바트 DB"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", {
+									style: {
+										padding: "8px 12px",
+										fontFamily: "monospace"
+									},
+									children: "lb_option_sku.option_combo_name / option_price"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", {
+									style: {
+										padding: "8px 12px",
+										color: "var(--muted)"
+									},
+									children: "서랍형 브라운 / 1,026,000원"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", {
+									style: {
+										padding: "8px 12px",
+										fontWeight: 600
+									},
+									children: "product_variant / pricing"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", {
+									style: {
+										padding: "8px 12px",
+										fontFamily: "monospace",
+										color: "var(--blue)"
+									},
+									children: "option_name / selling_price"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", {
+									style: {
+										padding: "8px 12px",
+										color: "var(--muted)"
+									},
+									children: "문자형 / 금액형"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", {
+									style: { padding: "8px 12px" },
+									children: "상품 본체와 옵션 SKU를 분리해 상세 옵션 로트와 가격을 연결"
+								})
+							]
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("tr", {
+							style: { borderBottom: "1px solid #f1f5f9" },
+							children: [
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", {
+									style: {
+										padding: "8px 12px",
+										fontWeight: 700,
+										color: "#2563eb"
+									},
+									children: "현대리바트 DB"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", {
+									style: {
+										padding: "8px 12px",
+										fontFamily: "monospace"
+									},
+									children: "lb_logistics_policy.shipping_fee_text / manual_transport_text"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", {
+									style: {
+										padding: "8px 12px",
+										color: "var(--muted)"
+									},
+									children: "무료 / 2~5층 가능"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", {
+									style: {
+										padding: "8px 12px",
+										fontWeight: 600
+									},
+									children: "delivery_info / livart_furniture_ext"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", {
+									style: {
+										padding: "8px 12px",
+										fontFamily: "monospace",
+										color: "var(--blue)"
+									},
+									children: "shipping_fee_amount / manual_transport_policy"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", {
+									style: {
+										padding: "8px 12px",
+										color: "var(--muted)"
+									},
+									children: "금액형 / 긴 텍스트"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", {
+									style: { padding: "8px 12px" },
+									children: "무료 배송은 0원으로 정규화하고 층수별 수동운반 규정은 원문 보존"
+								})
+							]
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("tr", {
+							style: { borderBottom: "1px solid #f1f5f9" },
+							children: [
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", {
+									style: {
+										padding: "8px 12px",
+										fontWeight: 700,
+										color: "#2563eb"
+									},
+									children: "현대리바트 DB"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", {
+									style: {
+										padding: "8px 12px",
+										fontFamily: "monospace"
+									},
+									children: "lb_goods_master / CS 공지"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", {
+									style: {
+										padding: "8px 12px",
+										color: "var(--muted)"
+									},
+									children: "P200199500 / B200075110"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", {
+									style: {
+										padding: "8px 12px",
+										fontWeight: 600
+									},
+									children: "performance_history / approval_workflow"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", {
+									style: {
+										padding: "8px 12px",
+										fontFamily: "monospace",
+										color: "var(--blue)"
+									},
+									children: "promotion_history / review_note"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", {
+									style: {
+										padding: "8px 12px",
+										color: "var(--muted)"
+									},
+									children: "JSON / 긴 텍스트"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", {
+									style: { padding: "8px 12px" },
+									children: "상세 페이지 원문과 정책 근거를 실행·검토 이력에 연결"
 								})
 							]
 						})
@@ -3651,7 +4466,7 @@ function CrawlingExplorer() {
 							children: [
 								"• ",
 								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "Oracle RDBMS + Flyway:" }),
-								" 매핑표에 정의된 9개 공통 마스터 + 3개 확장 테이블을 버전 관리하여 배치 동기화 시 멱등성을 보장합니다.",
+								" 공통 코어·목록 조회·상세 이력·계열사 확장 테이블을 버전 관리하여 배치 동기화 시 멱등성을 보장합니다.",
 								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("br", {}),
 								"• ",
 								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "Redis 캐싱 레이어:" }),

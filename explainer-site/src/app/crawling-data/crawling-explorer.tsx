@@ -72,7 +72,16 @@ export function CrawlingExplorer() {
             <p style={{ marginTop: '8px', color: '#334155', lineHeight: 1.65 }}>
               현대백화점그룹 3개 외부 계열사 DB(현대그린푸드·현대웰니스·현대리바트)의 이종 데이터 원장을 정기 동기화(ETL/Sync)하여
               <strong>1개의 통합 시스템 DB(Single Schema Multi-Tenant)</strong>에 수집·정규화합니다.<br />
-              모든 계열사가 공유하는 <strong>6개 공통 코어 마스터 테이블</strong>과, 각 계열사의 독자적 비즈니스 속성을 수용하는 <strong>3개 전용 확장 테이블(Extension Table)</strong>로 구성됩니다.
+              모든 계열사가 공유하는 <strong>8개 공통 코어 테이블</strong>에 목록 화면용 의사결정 테이블과 상품 상세 화면용 이력 테이블을 분리하고,
+              각 계열사의 독자적 비즈니스 속성은 <strong>3개 전용 확장 테이블(Extension Table)</strong>로 수용합니다.
+            </p>
+          </div>
+
+          <div className="callout" style={{ marginBottom: '28px', background: '#f8fafc', borderColor: '#cbd5e1' }}>
+            <strong style={{ fontSize: '15px', color: '#334155' }}>🧭 목록 화면과 상세 화면을 함께 지원하는 분리 기준</strong>
+            <p style={{ marginTop: '8px', color: '#475569', lineHeight: 1.65 }}>
+              목록 화면은 <strong>상품·계열사·카테고리·SKU·판매 상태·위험 태그·판매가·가용재고·추천 전략</strong>을 빠르게 조회합니다.
+              상품 상세 화면은 옵션 조합과 로트, AI 판단 근거, 입출고·판매·반품·프로모션 이력, 승인 상태를 별도 테이블에서 조회하므로 상품 마스터가 비대해지지 않습니다.
             </p>
           </div>
 
@@ -182,11 +191,13 @@ export function CrawlingExplorer() {
                 <div>• <strong style={{ color: '#10b981' }}>inventory_id</strong> (정수형, 기본키) - 재고 기록 ID</div>
                 <div>• <strong>product_id</strong> (정수형, 외래키) - 통합 상품 ID</div>
                 <div>• <strong>stock_qty</strong> (정수형) - 현재 총 재고 수량</div>
-                <div>• <strong>remaining_qty</strong> (정수형) - 남은 한정 수량 (웰니스)</div>
+                <div>• <strong>reserved_qty</strong> (정수형) - 주문·프로모션 등으로 이미 할당된 수량</div>
+                <div>• <strong>available_qty</strong> (정수형, 계산값) - 실제 가용재고 (`stock_qty - reserved_qty`)</div>
+                <div>• <strong>safety_stock_qty</strong> (정수형) - 전략 계산에서 보호할 안전재고</div>
+                <div>• <strong>remaining_qty</strong> (정수형) - 남은 한정 수량 (웰니스 원천값)</div>
                 <div>• <strong>storage_condition</strong> (문자형) - 보관 조건 (냉동 / 냉장 / 상온)</div>
                 <div>• <strong>expiry_date</strong> (날짜) - 소비기한 / 유통기한 날짜</div>
                 <div>• <strong>d_day</strong> (정수형) - 소비기한 잔여 일수 (D-Day)</div>
-                <div>• <strong>risk_grade</strong> (문자형) - AI 위험 등급 (`NORMAL` / `WARNING` / `DANGER`)</div>
                 <div>• <strong>updated_at</strong> (일시) - 재고 동기화 일시</div>
               </div>
             </div>
@@ -204,8 +215,10 @@ export function CrawlingExplorer() {
                 <div>• <strong>delivery_type</strong> (문자형) - 배송 방식 (직접배송 / 택배 등)</div>
                 <div>• <strong>delivery_fee_text</strong> (문자형) - 기본 배송비 안내</div>
                 <div>• <strong>delivery_period_text</strong> (문자형) - 배송 소요기간 (주문 후 4~5일)</div>
-                <div>• <strong>return_fee_text</strong> (문자형) - 반품/교환 배송비 (105,200원 / 38,000원)</div>
-                <div>• <strong>return_condition_text</strong> (문자형) - 조립 후 반품 불가 조건</div>
+                <div>• <strong>shipping_fee_amount</strong> (금액) - 기본 배송료 수치 (무료이면 0)</div>
+                <div>• <strong>return_fee_text</strong> (문자형) - 반품/교환 배송비 안내 (105,200원 / 38,000원)</div>
+                <div>• <strong>installation_type</strong> (문자형) - 직접 설치 / 기사 설치 / 설치 없음</div>
+                <div>• <strong>return_condition_text</strong> (문자형) - 조립 후 반품 불가 등 교환·반품 조건</div>
               </div>
             </div>
 
@@ -226,6 +239,96 @@ export function CrawlingExplorer() {
               </div>
             </div>
 
+          </div>
+
+          {/* Decision and detail tables */}
+          <h3 style={{ fontSize: '18px', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span>📋 목록·상품 상세 화면 지원 테이블</span>
+            <span style={{ fontSize: '12px', color: 'var(--muted)', fontWeight: 400 }}>- 조회용 요약과 상세 이력을 분리 저장</span>
+          </h3>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '20px', marginBottom: '36px' }}>
+            <div className="term-entry" style={{ background: '#eef2ff', borderColor: '#818cf8', borderWidth: '2px' }}>
+              <strong style={{ color: '#3730a3', fontSize: '14px' }}>9. 판매 전략 추천 (strategy_recommendation) ★</strong>
+              <p style={{ fontSize: '11px', color: '#4338ca', margin: '6px 0 10px' }}>목록에서 바로 보여줄 추천 판매 방식과 전략 대상 수량</p>
+              <div style={{ fontSize: '11px', fontFamily: 'monospace', color: '#3730a3', lineHeight: 1.7 }}>
+                <div>• <strong>recommendation_id</strong> (정수형, 기본키) - 추천 결과 ID</div>
+                <div>• <strong>product_id</strong> (정수형, 외래키) - 통합 상품 ID</div>
+                <div>• <strong>recommended_strategy</strong> (문자형) - 정상판매 / 할인 / 쿠폰 / 번들 / 외부 채널 / 기부</div>
+                <div>• <strong>strategy_target_qty</strong> (정수형) - 추천 전략을 적용할 수량</div>
+                <div>• <strong>risk_score</strong> (숫자형) - 추천 시점 위험 점수</div>
+                <div>• <strong>next_action</strong> (문자형) - 담당자가 다음에 할 일</div>
+                <div>• <strong>status / generated_at</strong> (문자형·일시) - 추천 상태와 생성 시각</div>
+              </div>
+            </div>
+
+            <div className="term-entry" style={{ background: '#ecfeff', borderColor: '#22d3ee', borderWidth: '2px' }}>
+              <strong style={{ color: '#155e75', fontSize: '14px' }}>10. 상품 옵션·변형 (product_variant) ★</strong>
+              <p style={{ fontSize: '11px', color: '#0e7490', margin: '6px 0 10px' }}>가구 옵션과 웰니스·식품의 용량·구성별 SKU</p>
+              <div style={{ fontSize: '11px', fontFamily: 'monospace', color: '#155e75', lineHeight: 1.7 }}>
+                <div>• <strong>variant_id</strong> (정수형, 기본키) - 통합 옵션 ID</div>
+                <div>• <strong>product_id</strong> (정수형, 외래키) - 상위 상품 ID</div>
+                <div>• <strong>external_variant_id</strong> (문자형) - 외부 세부 SKU (`subGoodsSn` 등)</div>
+                <div>• <strong>option_name</strong> (문자형) - 색상·타입·구성 조합명</div>
+                <div>• <strong>color / size / volume</strong> (문자형) - 공통 조회 속성</div>
+                <div>• <strong>option_price_delta</strong> (금액) - 옵션 추가 금액</div>
+                <div>• <strong>is_active / updated_at</strong> (논리형·일시) - 판매 가능 여부와 동기화 시각</div>
+              </div>
+            </div>
+
+            <div className="term-entry" style={{ background: '#f0fdf4', borderColor: '#34d399', borderWidth: '2px' }}>
+              <strong style={{ color: '#166534', fontSize: '14px' }}>11. 로트별 재고 (lot_inventory) ★</strong>
+              <p style={{ fontSize: '11px', color: '#15803d', margin: '6px 0 10px' }}>소비기한·보관조건이 다른 재고를 SKU별로 추적</p>
+              <div style={{ fontSize: '11px', fontFamily: 'monospace', color: '#166534', lineHeight: 1.7 }}>
+                <div>• <strong>lot_inventory_id</strong> (정수형, 기본키) - 로트 재고 ID</div>
+                <div>• <strong>variant_id</strong> (정수형, 외래키) - 옵션·SKU ID</div>
+                <div>• <strong>lot_no</strong> (문자형) - 원천 로트 번호</div>
+                <div>• <strong>stock_qty / reserved_qty</strong> (정수형) - 총량과 할당량</div>
+                <div>• <strong>available_qty</strong> (정수형, 계산값) - 로트별 가용량</div>
+                <div>• <strong>expiry_date</strong> (날짜) - 소비기한 / 유통기한</div>
+                <div>• <strong>storage_condition / received_at</strong> (문자형·일시) - 보관 조건과 입고 시각</div>
+              </div>
+            </div>
+
+            <div className="term-entry" style={{ background: '#fff7ed', borderColor: '#fb923c', borderWidth: '2px' }}>
+              <strong style={{ color: '#9a3412', fontSize: '14px' }}>12. AI 위험 분석 (ai_risk_analysis) ★</strong>
+              <p style={{ fontSize: '11px', color: '#c2410c', margin: '6px 0 10px' }}>위험 점수뿐 아니라 추천 근거와 모델 버전까지 보존</p>
+              <div style={{ fontSize: '11px', fontFamily: 'monospace', color: '#9a3412', lineHeight: 1.7 }}>
+                <div>• <strong>risk_analysis_id</strong> (정수형, 기본키) - 분석 결과 ID</div>
+                <div>• <strong>product_id</strong> (정수형, 외래키) - 통합 상품 ID</div>
+                <div>• <strong>risk_score</strong> (숫자형) - 0~100 위험 점수</div>
+                <div>• <strong>risk_grade</strong> (문자형) - 정상 / 주의 / 위험</div>
+                <div>• <strong>risk_reasons</strong> (JSON) - 소비기한·재고·판매속도 등 판단 근거</div>
+                <div>• <strong>used_features</strong> (JSON) - 분석에 사용한 입력값 요약</div>
+                <div>• <strong>model_version / evaluated_at</strong> (문자형·일시) - 재현 가능한 모델 정보</div>
+              </div>
+            </div>
+
+            <div className="term-entry" style={{ background: '#f8fafc', borderColor: '#94a3b8' }}>
+              <strong style={{ color: '#334155', fontSize: '14px' }}>13. 성과·재고 이력 (performance_history) ★</strong>
+              <p style={{ fontSize: '11px', color: '#475569', margin: '6px 0 10px' }}>입고부터 판매·반품·프로모션 결과까지 시계열로 보존</p>
+              <div style={{ fontSize: '11px', fontFamily: 'monospace', color: '#334155', lineHeight: 1.7 }}>
+                <div>• <strong>performance_id</strong> (정수형, 기본키) - 성과 이력 ID</div>
+                <div>• <strong>product_id / variant_id</strong> (정수형, 외래키) - 상품·옵션 ID</div>
+                <div>• <strong>recorded_date</strong> (날짜) - 집계 기준일</div>
+                <div>• <strong>inbound_qty / sales_qty / return_qty</strong> (정수형) - 입고·판매·반품 수량</div>
+                <div>• <strong>promotion_history</strong> (JSON) - 할인·쿠폰·번들 등 실행 이력</div>
+                <div>• <strong>sales_rate</strong> (숫자형) - 일/주간 판매속도</div>
+              </div>
+            </div>
+
+            <div className="term-entry" style={{ background: '#fdf4ff', borderColor: '#d946ef', borderWidth: '2px' }}>
+              <strong style={{ color: '#86198f', fontSize: '14px' }}>14. 승인·전산 이력 (approval_workflow) ★</strong>
+              <p style={{ fontSize: '11px', color: '#a21caf', margin: '6px 0 10px' }}>추천 실행 전 검토자와 전산 전파 상태를 추적</p>
+              <div style={{ fontSize: '11px', fontFamily: 'monospace', color: '#86198f', lineHeight: 1.7 }}>
+                <div>• <strong>approval_id</strong> (정수형, 기본키) - 승인 이력 ID</div>
+                <div>• <strong>product_id / recommendation_id</strong> (정수형, 외래키) - 상품·추천 결과 ID</div>
+                <div>• <strong>approval_status</strong> (문자형) - 대기 / 승인 / 반려 / 실행완료</div>
+                <div>• <strong>reviewer_id / reviewer_name</strong> (문자형) - 검토 담당자</div>
+                <div>• <strong>review_note</strong> (긴 텍스트) - 승인·반려 사유</div>
+                <div>• <strong>requested_at / reviewed_at / teams_sent_at</strong> (일시) - 요청·검토·전산 전파 시각</div>
+              </div>
+            </div>
           </div>
 
           {/* Extension Tables */}
@@ -272,6 +375,9 @@ export function CrawlingExplorer() {
                 <div>• <strong>ladder_car_policy</strong> (긴 텍스트) - 사다리차 본사지원/과금 규정 (300만 이상 100% 지원 등)</div>
                 <div>• <strong>manual_transport_policy</strong> (긴 텍스트) - 수동 계단운반 규정 (2~5층 가능, 6층 이상 불가)</div>
                 <div>• <strong>on_site_extra_fee</strong> (긴 텍스트) - 현장 추가 작업비 (옷장 3.5만~8만, 소파 1.6만~2.7만)</div>
+                <div>• <strong>installation_type</strong> (문자형) - 직접 설치 / 기사 설치 구분</div>
+                <div>• <strong>return_shipping_fee</strong> (금액) - 교환·반품 왕복 배송비</div>
+                <div>• <strong>assembly_non_returnable_flag</strong> (논리형) - 조립 후 반품 불가 여부</div>
               </div>
             </div>
 
@@ -440,7 +546,7 @@ export function CrawlingExplorer() {
           <div className="callout" style={{ marginBottom: '20px' }}>
             <strong style={{ fontSize: '15px' }}>🔄 3개 외부 DB 항목 ➔ 1개 통합 DB (InventoryOS) 연동 매핑표</strong>
             <p style={{ marginTop: '6px', fontSize: '12px' }}>
-              외부 계열사 DB의 61개 수집 필드가 통합 시스템 DB의 9개 공통 마스터 및 3개 특화 확장 테이블로 변환·저장되는 매핑 명세입니다.
+              외부 계열사 DB의 61개 수집 필드가 통합 시스템 DB의 공통 마스터·목록 조회·상세 이력·계열사 확장 테이블로 변환·저장되는 매핑 명세입니다.
             </p>
           </div>
 
@@ -477,6 +583,15 @@ export function CrawlingExplorer() {
                   <td style={{ padding: '8px 12px', color: 'var(--muted)' }}>문자형 VARCHAR(50)</td>
                   <td style={{ padding: '8px 12px' }}>그린푸드 케어식단 유형 확장 매핑</td>
                 </tr>
+                <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+                  <td style={{ padding: '8px 12px', fontWeight: 700, color: '#16a34a' }}>현대그린푸드 DB</td>
+                  <td style={{ padding: '8px 12px', fontFamily: 'monospace' }}>gf_meal_detail.package_days / storage_temp</td>
+                  <td style={{ padding: '8px 12px', color: 'var(--muted)' }}>5일 / 냉동</td>
+                  <td style={{ padding: '8px 12px', fontWeight: 600 }}>product_variant / lot_inventory</td>
+                  <td style={{ padding: '8px 12px', fontFamily: 'monospace', color: 'var(--blue)' }}>volume / storage_condition</td>
+                  <td style={{ padding: '8px 12px', color: 'var(--muted)' }}>문자형 / 문자형</td>
+                  <td style={{ padding: '8px 12px' }}>패키지 구성과 보관 조건을 상세 화면 필터로 사용</td>
+                </tr>
 
                 {/* Wellness mappings */}
                 <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
@@ -497,6 +612,24 @@ export function CrawlingExplorer() {
                   <td style={{ padding: '8px 12px', color: 'var(--muted)' }}>날짜 DATE / 정수형 INT</td>
                   <td style={{ padding: '8px 12px' }}>소비기한 날짜 파싱 ➔ D-Day 계산 및 하드차단 규칙 연결</td>
                 </tr>
+                <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+                  <td style={{ padding: '8px 12px', fontWeight: 700, color: '#d97706' }}>현대웰니스 DB</td>
+                  <td style={{ padding: '8px 12px', fontFamily: 'monospace' }}>wl_goods_stock.stock_qty / remaining_qty</td>
+                  <td style={{ padding: '8px 12px', color: 'var(--muted)' }}>120개 / 32개</td>
+                  <td style={{ padding: '8px 12px', fontWeight: 600 }}>inventory / lot_inventory</td>
+                  <td style={{ padding: '8px 12px', fontFamily: 'monospace', color: 'var(--blue)' }}>stock_qty / available_qty</td>
+                  <td style={{ padding: '8px 12px', color: 'var(--muted)' }}>정수형 INT</td>
+                  <td style={{ padding: '8px 12px' }}>예약 수량을 차감한 가용재고를 계산하고 로트별 소비기한과 연결</td>
+                </tr>
+                <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+                  <td style={{ padding: '8px 12px', fontWeight: 700, color: '#d97706' }}>현대웰니스 DB</td>
+                  <td style={{ padding: '8px 12px', fontFamily: 'monospace' }}>wl_goods_price.daily_price_text</td>
+                  <td style={{ padding: '8px 12px', color: 'var(--muted)' }}>하루당 450원</td>
+                  <td style={{ padding: '8px 12px', fontWeight: 600 }}>pricing / performance_history</td>
+                  <td style={{ padding: '8px 12px', fontFamily: 'monospace', color: 'var(--blue)' }}>daily_price_text / sales_rate</td>
+                  <td style={{ padding: '8px 12px', color: 'var(--muted)' }}>문자형 / 숫자형</td>
+                  <td style={{ padding: '8px 12px' }}>표시용 1일 단가와 기간별 판매속도를 분리 저장</td>
+                </tr>
 
                 {/* Livart mappings */}
                 <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
@@ -516,6 +649,33 @@ export function CrawlingExplorer() {
                   <td style={{ padding: '8px 12px', fontFamily: 'monospace', color: 'var(--blue)' }}>return_fee_text</td>
                   <td style={{ padding: '8px 12px', color: 'var(--muted)' }}>문자형 VARCHAR(150)</td>
                   <td style={{ padding: '8px 12px' }}>교환/반품 배송비 및 조립 후 반품 불가 조건 매핑</td>
+                </tr>
+                <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+                  <td style={{ padding: '8px 12px', fontWeight: 700, color: '#2563eb' }}>현대리바트 DB</td>
+                  <td style={{ padding: '8px 12px', fontFamily: 'monospace' }}>lb_option_sku.option_combo_name / option_price</td>
+                  <td style={{ padding: '8px 12px', color: 'var(--muted)' }}>서랍형 브라운 / 1,026,000원</td>
+                  <td style={{ padding: '8px 12px', fontWeight: 600 }}>product_variant / pricing</td>
+                  <td style={{ padding: '8px 12px', fontFamily: 'monospace', color: 'var(--blue)' }}>option_name / selling_price</td>
+                  <td style={{ padding: '8px 12px', color: 'var(--muted)' }}>문자형 / 금액형</td>
+                  <td style={{ padding: '8px 12px' }}>상품 본체와 옵션 SKU를 분리해 상세 옵션 로트와 가격을 연결</td>
+                </tr>
+                <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+                  <td style={{ padding: '8px 12px', fontWeight: 700, color: '#2563eb' }}>현대리바트 DB</td>
+                  <td style={{ padding: '8px 12px', fontFamily: 'monospace' }}>lb_logistics_policy.shipping_fee_text / manual_transport_text</td>
+                  <td style={{ padding: '8px 12px', color: 'var(--muted)' }}>무료 / 2~5층 가능</td>
+                  <td style={{ padding: '8px 12px', fontWeight: 600 }}>delivery_info / livart_furniture_ext</td>
+                  <td style={{ padding: '8px 12px', fontFamily: 'monospace', color: 'var(--blue)' }}>shipping_fee_amount / manual_transport_policy</td>
+                  <td style={{ padding: '8px 12px', color: 'var(--muted)' }}>금액형 / 긴 텍스트</td>
+                  <td style={{ padding: '8px 12px' }}>무료 배송은 0원으로 정규화하고 층수별 수동운반 규정은 원문 보존</td>
+                </tr>
+                <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+                  <td style={{ padding: '8px 12px', fontWeight: 700, color: '#2563eb' }}>현대리바트 DB</td>
+                  <td style={{ padding: '8px 12px', fontFamily: 'monospace' }}>lb_goods_master / CS 공지</td>
+                  <td style={{ padding: '8px 12px', color: 'var(--muted)' }}>P200199500 / B200075110</td>
+                  <td style={{ padding: '8px 12px', fontWeight: 600 }}>performance_history / approval_workflow</td>
+                  <td style={{ padding: '8px 12px', fontFamily: 'monospace', color: 'var(--blue)' }}>promotion_history / review_note</td>
+                  <td style={{ padding: '8px 12px', color: 'var(--muted)' }}>JSON / 긴 텍스트</td>
+                  <td style={{ padding: '8px 12px' }}>상세 페이지 원문과 정책 근거를 실행·검토 이력에 연결</td>
                 </tr>
               </tbody>
             </table>
@@ -726,7 +886,7 @@ export function CrawlingExplorer() {
                 3. `architecture-and-tech-stack.md` (DB &amp; 인프라 연계)
               </h3>
               <p style={{ fontSize: '13px', lineHeight: 1.6, color: 'var(--muted)' }}>
-                • <strong>Oracle RDBMS + Flyway:</strong> 매핑표에 정의된 9개 공통 마스터 + 3개 확장 테이블을 버전 관리하여 배치 동기화 시 멱등성을 보장합니다.<br />
+                • <strong>Oracle RDBMS + Flyway:</strong> 공통 코어·목록 조회·상세 이력·계열사 확장 테이블을 버전 관리하여 배치 동기화 시 멱등성을 보장합니다.<br />
                 • <strong>Redis 캐싱 레이어:</strong> 2,690개 상품의 위험도 계산 결과 및 일일 판매속도를 Redis Hash로 캐싱하여 프론트엔드 대시보드 조회의 응답속도를 50ms 이내로 보장합니다.<br />
                 • <strong>Spring Batch 동기화 원장:</strong> `sync_log` 테이블을 통해 일일 3개 외부 DB 연동 성공률, 미수집 항목, 가격 변동 트래킹을 자동 수행합니다.
               </p>
