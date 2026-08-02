@@ -23,7 +23,7 @@ export default function CrawlingDataPage() {
           <Reveal>
             <p>
               현대그린푸드(735건), 현대웰니스(145건), 현대리바트(1,810건)의 총 2,690건 실제 크롤링 수집 데이터를 분석하고,
-              InventoryOS 재고 의사결정 시스템 구축에 필요한 <strong>단일 스키마 다중 테넌트(Single Schema Multi-Tenant) ERD</strong>를 친숙한 한글 명세로 정리했습니다.
+              InventoryOS 재고 의사결정 시스템 구축에 필요한 <strong>단일 스키마 다중 테넌트(Single Schema Multi-Tenant) ERD</strong>를 명세로 정리했습니다.
             </p>
           </Reveal>
 
@@ -36,8 +36,8 @@ export default function CrawlingDataPage() {
             </div>
             <div className="proof-item" style={{ background: '#ffffff', padding: '16px 20px', borderRadius: '14px', border: '1px solid var(--line)' }}>
               <span style={{ fontSize: '11px', color: 'var(--muted)', fontWeight: 700 }}>수집 항목 (컬럼)</span>
-              <strong style={{ fontSize: '28px', color: '#059669', display: 'block', margin: '4px 0 2px' }}>총 58개 필드</strong>
-              <span style={{ fontSize: '11px', color: 'var(--muted)' }}>그린푸드 20 · 웰니스 22 · 리바트 16</span>
+              <strong style={{ fontSize: '28px', color: '#059669', display: 'block', margin: '4px 0 2px' }}>총 51개 필드</strong>
+              <span style={{ fontSize: '11px', color: 'var(--muted)' }}>그린푸드 20 · 웰니스 22 · 리바트 9</span>
             </div>
             <div className="proof-item" style={{ background: '#ffffff', padding: '16px 20px', borderRadius: '14px', border: '1px solid var(--line)' }}>
               <span style={{ fontSize: '11px', color: 'var(--muted)', fontWeight: 700 }}>추천 DB 테이블</span>

@@ -651,8 +651,8 @@ export const livartData: AffiliateCrawlSummary = {
   affiliateId: 'livart',
   name: '현대리바트',
   totalCount: 1810,
-  columnCount: 16,
-  columns: ["수집_순서", "대분류", "중분류", "카테고리_경로", "상품_ID", "브랜드", "상품명", "판매상태", "상품_배지", "할인율_pct", "정가_원", "판매가_원", "상품_URL", "이미지_URL", "수집일시", "출처_URL"],
+  columnCount: 9,
+  columns: ["goodsSn", "상품명", "정가", "판매가", "브랜드", "대분류", "중분류", "썸네일URL", "상품URL"],
   categories: {
     "키즈/주니어": 418,
     "책상/책장": 370,
@@ -686,15 +686,8 @@ export const livartData: AffiliateCrawlSummary = {
     "subCategory": "",
     "priceOriginal": "5280000",
     "priceSale": "",
-    "discountPct": "",
-    "status": "판매 중",
-    "badge": "",
     "url": "https://living.hyundailivart.co.kr/p/P200165385",
-    "imageUrl": "https://static.hyundailivart.co.kr/upload_mall/goods/P200165385/GM43266527_img.jpg?RS=0X250&CS=250X250&AO=1",
-    "extra": {
-      "카테고리_경로": "가구 > 마이스터 컬렉션",
-      "수집일시": "2026-08-02T22:30:00+09:00"
-    }
+    "imageUrl": "https://static.hyundailivart.co.kr/upload_mall/goods/P200165385/GM43266527_img.jpg?RS=0X250&CS=250X250&AO=1"
   },
   {
     "id": "P200165386",
@@ -704,15 +697,8 @@ export const livartData: AffiliateCrawlSummary = {
     "subCategory": "",
     "priceOriginal": "3290000",
     "priceSale": "",
-    "discountPct": "",
-    "status": "판매 중",
-    "badge": "",
     "url": "https://living.hyundailivart.co.kr/p/P200165386",
-    "imageUrl": "https://static.hyundailivart.co.kr/upload_mall/goods/P200165386/GM43241713_img.jpg?RS=0X250&CS=250X250&AO=1",
-    "extra": {
-      "카테고리_경로": "가구 > 마이스터 컬렉션",
-      "수집일시": "2026-08-02T22:30:00+09:00"
-    }
+    "imageUrl": "https://static.hyundailivart.co.kr/upload_mall/goods/P200165386/GM43241713_img.jpg?RS=0X250&CS=250X250&AO=1"
   },
   {
     "id": "P200165387",
@@ -722,15 +708,8 @@ export const livartData: AffiliateCrawlSummary = {
     "subCategory": "",
     "priceOriginal": "1980000",
     "priceSale": "",
-    "discountPct": "",
-    "status": "판매 중",
-    "badge": "",
     "url": "https://living.hyundailivart.co.kr/p/P200165387",
-    "imageUrl": "https://static.hyundailivart.co.kr/upload_mall/goods/P200165387/GM43249908_img.jpg?RS=0X250&CS=250X250&AO=1",
-    "extra": {
-      "카테고리_경로": "가구 > 마이스터 컬렉션",
-      "수집일시": "2026-08-02T22:30:00+09:00"
-    }
+    "imageUrl": "https://static.hyundailivart.co.kr/upload_mall/goods/P200165387/GM43249908_img.jpg?RS=0X250&CS=250X250&AO=1"
   },
   {
     "id": "P200165392",
@@ -740,15 +719,8 @@ export const livartData: AffiliateCrawlSummary = {
     "subCategory": "",
     "priceOriginal": "1740000",
     "priceSale": "",
-    "discountPct": "",
-    "status": "판매 중",
-    "badge": "",
     "url": "https://living.hyundailivart.co.kr/p/P200165392",
-    "imageUrl": "https://static.hyundailivart.co.kr/upload_mall/goods/P200165392/GM43255295_img.jpg?RS=0X250&CS=250X250&AO=1",
-    "extra": {
-      "카테고리_경로": "가구 > 마이스터 컬렉션",
-      "수집일시": "2026-08-02T22:30:00+09:00"
-    }
+    "imageUrl": "https://static.hyundailivart.co.kr/upload_mall/goods/P200165392/GM43255295_img.jpg?RS=0X250&CS=250X250&AO=1"
   },
   {
     "id": "P200165393",
@@ -758,15 +730,8 @@ export const livartData: AffiliateCrawlSummary = {
     "subCategory": "",
     "priceOriginal": "924000",
     "priceSale": "",
-    "discountPct": "",
-    "status": "판매 중",
-    "badge": "",
     "url": "https://living.hyundailivart.co.kr/p/P200165393",
-    "imageUrl": "https://static.hyundailivart.co.kr/upload_mall/goods/P200165393/GM43256779_img.jpg?RS=0X250&CS=250X250&AO=1",
-    "extra": {
-      "카테고리_경로": "가구 > 마이스터 컬렉션",
-      "수집일시": "2026-08-02T22:30:00+09:00"
-    }
+    "imageUrl": "https://static.hyundailivart.co.kr/upload_mall/goods/P200165393/GM43256779_img.jpg?RS=0X250&CS=250X250&AO=1"
   },
   {
     "id": "P200189253",
@@ -776,15 +741,8 @@ export const livartData: AffiliateCrawlSummary = {
     "subCategory": "",
     "priceOriginal": "1890000",
     "priceSale": "",
-    "discountPct": "",
-    "status": "판매 중",
-    "badge": "",
     "url": "https://living.hyundailivart.co.kr/p/P200189253",
-    "imageUrl": "https://static.hyundailivart.co.kr/upload_mall/goods/P200189253/GM43674168_img.jpg?RS=0X250&CS=250X250&AO=1",
-    "extra": {
-      "카테고리_경로": "가구 > 마이스터 컬렉션",
-      "수집일시": "2026-08-02T22:30:00+09:00"
-    }
+    "imageUrl": "https://static.hyundailivart.co.kr/upload_mall/goods/P200189253/GM43674168_img.jpg?RS=0X250&CS=250X250&AO=1"
   },
   {
     "id": "P200189309",
@@ -794,15 +752,8 @@ export const livartData: AffiliateCrawlSummary = {
     "subCategory": "",
     "priceOriginal": "10660000",
     "priceSale": "",
-    "discountPct": "",
-    "status": "판매 중",
-    "badge": "",
     "url": "https://living.hyundailivart.co.kr/p/P200189309",
-    "imageUrl": "https://static.hyundailivart.co.kr/upload_mall/goods/P200189309/GM43678006_img.jpg?RS=0X250&CS=250X250&AO=1",
-    "extra": {
-      "카테고리_경로": "가구 > 마이스터 컬렉션",
-      "수집일시": "2026-08-02T22:30:00+09:00"
-    }
+    "imageUrl": "https://static.hyundailivart.co.kr/upload_mall/goods/P200189309/GM43678006_img.jpg?RS=0X250&CS=250X250&AO=1"
   },
   {
     "id": "P200191349",
@@ -812,15 +763,8 @@ export const livartData: AffiliateCrawlSummary = {
     "subCategory": "",
     "priceOriginal": "1670000",
     "priceSale": "",
-    "discountPct": "",
-    "status": "판매 중",
-    "badge": "",
     "url": "https://living.hyundailivart.co.kr/p/P200191349",
-    "imageUrl": "https://static.hyundailivart.co.kr/upload_mall/goods/P200191349/GM43720616_img.jpg?RS=0X250&CS=250X250&AO=1",
-    "extra": {
-      "카테고리_경로": "가구 > 마이스터 컬렉션",
-      "수집일시": "2026-08-02T22:30:00+09:00"
-    }
+    "imageUrl": "https://static.hyundailivart.co.kr/upload_mall/goods/P200191349/GM43720616_img.jpg?RS=0X250&CS=250X250&AO=1"
   },
   {
     "id": "P200194552",
@@ -830,15 +774,8 @@ export const livartData: AffiliateCrawlSummary = {
     "subCategory": "",
     "priceOriginal": "315000",
     "priceSale": "",
-    "discountPct": "",
-    "status": "판매 중",
-    "badge": "",
     "url": "https://living.hyundailivart.co.kr/p/P200194552",
-    "imageUrl": "https://static.hyundailivart.co.kr/upload_mall/goods/P200194552/GM43802619_img.jpg?RS=0X250&CS=250X250&AO=1",
-    "extra": {
-      "카테고리_경로": "가구 > 화장대/거울/스툴",
-      "수집일시": "2026-08-02T22:30:00+09:00"
-    }
+    "imageUrl": "https://static.hyundailivart.co.kr/upload_mall/goods/P200194552/GM43802619_img.jpg?RS=0X250&CS=250X250&AO=1"
   },
   {
     "id": "P200191352",
@@ -848,15 +785,8 @@ export const livartData: AffiliateCrawlSummary = {
     "subCategory": "",
     "priceOriginal": "71000",
     "priceSale": "",
-    "discountPct": "",
-    "status": "판매 중",
-    "badge": "",
     "url": "https://living.hyundailivart.co.kr/p/P200191352",
-    "imageUrl": "https://static.hyundailivart.co.kr/upload_mall/goods/P200191352/GM43720635_img.jpg?RS=0X250&CS=250X250&AO=1",
-    "extra": {
-      "카테고리_경로": "가구 > 소파",
-      "수집일시": "2026-08-02T22:30:00+09:00"
-    }
+    "imageUrl": "https://static.hyundailivart.co.kr/upload_mall/goods/P200191352/GM43720635_img.jpg?RS=0X250&CS=250X250&AO=1"
   },
   {
     "id": "P200198883",
@@ -866,15 +796,8 @@ export const livartData: AffiliateCrawlSummary = {
     "subCategory": "",
     "priceOriginal": "6300000",
     "priceSale": "",
-    "discountPct": "",
-    "status": "판매 중",
-    "badge": "",
     "url": "https://living.hyundailivart.co.kr/p/P200198883",
-    "imageUrl": "https://static.hyundailivart.co.kr/upload_mall/goods/P200198883/GM43987294_img.jpg?RS=0X250&CS=250X250&AO=1",
-    "extra": {
-      "카테고리_경로": "가구 > 마이스터 컬렉션",
-      "수집일시": "2026-08-02T22:30:00+09:00"
-    }
+    "imageUrl": "https://static.hyundailivart.co.kr/upload_mall/goods/P200198883/GM43987294_img.jpg?RS=0X250&CS=250X250&AO=1"
   },
   {
     "id": "P200198484",
@@ -884,15 +807,8 @@ export const livartData: AffiliateCrawlSummary = {
     "subCategory": "",
     "priceOriginal": "3090000",
     "priceSale": "",
-    "discountPct": "",
-    "status": "판매 중",
-    "badge": "",
     "url": "https://living.hyundailivart.co.kr/p/P200198484",
-    "imageUrl": "https://static.hyundailivart.co.kr/upload_mall/goods/P200198484/GM43950868_img.jpg?RS=0X250&CS=250X250&AO=1",
-    "extra": {
-      "카테고리_경로": "가구 > 마이스터 컬렉션",
-      "수집일시": "2026-08-02T22:30:00+09:00"
-    }
+    "imageUrl": "https://static.hyundailivart.co.kr/upload_mall/goods/P200198484/GM43950868_img.jpg?RS=0X250&CS=250X250&AO=1"
   },
   {
     "id": "P200198241",
@@ -902,15 +818,8 @@ export const livartData: AffiliateCrawlSummary = {
     "subCategory": "",
     "priceOriginal": "3480000",
     "priceSale": "",
-    "discountPct": "",
-    "status": "판매 중",
-    "badge": "",
     "url": "https://living.hyundailivart.co.kr/p/P200198241",
-    "imageUrl": "https://static.hyundailivart.co.kr/upload_mall/goods/P200198241/GM43942574_img.jpg?RS=0X250&CS=250X250&AO=1",
-    "extra": {
-      "카테고리_경로": "가구 > 마이스터 컬렉션",
-      "수집일시": "2026-08-02T22:30:00+09:00"
-    }
+    "imageUrl": "https://static.hyundailivart.co.kr/upload_mall/goods/P200198241/GM43942574_img.jpg?RS=0X250&CS=250X250&AO=1"
   },
   {
     "id": "P200189315",
@@ -920,15 +829,8 @@ export const livartData: AffiliateCrawlSummary = {
     "subCategory": "",
     "priceOriginal": "1340000",
     "priceSale": "",
-    "discountPct": "",
-    "status": "판매 중",
-    "badge": "",
     "url": "https://living.hyundailivart.co.kr/p/P200189315",
-    "imageUrl": "https://static.hyundailivart.co.kr/upload_mall/goods/P200189315/GM43678036_img.jpg?RS=0X250&CS=250X250&AO=1",
-    "extra": {
-      "카테고리_경로": "가구 > 소파",
-      "수집일시": "2026-08-02T22:30:00+09:00"
-    }
+    "imageUrl": "https://static.hyundailivart.co.kr/upload_mall/goods/P200189315/GM43678036_img.jpg?RS=0X250&CS=250X250&AO=1"
   },
   {
     "id": "P200187605",
@@ -938,15 +840,8 @@ export const livartData: AffiliateCrawlSummary = {
     "subCategory": "",
     "priceOriginal": "17410001262500",
     "priceSale": "27",
-    "discountPct": "100",
-    "status": "판매 중",
-    "badge": "클리어런스",
     "url": "https://living.hyundailivart.co.kr/p/P200187605",
-    "imageUrl": "https://static.hyundailivart.co.kr/upload_mall/goods/P200187605/GM43615079_img.jpg?RS=0X250&CS=250X250&AO=1",
-    "extra": {
-      "카테고리_경로": "가구 > 소파",
-      "수집일시": "2026-08-02T22:30:00+09:00"
-    }
+    "imageUrl": "https://static.hyundailivart.co.kr/upload_mall/goods/P200187605/GM43615079_img.jpg?RS=0X250&CS=250X250&AO=1"
   }
 ]
 };
