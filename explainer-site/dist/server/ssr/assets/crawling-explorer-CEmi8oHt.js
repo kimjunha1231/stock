@@ -2146,7 +2146,7 @@ function CrawlingExplorer() {
 						fontSize: "16px",
 						color: "#334155"
 					},
-					children: "📡 3개 외부 계열사 레가시 DB 구조 (External Affiliate DBs)"
+					children: "📡 3개 외부 계열사 자체 DB 스키마 구조 (External Affiliate DBs)"
 				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
 					style: {
 						marginTop: "6px",
@@ -2155,9 +2155,9 @@ function CrawlingExplorer() {
 						lineHeight: 1.6
 					},
 					children: [
-						"현대그린푸드, 현대웰니스, 현대리바트는 각각 독립된 독자적 외부 DB 및 E-commerce 시스템을 운용하고 있습니다.",
+						"현대그린푸드, 현대웰니스, 현대리바트는 각자 독립된 개별 DB 및 E-Commerce 시스템을 운영 중입니다.",
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("br", {}),
-						"InventoryOS는 각 외부 DB의 원천 스키마에서 배치(Batch) 및 API 방식으로 데이터를 수집하여 통합 DB로 정규화합니다."
+						"InventoryOS는 각 외부 DB의 원천 스키마 항목을 주기적으로 동기화(Batch & API)하여 통합 DB로 정규화합니다."
 					]
 				})]
 			}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
@@ -2188,102 +2188,206 @@ function CrawlingExplorer() {
 									alignItems: "center",
 									gap: "8px"
 								},
-								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "🥗 1. 현대그린푸드 외부 DB (External Greenfood DB)" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "🥗 1. 현대그린푸드 외부 DB 구조 (External Greenfood DB)" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
 									className: "pill",
 									style: {
 										background: "#dcfce7",
 										color: "#15803d"
 									},
-									children: "20개 필드"
+									children: "20개 수집 항목"
 								})]
 							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
 								style: {
 									fontSize: "11px",
 									color: "var(--muted)"
 								},
-								children: "식재료 / 케어식단 / 신선식품 원장"
+								children: "식재료 / 케어식단 / 신선식품 원장 DB"
 							})]
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 							style: {
 								display: "grid",
-								gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
+								gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
 								gap: "12px"
 							},
 							children: [
 								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 									style: {
 										background: "#f0fdf4",
-										padding: "10px",
+										padding: "12px",
 										borderRadius: "8px",
 										fontSize: "11px",
+										lineHeight: 1.75,
 										fontFamily: "monospace"
 									},
 									children: [
 										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", {
-											style: { color: "#166534" },
-											children: "gf_item_master (상품 마스터)"
+											style: {
+												color: "#166534",
+												display: "block",
+												marginBottom: "6px"
+											},
+											children: "gf_item_master (상품 마스터 테이블)"
 										}),
-										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { children: "• item_id (PK)" }),
-										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { children: "• item_name, brand_name" }),
-										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { children: "• main_cate_name, sub_cate_name" }),
-										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { children: "• ctgry_path, item_desc" }),
-										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { children: "• sale_status, item_badge" })
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "item_id" }),
+											" (기본키) - 상품 고유 ID"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "item_name" }),
+											" - 상품명"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "brand_name" }),
+											" - 브랜드 이름"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "main_cate_name" }),
+											" - 대분류 카테고리명"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "sub_cate_name" }),
+											" - 소분류 카테고리명"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "ctgry_path" }),
+											" - 카테고리 전체 경로"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "item_desc" }),
+											" - 상품 상세 설명"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "sale_status" }),
+											" - 판매 상태 (판매 중)"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "item_badge" }),
+											" - 특성 배지 (냉동 / 고단백)"
+										] })
 									]
 								}),
 								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 									style: {
 										background: "#f0fdf4",
-										padding: "10px",
+										padding: "12px",
 										borderRadius: "8px",
 										fontSize: "11px",
+										lineHeight: 1.75,
 										fontFamily: "monospace"
 									},
 									children: [
 										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", {
-											style: { color: "#166534" },
-											children: "gf_item_price (가격)"
+											style: {
+												color: "#166534",
+												display: "block",
+												marginBottom: "6px"
+											},
+											children: "gf_item_price (가격 테이블)"
 										}),
-										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { children: "• item_id (FK)" }),
-										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { children: "• original_price" }),
-										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { children: "• selling_price" }),
-										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { children: "• discount_rate" })
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "item_id" }),
+											" (외래키) - 상품 고유 ID"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "original_price" }),
+											" - 정가 (원)"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "selling_price" }),
+											" - 실 판매가 (원)"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "discount_rate" }),
+											" - 할인율 (%)"
+										] })
 									]
 								}),
 								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 									style: {
 										background: "#f0fdf4",
-										padding: "10px",
+										padding: "12px",
 										borderRadius: "8px",
 										fontSize: "11px",
+										lineHeight: 1.75,
 										fontFamily: "monospace"
 									},
 									children: [
 										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", {
-											style: { color: "#166534" },
-											children: "gf_meal_detail (식단 특화)"
+											style: {
+												color: "#166534",
+												display: "block",
+												marginBottom: "6px"
+											},
+											children: "gf_meal_detail (식단 특화 테이블)"
 										}),
-										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { children: "• item_id (FK)" }),
-										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { children: "• meal_type_code (고혈압/당뇨)" }),
-										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { children: "• package_days (5일/7일)" }),
-										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { children: "• storage_temp (냉동/상온)" })
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "item_id" }),
+											" (외래키) - 상품 고유 ID"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "meal_type_code" }),
+											" - 식단 유형 (고혈압 / 당뇨 / 저속)"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "package_days" }),
+											" - 식단 구성 일수 (5일 / 7일)"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "storage_temp" }),
+											" - 보관 온도 (냉동 / 냉장 / 상온)"
+										] })
 									]
 								}),
 								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 									style: {
 										background: "#f0fdf4",
-										padding: "10px",
+										padding: "12px",
 										borderRadius: "8px",
 										fontSize: "11px",
+										lineHeight: 1.75,
 										fontFamily: "monospace"
 									},
 									children: [
 										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", {
-											style: { color: "#166534" },
-											children: "gf_delivery_policy (배송)"
+											style: {
+												color: "#166534",
+												display: "block",
+												marginBottom: "6px"
+											},
+											children: "gf_delivery_policy (배송 규정 테이블)"
 										}),
-										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { children: "• item_id (FK)" }),
-										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { children: "• delivery_condition_text" }),
-										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { children: "• free_shipping_threshold" })
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "item_id" }),
+											" (외래키) - 상품 고유 ID"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "delivery_condition_text" }),
+											" - 배송 조건 안내"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "free_shipping_threshold" }),
+											" - 무료 배송 기준 금액"
+										] })
 									]
 								})
 							]
@@ -2311,102 +2415,211 @@ function CrawlingExplorer() {
 									alignItems: "center",
 									gap: "8px"
 								},
-								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "💊 2. 현대웰니스 외부 DB (External Wellness DB)" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "💊 2. 현대웰니스 외부 DB 구조 (External Wellness DB)" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
 									className: "pill",
 									style: {
 										background: "#fef9c3",
 										color: "#a16207"
 									},
-									children: "22개 필드"
+									children: "22개 수집 항목"
 								})]
 							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
 								style: {
 									fontSize: "11px",
 									color: "var(--muted)"
 								},
-								children: "건강기능식품 / 고도몰 기반 원장"
+								children: "건강기능식품 / 고도몰 기반 원장 DB"
 							})]
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 							style: {
 								display: "grid",
-								gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
+								gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
 								gap: "12px"
 							},
 							children: [
 								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 									style: {
 										background: "#fefce8",
-										padding: "10px",
+										padding: "12px",
 										borderRadius: "8px",
 										fontSize: "11px",
+										lineHeight: 1.75,
 										fontFamily: "monospace"
 									},
 									children: [
 										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", {
-											style: { color: "#854d0e" },
-											children: "wl_goods_master (상품 마스터)"
+											style: {
+												color: "#854d0e",
+												display: "block",
+												marginBottom: "6px"
+											},
+											children: "wl_goods_master (상품 마스터 테이블)"
 										}),
-										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { children: "• goods_no (PK)" }),
-										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { children: "• goods_nm, brand_name" }),
-										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { children: "• brand_cate_name, cate_path" }),
-										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { children: "• goods_desc, sale_status" }),
-										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { children: "• goods_badge (임박 등)" })
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "goods_no" }),
+											" (기본키) - 상품 고유 번호"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "goods_nm" }),
+											" - 상품명"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "brand_name" }),
+											" - 브랜드명 (솔가 / 고헬씨 등)"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "brand_cate_name" }),
+											" - 브랜드 카테고리명"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "cate_path" }),
+											" - 카테고리 전체 경로"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "goods_desc" }),
+											" - 상품 설명"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "sale_status" }),
+											" - 판매 상태 (판매중)"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "goods_badge" }),
+											" - 임박 태그 (\"임박 [27.05.01까지]\")"
+										] })
 									]
 								}),
 								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 									style: {
 										background: "#fefce8",
-										padding: "10px",
+										padding: "12px",
 										borderRadius: "8px",
 										fontSize: "11px",
+										lineHeight: 1.75,
 										fontFamily: "monospace"
 									},
 									children: [
 										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", {
-											style: { color: "#854d0e" },
-											children: "wl_goods_price (가격 및 1일 단가)"
+											style: {
+												color: "#854d0e",
+												display: "block",
+												marginBottom: "6px"
+											},
+											children: "wl_goods_price (가격 & 1일 단가)"
 										}),
-										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { children: "• goods_no (FK)" }),
-										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { children: "• fixed_price, sale_price" }),
-										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { children: "• discount_pct" }),
-										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { children: "• daily_price_text (\"하루당 450원\")" })
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "goods_no" }),
+											" (외래키) - 상품 고유 번호"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "fixed_price" }),
+											" - 정가 (원)"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "sale_price" }),
+											" - 실 판매가 (원)"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "discount_pct" }),
+											" - 할인율 (%)"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "daily_price_text" }),
+											" - 1일 단가 (\"하루당 450원\")"
+										] })
 									]
 								}),
 								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 									style: {
 										background: "#fefce8",
-										padding: "10px",
+										padding: "12px",
 										borderRadius: "8px",
 										fontSize: "11px",
+										lineHeight: 1.75,
 										fontFamily: "monospace"
 									},
 									children: [
 										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", {
-											style: { color: "#854d0e" },
-											children: "wl_goods_stock (재고 & 임박)"
+											style: {
+												color: "#854d0e",
+												display: "block",
+												marginBottom: "6px"
+											},
+											children: "wl_goods_stock (재고 & 소비기한 관리)"
 										}),
-										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { children: "• goods_no (FK)" }),
-										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { children: "• stock_qty, remaining_qty (남은수량)" }),
-										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { children: "• is_expiring_soon" }),
-										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { children: "• expiration_date_text (\"27.05.01까지\")" })
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "goods_no" }),
+											" (외래키) - 상품 고유 번호"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "stock_qty" }),
+											" - 총 재고 수량"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "remaining_qty" }),
+											" - 남은 수량 (\"32개\")"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "is_expiring_soon" }),
+											" - 소비기한 임박 여부 (예/아니오)"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "expiration_date_text" }),
+											" - 유통기한 표기 (\"27.05.01까지\")"
+										] })
 									]
 								}),
 								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 									style: {
 										background: "#fefce8",
-										padding: "10px",
+										padding: "12px",
 										borderRadius: "8px",
 										fontSize: "11px",
+										lineHeight: 1.75,
 										fontFamily: "monospace"
 									},
 									children: [
 										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", {
-											style: { color: "#854d0e" },
-											children: "wl_health_detail (건기식 특화)"
+											style: {
+												color: "#854d0e",
+												display: "block",
+												marginBottom: "6px"
+											},
+											children: "wl_health_detail (건기식 특화 테이블)"
 										}),
-										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { children: "• goods_no (FK)" }),
-										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { children: "• capsule_count (60캡슐)" }),
-										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { children: "• functional_claim_text" })
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "goods_no" }),
+											" (외래키) - 상품 고유 번호"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "capsule_count" }),
+											" - 총 용량/캡슐 수 (\"60캡슐\")"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "functional_claim_text" }),
+											" - 식약처 인증 기능성 내용"
+										] })
 									]
 								})
 							]
@@ -2434,103 +2647,216 @@ function CrawlingExplorer() {
 									alignItems: "center",
 									gap: "8px"
 								},
-								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "🛋️ 3. 현대리바트 외부 DB (External Livart DB)" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "🛋️ 3. 현대리바트 외부 DB 구조 (External Livart DB)" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
 									className: "pill",
 									style: {
 										background: "#dbeafe",
 										color: "#1d4ed8"
 									},
-									children: "19개 필드"
+									children: "19개 수집 항목"
 								})]
 							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
 								style: {
 									fontSize: "11px",
 									color: "var(--muted)"
 								},
-								children: "가구 몰 / CAD / CS 물류공지 원장"
+								children: "가구 몰 / CAD / CS 물류공지 원장 DB"
 							})]
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 							style: {
 								display: "grid",
-								gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
+								gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
 								gap: "12px"
 							},
 							children: [
 								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 									style: {
 										background: "#eff6ff",
-										padding: "10px",
+										padding: "12px",
 										borderRadius: "8px",
 										fontSize: "11px",
+										lineHeight: 1.75,
 										fontFamily: "monospace"
 									},
 									children: [
 										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", {
-											style: { color: "#1e40af" },
-											children: "lb_goods_master (가구 마스터)"
+											style: {
+												color: "#1e40af",
+												display: "block",
+												marginBottom: "6px"
+											},
+											children: "lb_goods_master (가구 상품 마스터)"
 										}),
-										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { children: "• goods_sn (PK)" }),
-										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { children: "• goods_nm, brand_name" }),
-										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { children: "• cat_l_name, cat_m_name" }),
-										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { children: "• thumbnail_url, product_url" })
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "goods_sn" }),
+											" (기본키) - 가구 상품 코드 (P200199500)"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "goods_nm" }),
+											" - 가구 상품명"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "brand_name" }),
+											" - 브랜드명 (리바트온라인 등)"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "cat_l_name" }),
+											" - 대분류명 (소파 / 침대 등)"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "cat_m_name" }),
+											" - 중분류명 (패브릭소파 등)"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "thumbnail_url" }),
+											" - 썸네일 이미지 링크"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "product_url" }),
+											" - 상품 상세페이지 링크"
+										] })
 									]
 								}),
 								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 									style: {
 										background: "#eff6ff",
-										padding: "10px",
+										padding: "12px",
 										borderRadius: "8px",
 										fontSize: "11px",
+										lineHeight: 1.75,
 										fontFamily: "monospace"
 									},
 									children: [
 										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", {
-											style: { color: "#1e40af" },
-											children: "lb_option_sku (옵션 & 세부 SKU)"
+											style: {
+												color: "#1e40af",
+												display: "block",
+												marginBottom: "6px"
+											},
+											children: "lb_option_sku (옵션 & 세부 조합 SKU)"
 										}),
-										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { children: "• goods_sn (FK)" }),
-										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { children: "• opt_type (색상/타입)" }),
-										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { children: "• sub_goods_sn (세부 SKU)" }),
-										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { children: "• option_combo_name, option_price" })
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "goods_sn" }),
+											" (외래키) - 가구 상품 코드"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "opt_type" }),
+											" - 옵션 종류 (색상 / 타입)"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "sub_goods_sn" }),
+											" - 옵션별 세부 조합 SKU 코드"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "option_combo_name" }),
+											" - 옵션 조합명 (\"서랍형 브라운\")"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "option_price" }),
+											" - 옵션별 실 판매가 (\"1,026,000원\")"
+										] })
 									]
 								}),
 								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 									style: {
 										background: "#eff6ff",
-										padding: "10px",
+										padding: "12px",
 										borderRadius: "8px",
 										fontSize: "11px",
+										lineHeight: 1.75,
 										fontFamily: "monospace"
 									},
 									children: [
 										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", {
-											style: { color: "#1e40af" },
-											children: "lb_logistics_policy (배송/물류 규정)"
+											style: {
+												color: "#1e40af",
+												display: "block",
+												marginBottom: "6px"
+											},
+											children: "lb_logistics_policy (배송 & 물류 규정)"
 										}),
-										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { children: "• goods_sn (FK)" }),
-										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { children: "• delivery_type, shipping_fee_text" }),
-										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { children: "• delivery_period_text" }),
-										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { children: "• ladder_car_policy_text (CS B200059617)" }),
-										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { children: "• manual_transport_text (2~5층)" })
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "goods_sn" }),
+											" (외래키) - 가구 상품 코드"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "delivery_type" }),
+											" - 배송 방식 (\"직접배송 / 자체배송\")"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "shipping_fee_text" }),
+											" - 기본 배송비 안내 (\"무료\")"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "delivery_period_text" }),
+											" - 배송 소요기간 (\"4~5일 소요\")"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "ladder_car_policy_text" }),
+											" - 사다리차 규정 (공지 B200059617: \"300만 이상 100% 지원\")"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "manual_transport_text" }),
+											" - 계단 수동운반 규정 (\"2~5층 가능, 6층 이상 불가\")"
+										] })
 									]
 								}),
 								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 									style: {
 										background: "#eff6ff",
-										padding: "10px",
+										padding: "12px",
 										borderRadius: "8px",
 										fontSize: "11px",
+										lineHeight: 1.75,
 										fontFamily: "monospace"
 									},
 									children: [
 										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", {
-											style: { color: "#1e40af" },
-											children: "lb_cs_return_policy (교환/반품 규정)"
+											style: {
+												color: "#1e40af",
+												display: "block",
+												marginBottom: "6px"
+											},
+											children: "lb_cs_return_policy (교환 / 반품 & 현장 작업비)"
 										}),
-										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { children: "• goods_sn (FK)" }),
-										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { children: "• return_shipping_fee (105,200원)" }),
-										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { children: "• on_site_extra_fee (CS B200075110)" }),
-										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { children: "• assembly_non_returnable_flag" })
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "goods_sn" }),
+											" (외래키) - 가구 상품 코드"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "return_shipping_fee" }),
+											" - 반품 배송비 (\"105,200원 / 38,000원\")"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "on_site_extra_fee" }),
+											" - 현장 추가 작업비 (공지 B200075110: \"옷장/소파 연결비\")"
+										] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											"• ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "assembly_non_returnable_flag" }),
+											" - 조립 후 반품 불가 조건"
+										] })
 									]
 								})
 							]

@@ -285,10 +285,10 @@ export function CrawlingExplorer() {
       {activeTab === 'external' && (
         <div>
           <div className="callout" style={{ marginBottom: '24px', background: '#f8fafc', borderColor: '#cbd5e1' }}>
-            <strong style={{ fontSize: '16px', color: '#334155' }}>📡 3개 외부 계열사 레가시 DB 구조 (External Affiliate DBs)</strong>
+            <strong style={{ fontSize: '16px', color: '#334155' }}>📡 3개 외부 계열사 자체 DB 스키마 구조 (External Affiliate DBs)</strong>
             <p style={{ marginTop: '6px', color: '#64748b', fontSize: '13px', lineHeight: 1.6 }}>
-              현대그린푸드, 현대웰니스, 현대리바트는 각각 독립된 독자적 외부 DB 및 E-commerce 시스템을 운용하고 있습니다.<br />
-              InventoryOS는 각 외부 DB의 원천 스키마에서 배치(Batch) 및 API 방식으로 데이터를 수집하여 통합 DB로 정규화합니다.
+              현대그린푸드, 현대웰니스, 현대리바트는 각자 독립된 개별 DB 및 E-Commerce 시스템을 운영 중입니다.<br />
+              InventoryOS는 각 외부 DB의 원천 스키마 항목을 주기적으로 동기화(Batch &amp; API)하여 통합 DB로 정규화합니다.
             </p>
           </div>
 
@@ -298,39 +298,43 @@ export function CrawlingExplorer() {
             <div className="term-entry" style={{ background: '#ffffff', borderColor: '#86efac' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
                 <h3 style={{ margin: 0, fontSize: '16px', color: '#166534', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <span>🥗 1. 현대그린푸드 외부 DB (External Greenfood DB)</span>
-                  <span className="pill" style={{ background: '#dcfce7', color: '#15803d' }}>20개 필드</span>
+                  <span>🥗 1. 현대그린푸드 외부 DB 구조 (External Greenfood DB)</span>
+                  <span className="pill" style={{ background: '#dcfce7', color: '#15803d' }}>20개 수집 항목</span>
                 </h3>
-                <span style={{ fontSize: '11px', color: 'var(--muted)' }}>식재료 / 케어식단 / 신선식품 원장</span>
+                <span style={{ fontSize: '11px', color: 'var(--muted)' }}>식재료 / 케어식단 / 신선식품 원장 DB</span>
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '12px' }}>
-                <div style={{ background: '#f0fdf4', padding: '10px', borderRadius: '8px', fontSize: '11px', fontFamily: 'monospace' }}>
-                  <strong style={{ color: '#166534' }}>gf_item_master (상품 마스터)</strong>
-                  <div>• item_id (PK)</div>
-                  <div>• item_name, brand_name</div>
-                  <div>• main_cate_name, sub_cate_name</div>
-                  <div>• ctgry_path, item_desc</div>
-                  <div>• sale_status, item_badge</div>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '12px' }}>
+                <div style={{ background: '#f0fdf4', padding: '12px', borderRadius: '8px', fontSize: '11px', lineHeight: 1.75, fontFamily: 'monospace' }}>
+                  <strong style={{ color: '#166534', display: 'block', marginBottom: '6px' }}>gf_item_master (상품 마스터 테이블)</strong>
+                  <div>• <strong>item_id</strong> (기본키) - 상품 고유 ID</div>
+                  <div>• <strong>item_name</strong> - 상품명</div>
+                  <div>• <strong>brand_name</strong> - 브랜드 이름</div>
+                  <div>• <strong>main_cate_name</strong> - 대분류 카테고리명</div>
+                  <div>• <strong>sub_cate_name</strong> - 소분류 카테고리명</div>
+                  <div>• <strong>ctgry_path</strong> - 카테고리 전체 경로</div>
+                  <div>• <strong>item_desc</strong> - 상품 상세 설명</div>
+                  <div>• <strong>sale_status</strong> - 판매 상태 (판매 중)</div>
+                  <div>• <strong>item_badge</strong> - 특성 배지 (냉동 / 고단백)</div>
                 </div>
-                <div style={{ background: '#f0fdf4', padding: '10px', borderRadius: '8px', fontSize: '11px', fontFamily: 'monospace' }}>
-                  <strong style={{ color: '#166534' }}>gf_item_price (가격)</strong>
-                  <div>• item_id (FK)</div>
-                  <div>• original_price</div>
-                  <div>• selling_price</div>
-                  <div>• discount_rate</div>
+                <div style={{ background: '#f0fdf4', padding: '12px', borderRadius: '8px', fontSize: '11px', lineHeight: 1.75, fontFamily: 'monospace' }}>
+                  <strong style={{ color: '#166534', display: 'block', marginBottom: '6px' }}>gf_item_price (가격 테이블)</strong>
+                  <div>• <strong>item_id</strong> (외래키) - 상품 고유 ID</div>
+                  <div>• <strong>original_price</strong> - 정가 (원)</div>
+                  <div>• <strong>selling_price</strong> - 실 판매가 (원)</div>
+                  <div>• <strong>discount_rate</strong> - 할인율 (%)</div>
                 </div>
-                <div style={{ background: '#f0fdf4', padding: '10px', borderRadius: '8px', fontSize: '11px', fontFamily: 'monospace' }}>
-                  <strong style={{ color: '#166534' }}>gf_meal_detail (식단 특화)</strong>
-                  <div>• item_id (FK)</div>
-                  <div>• meal_type_code (고혈압/당뇨)</div>
-                  <div>• package_days (5일/7일)</div>
-                  <div>• storage_temp (냉동/상온)</div>
+                <div style={{ background: '#f0fdf4', padding: '12px', borderRadius: '8px', fontSize: '11px', lineHeight: 1.75, fontFamily: 'monospace' }}>
+                  <strong style={{ color: '#166534', display: 'block', marginBottom: '6px' }}>gf_meal_detail (식단 특화 테이블)</strong>
+                  <div>• <strong>item_id</strong> (외래키) - 상품 고유 ID</div>
+                  <div>• <strong>meal_type_code</strong> - 식단 유형 (고혈압 / 당뇨 / 저속)</div>
+                  <div>• <strong>package_days</strong> - 식단 구성 일수 (5일 / 7일)</div>
+                  <div>• <strong>storage_temp</strong> - 보관 온도 (냉동 / 냉장 / 상온)</div>
                 </div>
-                <div style={{ background: '#f0fdf4', padding: '10px', borderRadius: '8px', fontSize: '11px', fontFamily: 'monospace' }}>
-                  <strong style={{ color: '#166534' }}>gf_delivery_policy (배송)</strong>
-                  <div>• item_id (FK)</div>
-                  <div>• delivery_condition_text</div>
-                  <div>• free_shipping_threshold</div>
+                <div style={{ background: '#f0fdf4', padding: '12px', borderRadius: '8px', fontSize: '11px', lineHeight: 1.75, fontFamily: 'monospace' }}>
+                  <strong style={{ color: '#166534', display: 'block', marginBottom: '6px' }}>gf_delivery_policy (배송 규정 테이블)</strong>
+                  <div>• <strong>item_id</strong> (외래키) - 상품 고유 ID</div>
+                  <div>• <strong>delivery_condition_text</strong> - 배송 조건 안내</div>
+                  <div>• <strong>free_shipping_threshold</strong> - 무료 배송 기준 금액</div>
                 </div>
               </div>
             </div>
@@ -339,39 +343,44 @@ export function CrawlingExplorer() {
             <div className="term-entry" style={{ background: '#ffffff', borderColor: '#fde047' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
                 <h3 style={{ margin: 0, fontSize: '16px', color: '#854d0e', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <span>💊 2. 현대웰니스 외부 DB (External Wellness DB)</span>
-                  <span className="pill" style={{ background: '#fef9c3', color: '#a16207' }}>22개 필드</span>
+                  <span>💊 2. 현대웰니스 외부 DB 구조 (External Wellness DB)</span>
+                  <span className="pill" style={{ background: '#fef9c3', color: '#a16207' }}>22개 수집 항목</span>
                 </h3>
-                <span style={{ fontSize: '11px', color: 'var(--muted)' }}>건강기능식품 / 고도몰 기반 원장</span>
+                <span style={{ fontSize: '11px', color: 'var(--muted)' }}>건강기능식품 / 고도몰 기반 원장 DB</span>
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '12px' }}>
-                <div style={{ background: '#fefce8', padding: '10px', borderRadius: '8px', fontSize: '11px', fontFamily: 'monospace' }}>
-                  <strong style={{ color: '#854d0e' }}>wl_goods_master (상품 마스터)</strong>
-                  <div>• goods_no (PK)</div>
-                  <div>• goods_nm, brand_name</div>
-                  <div>• brand_cate_name, cate_path</div>
-                  <div>• goods_desc, sale_status</div>
-                  <div>• goods_badge (임박 등)</div>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '12px' }}>
+                <div style={{ background: '#fefce8', padding: '12px', borderRadius: '8px', fontSize: '11px', lineHeight: 1.75, fontFamily: 'monospace' }}>
+                  <strong style={{ color: '#854d0e', display: 'block', marginBottom: '6px' }}>wl_goods_master (상품 마스터 테이블)</strong>
+                  <div>• <strong>goods_no</strong> (기본키) - 상품 고유 번호</div>
+                  <div>• <strong>goods_nm</strong> - 상품명</div>
+                  <div>• <strong>brand_name</strong> - 브랜드명 (솔가 / 고헬씨 등)</div>
+                  <div>• <strong>brand_cate_name</strong> - 브랜드 카테고리명</div>
+                  <div>• <strong>cate_path</strong> - 카테고리 전체 경로</div>
+                  <div>• <strong>goods_desc</strong> - 상품 설명</div>
+                  <div>• <strong>sale_status</strong> - 판매 상태 (판매중)</div>
+                  <div>• <strong>goods_badge</strong> - 임박 태그 ("임박 [27.05.01까지]")</div>
                 </div>
-                <div style={{ background: '#fefce8', padding: '10px', borderRadius: '8px', fontSize: '11px', fontFamily: 'monospace' }}>
-                  <strong style={{ color: '#854d0e' }}>wl_goods_price (가격 및 1일 단가)</strong>
-                  <div>• goods_no (FK)</div>
-                  <div>• fixed_price, sale_price</div>
-                  <div>• discount_pct</div>
-                  <div>• daily_price_text ("하루당 450원")</div>
+                <div style={{ background: '#fefce8', padding: '12px', borderRadius: '8px', fontSize: '11px', lineHeight: 1.75, fontFamily: 'monospace' }}>
+                  <strong style={{ color: '#854d0e', display: 'block', marginBottom: '6px' }}>wl_goods_price (가격 &amp; 1일 단가)</strong>
+                  <div>• <strong>goods_no</strong> (외래키) - 상품 고유 번호</div>
+                  <div>• <strong>fixed_price</strong> - 정가 (원)</div>
+                  <div>• <strong>sale_price</strong> - 실 판매가 (원)</div>
+                  <div>• <strong>discount_pct</strong> - 할인율 (%)</div>
+                  <div>• <strong>daily_price_text</strong> - 1일 단가 ("하루당 450원")</div>
                 </div>
-                <div style={{ background: '#fefce8', padding: '10px', borderRadius: '8px', fontSize: '11px', fontFamily: 'monospace' }}>
-                  <strong style={{ color: '#854d0e' }}>wl_goods_stock (재고 &amp; 임박)</strong>
-                  <div>• goods_no (FK)</div>
-                  <div>• stock_qty, remaining_qty (남은수량)</div>
-                  <div>• is_expiring_soon</div>
-                  <div>• expiration_date_text ("27.05.01까지")</div>
+                <div style={{ background: '#fefce8', padding: '12px', borderRadius: '8px', fontSize: '11px', lineHeight: 1.75, fontFamily: 'monospace' }}>
+                  <strong style={{ color: '#854d0e', display: 'block', marginBottom: '6px' }}>wl_goods_stock (재고 &amp; 소비기한 관리)</strong>
+                  <div>• <strong>goods_no</strong> (외래키) - 상품 고유 번호</div>
+                  <div>• <strong>stock_qty</strong> - 총 재고 수량</div>
+                  <div>• <strong>remaining_qty</strong> - 남은 수량 ("32개")</div>
+                  <div>• <strong>is_expiring_soon</strong> - 소비기한 임박 여부 (예/아니오)</div>
+                  <div>• <strong>expiration_date_text</strong> - 유통기한 표기 ("27.05.01까지")</div>
                 </div>
-                <div style={{ background: '#fefce8', padding: '10px', borderRadius: '8px', fontSize: '11px', fontFamily: 'monospace' }}>
-                  <strong style={{ color: '#854d0e' }}>wl_health_detail (건기식 특화)</strong>
-                  <div>• goods_no (FK)</div>
-                  <div>• capsule_count (60캡슐)</div>
-                  <div>• functional_claim_text</div>
+                <div style={{ background: '#fefce8', padding: '12px', borderRadius: '8px', fontSize: '11px', lineHeight: 1.75, fontFamily: 'monospace' }}>
+                  <strong style={{ color: '#854d0e', display: 'block', marginBottom: '6px' }}>wl_health_detail (건기식 특화 테이블)</strong>
+                  <div>• <strong>goods_no</strong> (외래키) - 상품 고유 번호</div>
+                  <div>• <strong>capsule_count</strong> - 총 용량/캡슐 수 ("60캡슐")</div>
+                  <div>• <strong>functional_claim_text</strong> - 식약처 인증 기능성 내용</div>
                 </div>
               </div>
             </div>
@@ -380,40 +389,45 @@ export function CrawlingExplorer() {
             <div className="term-entry" style={{ background: '#ffffff', borderColor: '#93c5fd' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
                 <h3 style={{ margin: 0, fontSize: '16px', color: '#1e40af', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <span>🛋️ 3. 현대리바트 외부 DB (External Livart DB)</span>
-                  <span className="pill" style={{ background: '#dbeafe', color: '#1d4ed8' }}>19개 필드</span>
+                  <span>🛋️ 3. 현대리바트 외부 DB 구조 (External Livart DB)</span>
+                  <span className="pill" style={{ background: '#dbeafe', color: '#1d4ed8' }}>19개 수집 항목</span>
                 </h3>
-                <span style={{ fontSize: '11px', color: 'var(--muted)' }}>가구 몰 / CAD / CS 물류공지 원장</span>
+                <span style={{ fontSize: '11px', color: 'var(--muted)' }}>가구 몰 / CAD / CS 물류공지 원장 DB</span>
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '12px' }}>
-                <div style={{ background: '#eff6ff', padding: '10px', borderRadius: '8px', fontSize: '11px', fontFamily: 'monospace' }}>
-                  <strong style={{ color: '#1e40af' }}>lb_goods_master (가구 마스터)</strong>
-                  <div>• goods_sn (PK)</div>
-                  <div>• goods_nm, brand_name</div>
-                  <div>• cat_l_name, cat_m_name</div>
-                  <div>• thumbnail_url, product_url</div>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '12px' }}>
+                <div style={{ background: '#eff6ff', padding: '12px', borderRadius: '8px', fontSize: '11px', lineHeight: 1.75, fontFamily: 'monospace' }}>
+                  <strong style={{ color: '#1e40af', display: 'block', marginBottom: '6px' }}>lb_goods_master (가구 상품 마스터)</strong>
+                  <div>• <strong>goods_sn</strong> (기본키) - 가구 상품 코드 (P200199500)</div>
+                  <div>• <strong>goods_nm</strong> - 가구 상품명</div>
+                  <div>• <strong>brand_name</strong> - 브랜드명 (리바트온라인 등)</div>
+                  <div>• <strong>cat_l_name</strong> - 대분류명 (소파 / 침대 등)</div>
+                  <div>• <strong>cat_m_name</strong> - 중분류명 (패브릭소파 등)</div>
+                  <div>• <strong>thumbnail_url</strong> - 썸네일 이미지 링크</div>
+                  <div>• <strong>product_url</strong> - 상품 상세페이지 링크</div>
                 </div>
-                <div style={{ background: '#eff6ff', padding: '10px', borderRadius: '8px', fontSize: '11px', fontFamily: 'monospace' }}>
-                  <strong style={{ color: '#1e40af' }}>lb_option_sku (옵션 &amp; 세부 SKU)</strong>
-                  <div>• goods_sn (FK)</div>
-                  <div>• opt_type (색상/타입)</div>
-                  <div>• sub_goods_sn (세부 SKU)</div>
-                  <div>• option_combo_name, option_price</div>
+                <div style={{ background: '#eff6ff', padding: '12px', borderRadius: '8px', fontSize: '11px', lineHeight: 1.75, fontFamily: 'monospace' }}>
+                  <strong style={{ color: '#1e40af', display: 'block', marginBottom: '6px' }}>lb_option_sku (옵션 &amp; 세부 조합 SKU)</strong>
+                  <div>• <strong>goods_sn</strong> (외래키) - 가구 상품 코드</div>
+                  <div>• <strong>opt_type</strong> - 옵션 종류 (색상 / 타입)</div>
+                  <div>• <strong>sub_goods_sn</strong> - 옵션별 세부 조합 SKU 코드</div>
+                  <div>• <strong>option_combo_name</strong> - 옵션 조합명 ("서랍형 브라운")</div>
+                  <div>• <strong>option_price</strong> - 옵션별 실 판매가 ("1,026,000원")</div>
                 </div>
-                <div style={{ background: '#eff6ff', padding: '10px', borderRadius: '8px', fontSize: '11px', fontFamily: 'monospace' }}>
-                  <strong style={{ color: '#1e40af' }}>lb_logistics_policy (배송/물류 규정)</strong>
-                  <div>• goods_sn (FK)</div>
-                  <div>• delivery_type, shipping_fee_text</div>
-                  <div>• delivery_period_text</div>
-                  <div>• ladder_car_policy_text (CS B200059617)</div>
-                  <div>• manual_transport_text (2~5층)</div>
+                <div style={{ background: '#eff6ff', padding: '12px', borderRadius: '8px', fontSize: '11px', lineHeight: 1.75, fontFamily: 'monospace' }}>
+                  <strong style={{ color: '#1e40af', display: 'block', marginBottom: '6px' }}>lb_logistics_policy (배송 &amp; 물류 규정)</strong>
+                  <div>• <strong>goods_sn</strong> (외래키) - 가구 상품 코드</div>
+                  <div>• <strong>delivery_type</strong> - 배송 방식 ("직접배송 / 자체배송")</div>
+                  <div>• <strong>shipping_fee_text</strong> - 기본 배송비 안내 ("무료")</div>
+                  <div>• <strong>delivery_period_text</strong> - 배송 소요기간 ("4~5일 소요")</div>
+                  <div>• <strong>ladder_car_policy_text</strong> - 사다리차 규정 (공지 B200059617: "300만 이상 100% 지원")</div>
+                  <div>• <strong>manual_transport_text</strong> - 계단 수동운반 규정 ("2~5층 가능, 6층 이상 불가")</div>
                 </div>
-                <div style={{ background: '#eff6ff', padding: '10px', borderRadius: '8px', fontSize: '11px', fontFamily: 'monospace' }}>
-                  <strong style={{ color: '#1e40af' }}>lb_cs_return_policy (교환/반품 규정)</strong>
-                  <div>• goods_sn (FK)</div>
-                  <div>• return_shipping_fee (105,200원)</div>
-                  <div>• on_site_extra_fee (CS B200075110)</div>
-                  <div>• assembly_non_returnable_flag</div>
+                <div style={{ background: '#eff6ff', padding: '12px', borderRadius: '8px', fontSize: '11px', lineHeight: 1.75, fontFamily: 'monospace' }}>
+                  <strong style={{ color: '#1e40af', display: 'block', marginBottom: '6px' }}>lb_cs_return_policy (교환 / 반품 &amp; 현장 작업비)</strong>
+                  <div>• <strong>goods_sn</strong> (외래키) - 가구 상품 코드</div>
+                  <div>• <strong>return_shipping_fee</strong> - 반품 배송비 ("105,200원 / 38,000원")</div>
+                  <div>• <strong>on_site_extra_fee</strong> - 현장 추가 작업비 (공지 B200075110: "옷장/소파 연결비")</div>
+                  <div>• <strong>assembly_non_returnable_flag</strong> - 조립 후 반품 불가 조건</div>
                 </div>
               </div>
             </div>
