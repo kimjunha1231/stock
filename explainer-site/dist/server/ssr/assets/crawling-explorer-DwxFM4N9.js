@@ -1178,11 +1178,6 @@ function CrawlingExplorer() {
 										] }),
 										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
 											"• ",
-											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "domain" }),
-											" (문자형) - 공식 쇼핑몰 웹주소"
-										] }),
-										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
-											"• ",
 											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "created_at" }),
 											" (일시) - 등록 일시"
 										] })

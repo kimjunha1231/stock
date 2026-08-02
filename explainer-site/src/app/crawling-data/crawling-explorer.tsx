@@ -90,8 +90,7 @@ export function CrawlingExplorer() {
                 <div>• <strong style={{ color: '#1e40af' }}>affiliate_id</strong> (문자형, 기본키) - 계열사 식별 ID</div>
                 <div>• <strong>name</strong> (문자형) - 계열사명 (현대그린푸드 등)</div>
                 <div>• <strong>code</strong> (문자형) - 식별 코드 (GREENFOOD / WELLNESS / LIVART)</div>
-                <div>• <strong>domain</strong> (문자형) - 공식 쇼핑몰 웹주소</div>
-                <div>• <strong>created_at</strong> (일시) - 등록 일시</div>
+                                <div>• <strong>created_at</strong> (일시) - 등록 일시</div>
               </div>
             </div>
 
