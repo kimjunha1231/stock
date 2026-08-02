@@ -1410,11 +1410,6 @@ function CrawlingExplorer() {
 											"• ",
 											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "category_depth" }),
 											" (정수형) - 카테고리 단계 (1:대, 2:중, 3:소)"
-										] }),
-										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
-											"• ",
-											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "full_path" }),
-											" (문자형) - 전체 경로 (가구 > 소파 > 패브릭소파)"
 										] })
 									]
 								})

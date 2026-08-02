@@ -127,8 +127,7 @@ export function CrawlingExplorer() {
                 <div>• <strong>affiliate_id</strong> (문자형, 외래키) - 계열사 ID</div>
                 <div>• <strong>name</strong> (문자형) - 카테고리명 (소파, 식재료 등)</div>
                 <div>• <strong>category_depth</strong> (정수형) - 카테고리 단계 (1:대, 2:중, 3:소)</div>
-                <div>• <strong>full_path</strong> (문자형) - 전체 경로 (가구 &gt; 소파 &gt; 패브릭소파)</div>
-              </div>
+                              </div>
             </div>
 
             {/* Table 4: product Master */}
