@@ -11669,7 +11669,7 @@ var client_references_default = {
 		};
 	},
 	"8f226e75cca1": async () => {
-		const m = await import("./assets/crawling-explorer-CEmi8oHt.js");
+		const m = await import("./assets/crawling-explorer-B136GCpc.js");
 		return { get "CrawlingExplorer"() {
 			return m["CrawlingExplorer"];
 		} };

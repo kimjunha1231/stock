@@ -1505,11 +1505,6 @@ function CrawlingExplorer() {
 										] }),
 										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
 											"• ",
-											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "description" }),
-											" (긴 텍스트) - 상품 설명"
-										] }),
-										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
-											"• ",
 											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "status" }),
 											" (문자형) - 판매 상태 (판매 중 / 일시 품절 등)"
 										] }),

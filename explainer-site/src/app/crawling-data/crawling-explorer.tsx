@@ -145,8 +145,7 @@ export function CrawlingExplorer() {
                 <div>• <strong>brand_id</strong> (정수형, 외래키) - 브랜드 ID</div>
                 <div>• <strong>category_id</strong> (정수형, 외래키) - 카테고리 ID</div>
                 <div>• <strong>product_name</strong> (문자형) - 표준 상품명</div>
-                <div>• <strong>description</strong> (긴 텍스트) - 상품 설명</div>
-                <div>• <strong>status</strong> (문자형) - 판매 상태 (판매 중 / 일시 품절 등)</div>
+                                <div>• <strong>status</strong> (문자형) - 판매 상태 (판매 중 / 일시 품절 등)</div>
                 <div>• <strong>badge</strong> (문자형) - 배지 (소비기한 임박 / 냉동 / 클리어런스)</div>
                 <div>• <strong>product_url</strong> (문자형) - 원천 상품 상세페이지 URL</div>
                 <div>• <strong>image_url</strong> (문자형) - 대표 썸네일 이미지 URL</div>
