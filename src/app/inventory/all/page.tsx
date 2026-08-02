@@ -293,7 +293,7 @@ function UnifiedInventoryContent() {
               ₩{(tagMetrics.totalSelling / 100000000).toFixed(2)}억원
             </p>
             <div className="flex justify-between items-center text-[11px] text-slate-500 pt-1 border-t border-slate-100">
-              <span>취득 원가: ₩{(tagMetrics.totalCost / 10000).toLocaleString('ko-KR', { maximumFractionDigits: 0 })}만원</span>
+              <span>정상 판매가 총액 기준</span>
               <span className="font-bold text-[#0F4C3A]">{tagMetrics.count}개 품목</span>
             </div>
           </div>
@@ -353,7 +353,7 @@ function UnifiedInventoryContent() {
 
           <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-xs">
             <div className="flex items-center justify-between text-xs text-slate-500 font-medium mb-2">
-              <span>선택 품목 취득원가 평가액</span>
+              <span>선택 품목 정상가 총액</span>
               <PackageCheck className="w-4 h-4 text-emerald-600" />
             </div>
             <p className="text-2xl font-bold text-slate-900 tabular-nums font-mono">
@@ -464,7 +464,7 @@ function UnifiedInventoryContent() {
                 <th className="py-3 px-4 w-44 whitespace-nowrap">더현대 서울 층/매장</th>
                 <th className="py-3 px-4 w-24 whitespace-nowrap">매입구분</th>
                 <th className="py-3 px-4 w-24 text-right whitespace-nowrap">현재고</th>
-                <th className="py-3 px-4 w-32 text-right whitespace-nowrap">취득원가</th>
+                
                 <th className="py-3 px-4 w-32 text-right whitespace-nowrap">판매가</th>
                 <th className="py-3 px-4 w-24 text-center whitespace-nowrap">보관일수</th>
                 <th className="py-3 px-4 w-28 text-center whitespace-nowrap">AI 위험 태그</th>
@@ -518,9 +518,7 @@ function UnifiedInventoryContent() {
                       <td className="py-3.5 px-4 text-right font-bold text-slate-900 tabular-nums whitespace-nowrap">
                         {item.quantity.toLocaleString()}개
                       </td>
-                      <td className="py-3.5 px-4 text-right text-slate-600 tabular-nums whitespace-nowrap font-mono">
-                        ₩{item.costPrice.toLocaleString()}
-                      </td>
+
                       <td className="py-3.5 px-4 text-right font-bold text-[#0F4C3A] tabular-nums whitespace-nowrap font-mono">
                         ₩{item.sellingPrice.toLocaleString()}
                       </td>

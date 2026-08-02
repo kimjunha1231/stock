@@ -131,7 +131,7 @@ export default function DashboardPage() {
               ₩{(metrics.totalSelling / 100000000).toFixed(2)}억원
             </p>
             <div className="flex justify-between items-center text-[11px] text-slate-500 pt-1 border-t border-slate-100">
-              <span>취득 원가: ₩{(metrics.totalCost / 100000000).toFixed(2)}억원</span>
+              <span>정상 판매가 총액 기준</span>
               <span className="font-bold text-[#0F4C3A]">20개 카테고리</span>
             </div>
           </div>
@@ -301,7 +301,7 @@ export default function DashboardPage() {
                   <th className="py-2.5 px-3 min-w-[220px]">상품명</th>
                   <th className="py-2.5 px-3 w-36">층 / 카테고리</th>
                   <th className="py-2.5 px-3 w-24 text-right">현재고</th>
-                  <th className="py-2.5 px-3 w-36 text-right">정상가 / 원가</th>
+                  <th className="py-2.5 px-3 w-28 text-right">정상 판매가</th>
                   <th className="py-2.5 px-3 w-28 text-center">위험도 점수</th>
                   <th className="py-2.5 px-3 w-28 text-center">AI 전략</th>
                 </tr>
@@ -333,7 +333,7 @@ export default function DashboardPage() {
                     </td>
                     <td className="py-3 px-3 text-right tabular-nums whitespace-nowrap">
                       <p className="text-slate-900 font-bold">₩{item.sellingPrice.toLocaleString()}</p>
-                      <p className="text-[10px] text-slate-400">원가 ₩{item.costPrice.toLocaleString()}</p>
+                      
                     </td>
                     <td className="py-3 px-3 text-center whitespace-nowrap">
                       <span className="font-bold text-red-600 tabular-nums">{item.riskScore}점</span>

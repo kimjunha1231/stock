@@ -217,16 +217,16 @@ export function ProductDetailModal({
                 <span className="font-bold text-[#0F4C3A] text-sm font-mono">₩{item.sellingPrice.toLocaleString()}</span>
               </div>
               <div>
-                <span className="text-[11px] text-slate-500 block">취득 원가</span>
-                <span className="font-bold text-slate-800 text-sm font-mono">₩{item.costPrice.toLocaleString()}</span>
-              </div>
-              <div>
                 <span className="text-[11px] text-slate-500 block">현재 보유 재고</span>
                 <span className="font-bold text-slate-900 text-sm tabular-nums">{item.quantity.toLocaleString()}개</span>
               </div>
               <div>
                 <span className="text-[11px] text-slate-500 block">보관 일수</span>
                 <span className="font-bold text-slate-900 text-sm tabular-nums">{item.storageDays}일</span>
+              </div>
+              <div>
+                <span className="text-[11px] text-slate-500 block">데이터 갱신일시</span>
+                <span className="font-bold text-slate-700 text-xs font-mono">2026-07-31 09:00</span>
               </div>
             </div>
 

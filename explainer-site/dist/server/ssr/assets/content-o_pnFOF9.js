@@ -1,0 +1,670 @@
+//#region src/lib/content.ts
+var sources = [
+	{
+		"id": "mckinsey-retail",
+		"kind": "기술",
+		"title": "McKinsey & Company Retail Supply Chain Report",
+		"location": "Retail Profitability, Avoided Cost & AI TCO Framework",
+		"note": "리테일 손익 및 회피비용(Avoided Cost), AI 결정원가 TCO 통합 표준",
+		"url": "https://www.mckinsey.com/industries/retail/our-insights"
+	},
+	{
+		"id": "informs-journal",
+		"kind": "기술",
+		"title": "INFORMS Operations Research & Management Science",
+		"location": "Dynamic Markdown & Inventory Optimization Theory (Smith & Agrawal 2017)",
+		"note": "다기간 마크다운 Dynamic Pricing 및 Newsvendor 최적화 학술 검증 수식",
+		"url": "https://pubsonline.informs.org/"
+	},
+	{
+		"id": "oracle-retail",
+		"kind": "기술",
+		"title": "Oracle Retail Inventory Analytics Standard",
+		"location": "WOS (Weeks of Supply) & Sell-Through Rate (ST%) Benchmark",
+		"note": "글로벌 리테일 표준 재고 주수 및 소진율 지표 산산식 표준",
+		"url": "https://www.oracle.com/retail/"
+	},
+	{
+		id: "project-policy",
+		kind: "프로젝트",
+		title: "decision-policy.md",
+		location: "기준선·증분 기여현금이익·하드 차단",
+		note: "승인 전에 지켜야 할 손익과 안전 규칙",
+		url: "/prd"
+	},
+	{
+		id: "project-simulation",
+		kind: "프로젝트",
+		title: "src/lib/simulation.ts",
+		location: "SimulationControls·SimulationResult·simulateOption·fallback",
+		note: "전략 조건을 조정하고 계산하는 값",
+		url: "/formulas"
+	},
+	{
+		id: "project-types",
+		kind: "프로젝트",
+		title: "src/lib/types.ts",
+		location: "InventoryItem·StrategyOption·OptimizationCase",
+		note: "재고 상태·소유권·기한·전략 타입",
+		url: "/capabilities"
+	},
+	{
+		id: "mfds-useby",
+		kind: "법·정책",
+		title: "식품 소비기한 정책브리핑",
+		location: "소비기한과 유통기한·보관조건 준수",
+		note: "식품은 날짜 숫자만이 아니라 보관조건과 품질을 함께 봐야 하는 근거",
+		url: "https://www.korea.kr/news/healthView.do?newsId=148911057"
+	},
+	{
+		id: "allbaro",
+		kind: "법·정책",
+		title: "올바로시스템",
+		location: "사업장폐기물 전자관리",
+		note: "폐기 실행과 증빙을 별도 기록해야 하는 근거",
+		url: "https://www3.allbaro.or.kr/01_wsi/wsi_system_intro.vm"
+	},
+	{
+		id: "pipc-genai",
+		kind: "법·정책",
+		title: "개인정보위 생성형 AI 개인정보 처리 기준",
+		location: "생성형 AI 전 과정의 적법성·안전성·내부관리",
+		note: "고객 데이터를 최소화하고 로그·권한을 분리하는 근거",
+		url: "https://www.korea.kr/news/policyNewsView.do?newsId=148947194"
+	},
+	{
+		id: "openai-pricing",
+		kind: "기술",
+		title: "OpenAI API 가격 안내",
+		location: "입력·출력·캐시·Batch 사용량",
+		note: "공급자 가격 자체보다 usage 원장을 남기는 방식의 참고",
+		url: "https://openai.com/index/introducing-gpt-5-for-developers/"
+	},
+	{
+		id: "affiliate-wellness",
+		kind: "계열사",
+		title: "현대웰니스 공식몰",
+		location: "건강기능식품·영양제·브랜드·성분·기능·대상별 상품 분류",
+		note: "상품 페이지에서 수량, 판매가, 소비기한, 임박 태그를 분리해 입력해야 하는 근거",
+		url: "https://www.hyundaiwellness.com/"
+	},
+	{
+		id: "affiliate-livart-product",
+		kind: "계열사",
+		title: "현대리바트 공식 상품 페이지",
+		location: "배송·설치 안내, 배송 연기 조건",
+		note: "가구 전략에 제품 수량뿐 아니라 배송·설치·반품·AS 비용을 넣어야 하는 근거",
+		url: "https://company.hyundailivart.co.kr/p/P200086559?buyNow=P200086559"
+	},
+	{
+		id: "affiliate-livart-catalog",
+		kind: "계열사",
+		title: "현대리바트 오피스 카탈로그",
+		location: "제품군·배송·설치·AS",
+		note: "가구가 배송과 설치가 결합된 서비스 상품이라는 공식 카탈로그 근거",
+		url: "https://www.hyundailivart.co.kr/UserFiles/home/ko/brand/2020_OFFICE.pdf"
+	},
+	{
+		id: "affiliate-greenfood",
+		kind: "계열사",
+		title: "현대그린푸드 식자재 유통",
+		location: "급식·외식·유통 고객 대상 식재료 공급",
+		note: "식품 전략의 대상이 리테일 상품뿐 아니라 B2B 식자재·서비스 수요일 수 있음을 확인하는 공식 자료",
+		url: "https://www.hyundaigreenfood.com/po/fb/fdb/FBFDB01L.hgc"
+	},
+	{
+		id: "affiliate-greenfood-reservation",
+		kind: "계열사",
+		title: "현대그린푸드 사전예약 서비스",
+		location: "제철 농·수·축산물 사전예약·배송",
+		note: "식품의 주문 마감일, 배송일, 소비기한과 남은 물량을 연결해 계산해야 하는 근거",
+		url: "https://www.hyundaigreenfood.com/po/pr/ntn/PRNTN02V.hg?bbsSqPk=193712"
+	},
+	{
+		id: "food-label-law",
+		kind: "법·정책",
+		title: "식품 등의 표시·광고에 관한 법률",
+		location: "소비기한·보관방법·건강기능식품 주의사항",
+		note: "식품·건강기능식품은 날짜와 보관조건을 하드 차단 입력으로 관리해야 하는 법적 근거",
+		url: "https://www.law.go.kr/lsLinkCommonInfo.do?chrClsCd=010202&lsJoLnkSeq=1030102807"
+	},
+	{
+		id: "mfds-storage",
+		kind: "법·정책",
+		title: "식약처 소비기한 보관방법 안내",
+		location: "냉장·냉동 식품 취급요령",
+		note: "소비기한 숫자만이 아니라 보관조건을 함께 검증해야 하는 공공 안내",
+		url: "https://www.mfds.go.kr/brd/m_1105/view.do?seq=33674"
+	},
+	{
+		id: "markdown-paper",
+		kind: "기술",
+		title: "Smith & Agrawal (2017), INFORMS",
+		location: "Inventory-dependent markdown pricing and allocation",
+		note: "재고 수준·가격·점포 배분을 함께 최적화하는 수식의 학술 근거",
+		url: "https://pubsonline.informs.org/doi/abs/10.1287/msom.2016.0609"
+	},
+	{
+		id: "markdown-perishable",
+		kind: "기술",
+		title: "Chen, Pang & Pan (2014), INFORMS",
+		location: "Pricing, inventory and disposition for perishable products",
+		note: "부패성 상품의 가격·재고·처분과 보관비·처분비를 함께 최적화하는 근거",
+		url: "https://pubsonline.informs.org/doi/10.1287/opre.2014.1261"
+	},
+	{
+		id: "markdown-cannibalization",
+		kind: "기술",
+		title: "Hu, Shum & Yu (2016), INFORMS",
+		location: "Markdown, strategic consumers and residual inventory",
+		note: "할인이 정상판매를 잠식할 수 있어 잠식손실을 별도 항목으로 둬야 하는 근거",
+		url: "https://pubsonline.informs.org/doi/10.1287/opre.2015.1439"
+	},
+	{
+		id: "wellness-foodsafety",
+		kind: "법·정책",
+		title: "식품안전나라 건강기능식품 안내",
+		location: "기능성 표시·섭취방법·주의사항·유통기한",
+		note: "현대웰니스 건강기능식품의 표시·클레임 하드 차단 입력 근거",
+		url: "https://www.foodsafetykorea.go.kr/portal/board/boardDetail.do?bbs_no=bbs001&menu_grp=MENU_NEW01&menu_no=3120&ntctxt_no=21776"
+	},
+	{
+		id: "wellness-law",
+		kind: "법·정책",
+		title: "건강기능식품에 관한 법률",
+		location: "안전성·품질·건전한 유통·소비자 보호",
+		note: "현대웰니스 상품의 승인·리콜·표시 검토 상태를 판매전략보다 먼저 확인하는 근거",
+		url: "https://www.law.go.kr/LSW/lsInfoP.do?ancYnChk=0&lsId=009353"
+	},
+	{
+		id: "livart-corporation",
+		kind: "계열사",
+		title: "현대리바트 법인사업",
+		location: "대량 납품·계약별 납기·비용",
+		note: "B2B/프로젝트 상품은 MOQ·계약가격·납기·배송·설치 비용을 별도 입력해야 하는 근거",
+		url: "https://company.hyundailivart.co.kr/ko/corporation"
+	},
+	{
+		id: "livart-smart-factory",
+		kind: "계열사",
+		title: "현대리바트 스마트워크센터",
+		location: "스마트팩토리·자동화 공정·물류센터",
+		note: "가구 전략에 상품 상태·납기·보관·출고 비용을 연결하는 근거",
+		url: "https://company.hyundailivart.co.kr/ko/smartWorkCenter"
+	},
+	{
+		id: "greenfood-retail",
+		kind: "계열사",
+		title: "현대그린푸드 리테일 사업",
+		location: "오프라인·온라인·홈쇼핑·케어푸드 채널",
+		note: "식품의 채널·점포·상품군별 재고와 수수료를 구분하는 근거",
+		url: "https://hyundaigreenfood.com/po/fb/rtb/FBRTB01L.hgc"
+	},
+	{
+		id: "greenfood-lab",
+		kind: "계열사",
+		title: "현대그린푸드 식품위생연구소",
+		location: "미생물·잔류농약·중금속·HACCP 검사",
+		note: "검사·보류·해제·리콜 상태를 판매전략보다 먼저 검증하는 근거",
+		url: "https://hyundaigreenfood.com/po/is/fdr/ISFDR02L.hgc"
+	},
+	{
+		id: "food-label-standards",
+		kind: "법·정책",
+		title: "식약처 「식품등의 표시기준」",
+		location: "소비기한·보관방법·안전 주의사항",
+		note: "표시기준은 판매 허가가 아니며, 누락·불일치·리콜은 하드 차단해야 한다는 공공 근거",
+		url: "https://www.law.go.kr/LSW/admRulInfoP.do?admRulSeq=2100000263350"
+	},
+	{
+		id: "food-expiry-setting",
+		kind: "법·정책",
+		title: "식품·건강기능식품 소비기한 설정기준",
+		location: "표시된 보관방법과 안전한계기간",
+		note: "SKU별 로트·보관온도·포장 데이터로 처리기한을 계산해야 하는 보조 근거",
+		url: "https://www.law.go.kr/LSW/admRulInfoP.do?admRulSeq=2100000210351"
+	},
+	{
+		id: "google-trends-help",
+		kind: "기술",
+		title: "Google Trends 데이터 안내",
+		location: "상대 검색 관심도·비교·급증 해석",
+		note: "검색량 절대값이 아니라 상대지수로 제공되므로 내부 판매량과 함께 사용해야 하는 근거",
+		url: "https://support.google.com/trends/answer/4365533?hl=ko"
+	},
+	{
+		id: "google-trends-api",
+		kind: "기술",
+		title: "Google Trends API 안내",
+		location: "일·주·월 단위 검색 관심도 수집",
+		note: "프로그램으로 검색 관심도와 지역·기간별 추이를 수집하는 연동 후보",
+		url: "https://developers.google.com/search/apis/trends"
+	},
+	{
+		id: "social-demand-informs",
+		kind: "기술",
+		title: "The Value of Social Media Data in Fashion Forecasting",
+		location: "INFORMS MSOM 2023",
+		note: "SNS·검색지수를 판매예측에 결합해 초기 출하량을 판단한 실증 연구",
+		url: "https://pubsonline.informs.org/doi/10.1287/msom.2023.1193"
+	},
+	{
+		id: "social-demand-ibm",
+		kind: "기술",
+		title: "Can social media trends improve demand forecast?",
+		location: "IBM Research",
+		note: "SNS 게시물 수를 외생변수로 넣어 수요예측 정확도를 개선한 연구 요약",
+		url: "https://research.ibm.com/publications/can-social-media-trends-improve-demand-forecast"
+	},
+	{
+		id: "forecasting-tscv",
+		kind: "기술",
+		title: "Forecasting: Principles and Practice — Time series cross-validation",
+		location: "OTexts",
+		note: "미래 데이터를 섞지 않는 rolling-origin 검증과 다기간 예측 평가 근거",
+		url: "https://otexts.com/fpp3/tscv.html"
+	},
+	{
+		id: "forecasting-hierarchy",
+		kind: "기술",
+		title: "Forecasting hierarchical and grouped time series",
+		location: "OTexts",
+		note: "SKU·카테고리·계열사 집계 예측이 서로 맞아야 한다는 계층형 예측 근거",
+		url: "https://otexts.com/fpp3/hierarchical.html"
+	},
+	{
+		id: "forecasting-predictors",
+		kind: "기술",
+		title: "Forecasting — Selecting predictors",
+		location: "OTexts",
+		note: "예측 성능을 기준으로 외부 변수를 선택하고 과적합을 줄이는 근거",
+		url: "https://otexts.com/fpp3/selecting-predictors.html"
+	}
+];
+var glossary = [
+	{
+		"id": "c-llm",
+		"term": "C_LLM (LLM API 토큰 비용)",
+		"category": "AI·운영",
+		"short": "AI가 재고 분석 및 전략 설명서를 작성할 때 발생하는 언어모델 토큰 원가",
+		"definition": "초거대 언어모델에 입출력되는 프롬프트 및 전략 설명서 토큰 수량에 단위 단가를 곱해 계산하는 원가 요소입니다. 모델이 확정되기 전에는 실제 단가를 가정하지 않고 사용량 원장으로 관리합니다.",
+		"formula": "C_LLM = (Tokens_input × Price_input) + (Tokens_output × Price_output)",
+		"example": "입력 2,500 토큰 + 출력 800 토큰 발생 시 1건당 C_LLM은 약 8.5원입니다.",
+		"related": ["ai-decision-cost"],
+		"sourceIds": ["openai-pricing", "mckinsey-retail"]
+	},
+	{
+		"id": "cash-ai",
+		"term": "Cash_AI (AI 전략 순현금 손익)",
+		"category": "재무 기준",
+		"short": "AI 최적화 전략 실행 후 실제로 들어오고 나가는 순현금 흐름",
+		"definition": "할인 판매로 유입된 현금 매출에서 계열사별 가변 이행·마케팅비를 빼고, 회피한 보관·폐기 비용을 더한 뒤 AI 결정원가(C_AI_case)를 차감한 최종 현금 성과입니다.",
+		"formula": "Cash_AI = Revenue_ai − Cost_var + AvoidedCost − C_AI_case",
+		"example": "매출 4,680만원 − 변동비 24만원 + 회피폐기비 172만원 − AI원가 15원 = 순현금 손익 4,828만원.",
+		"related": [
+			"incremental-profit",
+			"avoidable-cost",
+			"ai-decision-cost"
+		],
+		"sourceIds": ["project-policy", "mckinsey-retail"]
+	},
+	{
+		"id": "lift-percent",
+		"term": "Lift% (수요 증대율)",
+		"category": "마케팅·고객",
+		"short": "프로모션이나 할인 적용 시 평시 대비 판매량이 증가하는 비율",
+		"definition": "가격 할인, 쿠폰·포인트, 앱·제휴채널 노출 등의 마케팅 자극으로 기본 판매속도(ROS) 대비 판매량이 얼마나 상승했는지 나타냅니다.",
+		"formula": "Lift% = ((행사 판매량 − 평시 판매량) ÷ 평시 판매량) × 100%",
+		"example": "평소 하루 5개 팔리던 상품이 35% 타임세일 후 하루 25개 팔렸다면 Lift% = +400% 입니다.",
+		"related": ["ros", "scenario"],
+		"sourceIds": ["informs-journal", "mckinsey-retail"]
+	},
+	{
+		"id": "ros",
+		"term": "ROS (Rate of Sale / 판매속도)",
+		"category": "재고·물류",
+		"short": "일일 또는 주간 단위 평균 판매 수량",
+		"definition": "특정 기간 동안 하루 평균 몇 개가 판매되는지 측정하는 속도 지표입니다.",
+		"formula": "ROS = 총 판매 수량 ÷ 기간 일수 (또는 주수)",
+		"example": "최근 7일간 특정 SKU 70개가 팔렸다면 ROS = 10개/일입니다.",
+		"related": ["wos", "sell-through-rate"],
+		"sourceIds": ["oracle-retail", "informs-journal"]
+	},
+	{
+		id: "baseline",
+		term: "통합 서비스 기준선",
+		category: "재무 기준",
+		short: "프로모션을 하지 않아도 실행 가능한 최선의 대안",
+		definition: "전략의 효과를 비교하기 위한 출발점입니다. 해당 계열사·채널이 프로모션을 하지 않고 선택할 수 있는 대안 중 가장 유리한 결과를 기준선으로 삼습니다.",
+		formula: "증분이익 = 전략 결과 − 통합 서비스 기준선 결과",
+		example: "그대로 보관 후 폐기하는 것보다, 제한 할인으로 소진하는 결과가 좋은지 비교합니다.",
+		related: ["incremental-profit", "contribution-cash"],
+		sourceIds: ["project-policy"]
+	},
+	{
+		id: "incremental-profit",
+		term: "증분이익",
+		category: "재무 기준",
+		short: "기준선과 비교해 전략이 추가로 만든 이익",
+		definition: "전략을 실행한 결과에서 통합 서비스 기준선의 결과를 뺀 값입니다. 장부상 매몰원가보다 실제로 변하는 현금 흐름과 회피비용을 중심으로 봅니다.",
+		formula: "위험조정 기여현금이익 − 기준선 기여현금이익",
+		example: "할인으로 매출이 줄어도 폐기·보관비를 피했다면 기준선 대비 증분이익이 커질 수 있습니다.",
+		related: [
+			"baseline",
+			"contribution-cash",
+			"avoidable-cost"
+		],
+		sourceIds: ["project-policy"]
+	},
+	{
+		id: "contribution-cash",
+		term: "기여현금이익",
+		category: "재무 기준",
+		short: "전략 때문에 실제로 변하는 현금 유입·유출과 회피비용",
+		definition: "판매, 수수료, 배송, 반품, 보관, 폐기처럼 전략 선택에 따라 변하는 항목을 반영한 현금 기준의 성과입니다.",
+		formula: "현금 유입 − 변동 현금비용 + 회피비용",
+		example: "취득원가처럼 이미 발생한 비용은 빼고, 전략 때문에 줄어드는 폐기비용은 더합니다.",
+		related: [
+			"incremental-profit",
+			"sunk-cost",
+			"avoidable-cost"
+		],
+		sourceIds: ["project-policy", "project-simulation"]
+	},
+	{
+		id: "sunk-cost",
+		term: "매몰원가",
+		category: "재무 기준",
+		short: "이미 발생해 전략 선택으로 바뀌지 않는 비용",
+		definition: "이미 지급된 취득원가나 장부가처럼 어떤 처리 전략을 선택해도 달라지지 않는 비용입니다. 전략 비교의 핵심 변동 비용과 분리합니다.",
+		example: "같은 상품을 할인하든 폐기하든 이미 지급한 취득원가는 동일하므로 증분 비교에서 분리합니다.",
+		related: ["contribution-cash"],
+		sourceIds: ["project-policy"]
+	},
+	{
+		id: "avoidable-cost",
+		term: "회피비용",
+		category: "재무 기준",
+		short: "전략을 실행했을 때 줄어드는 비용",
+		definition: "재고를 더 빨리 처리해 피할 수 있는 보관비, 폐기비, 회수비 등입니다. 단순한 매출이나 마진만으로 보이지 않는 전략 효과를 설명합니다.",
+		example: "유통기한 전에 소진하면 폐기 운송·처리 비용을 줄일 수 있습니다.",
+		related: ["incremental-profit", "contribution-cash"],
+		sourceIds: ["project-policy", "allbaro"]
+	},
+	{
+		id: "risk-stock",
+		term: "위험재고",
+		category: "기본 개념",
+		short: "시간·비용·품질 조건 때문에 손실 가능성이 커진 재고",
+		definition: "장기보관, 유통기한 임박, 방송 후 잔량, 공간 점유, 반품·파손 가능성 등으로 처리 지연 시 손실이 커질 수 있는 재고입니다.",
+		example: "소비기한이 임박한 식품과 보관·파손 비용이 큰 리빙 상품은 서로 다른 이유로 위험재고가 됩니다.",
+		related: ["hard-stop"],
+		sourceIds: ["project-types", "project-simulation"]
+	},
+	{
+		id: "hard-stop",
+		term: "하드 차단",
+		category: "AI·운영",
+		short: "비용보다 먼저 적용되는 실행 불가 조건",
+		definition: "식품안전, 유통기한, 소유권, 법규, 계열사 정책, 데이터 품질처럼 위반하면 전략 후보에서 제외해야 하는 조건입니다.",
+		example: "재고 소유권이 확인되지 않거나 식품안전 조건을 위반하는 할인안은 이익이 높아도 추천하지 않습니다.",
+		related: ["risk-stock"],
+		sourceIds: [
+			"project-policy",
+			"food-label-standards",
+			"mfds-storage"
+		]
+	},
+	{
+		id: "dday",
+		term: "D-day / 처리기한",
+		category: "재고·물류",
+		short: "판매·회수·기부·폐기 중 하나를 확정해야 하는 남은 시간",
+		definition: "식품의 소비기한, 패션의 시즌 종료, 캠페인의 종료일처럼 전략 선택을 바꾸는 시간 제약입니다. 단순한 비용이 아니라 먼저 지켜야 할 제약조건입니다.",
+		example: "소비기한이 임박한 식품은 추가 입고보다 폐기·할인·회수 비용을 먼저 비교합니다.",
+		related: ["risk-stock", "hard-stop"],
+		sourceIds: [
+			"project-types",
+			"food-label-standards",
+			"mfds-storage"
+		]
+	},
+	{
+		id: "ownership-model",
+		term: "재고 소유·정산 구조",
+		category: "재고·물류",
+		short: "상품 또는 서비스의 소유권·비용 부담·정산 권한을 정의하는 계약 정보",
+		definition: "계열사·공급사·채널마다 재고 소유권, 할인 승인권, 반품·회수·폐기 비용 부담, 수수료와 정산 방식이 달라질 수 있습니다. 공통 수식에 넣기 전에 계약별로 확인합니다.",
+		example: "소유권과 쿠폰 부담 주체가 확인되지 않은 상품은 이익 계산을 확정하지 않고 검토 대기 상태로 둡니다.",
+		related: ["hard-stop", "contribution-cash"],
+		sourceIds: ["project-types", "project-policy"]
+	},
+	{
+		id: "sales-velocity",
+		term: "판매속도",
+		category: "재고·물류",
+		short: "하루 또는 기간당 얼마나 팔리는지 나타내는 값",
+		definition: "현재고가 언제 소진될지 추정하는 기본 신호입니다. 판매속도만 보지 않고 노출·날씨·요일·행사·재고 품절 여부를 함께 확인합니다.",
+		formula: "판매속도 = 기간 판매수량 ÷ 기간 일수",
+		example: "최근 30일 판매속도와 행사 후 판매속도를 분리해 봅니다.",
+		related: ["dday", "scenario"],
+		sourceIds: ["project-simulation", "project-policy"]
+	},
+	{
+		id: "holding-cost",
+		term: "보관비",
+		category: "재고·물류",
+		short: "재고를 하루 더 보유하면서 생기는 비용과 공간 대체가치",
+		definition: "창고·냉장전력·피킹·공간 점유뿐 아니라 같은 공간을 다른 상품에 쓸 수 없게 되는 기회비용까지 포함할 수 있습니다.",
+		example: "대형 리빙 상품은 판매가보다 공간 대체가치가 전략을 바꿀 수 있습니다.",
+		related: ["avoidable-cost", "disposal-cost"],
+		sourceIds: ["project-policy", "project-simulation"]
+	},
+	{
+		id: "disposal-cost",
+		term: "폐기비",
+		category: "재고·물류",
+		short: "폐기물 처리·운송·증빙에 드는 실제 비용",
+		definition: "회계상 손상차손과 실제 현금성 처리비를 분리해야 합니다. 기부·벤더 회수·자원순환 비용도 무료라고 가정하지 않습니다.",
+		example: "폐기하지 않았다는 이유만으로 비용이 0원이 되지 않으며, 처리 증빙을 남깁니다.",
+		related: ["avoidable-cost", "hard-stop"],
+		sourceIds: ["project-policy", "allbaro"]
+	},
+	{
+		id: "return-rate",
+		term: "반품률",
+		category: "마케팅·고객",
+		short: "판매 후 되돌아오는 비율",
+		definition: "온라인 비중이 늘면 매출만큼 반품·검수·재판매 가능성·환불 시점이 중요해집니다. 상품군과 채널별로 따로 계산합니다.",
+		formula: "반품률 = 반품 수량 ÷ 판매 수량",
+		example: "건강기능식품, 가구, 식품의 반품·취소 비용을 같은 값으로 두지 않습니다.",
+		related: ["contribution-cash"],
+		sourceIds: ["project-simulation"]
+	},
+	{
+		id: "scenario",
+		term: "시나리오",
+		category: "AI·운영",
+		short: "같은 전략을 보수·기본·낙관 조건으로 나눠 보는 방법",
+		definition: "수요, 할인 반응, 반품률, 배송·설치 비용, 폐기확률이 달라질 때 결과 범위를 보여줍니다. 낙관값만으로 승인하지 않습니다.",
+		example: "기본 시나리오가 좋아도 보수 시나리오의 하방이 감당 가능한지 확인합니다.",
+		related: ["baseline", "fallback"],
+		sourceIds: ["project-policy", "project-simulation"]
+	},
+	{
+		id: "fallback",
+		term: "Fallback",
+		category: "AI·운영",
+		short: "첫 전략이 예상대로 작동하지 않을 때의 다음 처리 단계",
+		definition: "판매율이 낮아질수록 앱 노출, 제한 쿠폰, 번들, 별도 채널, 회수·기부·폐기처럼 다음 행동을 미리 정해두는 운영 트리입니다.",
+		example: "누적 판매 30% 미만이면 추가 할인보다 회수·기부·폐기 비용을 비교합니다.",
+		related: ["scenario", "disposal-cost"],
+		sourceIds: ["project-simulation", "project-policy"]
+	},
+	{
+		id: "ai-decision-cost",
+		term: "AI 결정원가",
+		category: "AI·운영",
+		short: "AI가 재고 전략을 찾고 설명하는 데 쓰는 비용",
+		definition: "데이터 추출·피처·검색·모델·LLM·도구·오케스트레이션·사람 검토·평가·실패 reserve를 합친 비용입니다. 할인·배송비와 별도로 기록합니다.",
+		formula: "C_AI_case = DATA + FEATURE + SEARCH + MODEL + LLM + TOOL + ORCH + HUMAN + EVAL + SHARED",
+		example: "슬라이더 100회는 LLM 100회가 아니라 수식 재계산 100회로 처리합니다.",
+		related: ["contribution-cash", "human-in-loop"],
+		sourceIds: [
+			"project-policy",
+			"project-simulation",
+			"openai-pricing"
+		]
+	},
+	{
+		id: "human-in-loop",
+		term: "Human-in-the-loop",
+		category: "AI·운영",
+		short: "AI가 제안하고 권한 있는 사람이 승인하는 구조",
+		definition: "AI는 가격·재고를 확정하지 않습니다. 해당 계열사의 권한 있는 담당자가 데이터·조건·하방 결과를 확인한 뒤 실행을 승인하고 결과를 회수합니다.",
+		example: "식품 안전·소유권·브랜드 예외는 담당자 승인 없이는 실행하지 않습니다.",
+		related: ["hard-stop", "ai-decision-cost"],
+		sourceIds: ["project-policy", "pipc-genai"]
+	}
+];
+var navItems = [
+	{
+		href: "/problem",
+		label: "문제"
+	},
+	{
+		href: "/ai-guide",
+		label: "AI 설계·운영 가이드"
+	},
+	{
+		href: "/capabilities",
+		label: "기능 명세"
+	},
+	{
+		href: "/crawling-data",
+		label: "크롤링 & ERD"
+	},
+	{
+		href: "/tech-stack",
+		label: "기술 스택 & 아키텍처"
+	},
+	{
+		href: "/glossary",
+		label: "용어 사전"
+	},
+	{
+		href: "/sources",
+		label: "출처·근거"
+	}
+];
+var mvpMenu = [
+	{
+		id: "01",
+		label: "홈 대시보드",
+		kind: "처음 확인하는 요약 화면",
+		purpose: "오늘 무엇부터 처리할지 빠르게 판단합니다.",
+		features: [
+			"전체 재고 수량·금액",
+			"정상·주의·위험 비율",
+			"계열사별 위험재고 규모",
+			"우선 처리 TOP 5",
+			"최근 데이터 갱신 시각"
+		]
+	},
+	{
+		id: "02",
+		label: "통합 재고",
+		kind: "검색·필터 작업 화면",
+		purpose: "3개 계열사의 상품과 SKU를 표로 찾아봅니다.",
+		features: [
+			"계열사·카테고리·브랜드 필터",
+			"상품·SKU별 재고·판매속도·보관기간",
+			"위험등급·소진예상일 정렬",
+			"페이지네이션·CSV 내보내기",
+			"상세에서 판매·재고 추이 확인"
+		]
+	},
+	{
+		id: "03",
+		label: "위험재고 분석",
+		kind: "위험 원인 확인 화면",
+		purpose: "왜 위험한지 확인하고 처리 대상을 고릅니다.",
+		features: [
+			"위험점수·등급",
+			"판단 이유와 사용한 항목",
+			"장기보관·판매부진 목록",
+			"소비기한·검사·법적 제한 사유",
+			"과거 판매·재고 추이"
+		]
+	},
+	{
+		id: "04",
+		label: "AI 전략",
+		kind: "추천 생성 화면",
+		purpose: "선택한 상품에 적용할 전략 후보를 만듭니다.",
+		features: [
+			"할인·쿠폰·프로모션 추천",
+			"판매 방식 비교안·외부 채널 활용안",
+			"마진 극대화·빠른 소진·최대 매출 목적",
+			"예상 결과와 추천 이유",
+			"전략 초안 저장"
+		]
+	},
+	{
+		id: "05",
+		label: "시뮬레이션",
+		kind: "조건 비교 화면",
+		purpose: "조건을 바꿔보고 결과를 비교합니다.",
+		features: [
+			"수량·할인율·처리기간 변경",
+			"쿠폰·포인트·배송·설치 예상비·프로모션 비용 반영",
+			"예상 판매량·매출·이익·마진율",
+			"소진기간·잔여재고·회피비용",
+			"기준선·추천안·수정안 비교"
+		]
+	},
+	{
+		id: "06",
+		label: "번들상품",
+		kind: "계열사 상품 조합 화면",
+		purpose: "서로 다른 계열사의 상품을 하나의 기획으로 묶습니다.",
+		features: [
+			"연관 상품 추천",
+			"구성 상품·수량·가격 설정",
+			"품절·법적 제한 검증",
+			"번들 적용 가능 수량",
+			"예상 매출·마진"
+		]
+	},
+	{
+		id: "07",
+		label: "검토·성과",
+		kind: "승인·결과 확인 화면",
+		purpose: "전략을 검토 요청하고 결과를 비교합니다.",
+		features: [
+			"전략 수정·버전 저장",
+			"Teams 검토 요청",
+			"전송 상태 확인",
+			"예상 대비 실제 판매·매출·마진",
+			"목표 달성률·예측 오차"
+		]
+	},
+	{
+		id: "08",
+		label: "기준정보·운영",
+		kind: "관리·이력 화면",
+		purpose: "공통 기준과 시스템 처리 이력을 확인합니다.",
+		features: [
+			"계열사·상품·카테고리·SKU 조회",
+			"데이터 동기화 이력",
+			"위험분석·수요예측 이력",
+			"AI 전략·Teams 전송 이력",
+			"배치·오류 상태 확인"
+		]
+	}
+];
+function getTerm(id) {
+	return glossary.find((term) => term.id === id);
+}
+//#endregion
+export { sources as a, navItems as i, glossary as n, mvpMenu as r, getTerm as t };

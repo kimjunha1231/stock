@@ -1,13 +1,12 @@
-export type AffiliateCompany = '현대백화점';
+export type AffiliateCompany = '현대그린푸드' | '현대웰니스' | '현대리바트';
 
 export type UserRole = 'THE_HYUNDAI_SEOUL_MD';
 
 export type StoreLocation = 
-  | '더현대 서울 B1 (식품관)' 
-  | '더현대 서울 1F (뷰티/리빙)' 
-  | '더현대 서울 2F (여성패션)' 
-  | '더현대 서울 3F (남성/잡화)' 
-  | '더현대 서울 전관';
+  | '현대그린푸드 몰' 
+  | '현대웰니스 공식몰' 
+  | '현대리바트 몰' 
+  | string;
 
 export type PurchaseType = '직매입' | '특약매입' | '임대매장';
 export type RiskStatus = 'SAFE' | 'CAUTION' | 'WARNING' | 'CRITICAL_NEAR' | 'DEAD_STOCK';
