@@ -166,7 +166,7 @@ export function CrawlingExplorer() {
                 <div>• <strong>selling_price</strong> (금액/숫자형) - 실판매가 (원)</div>
                 <div>• <strong>discount_pct</strong> (숫자형) - 할인율 (%)</div>
                 <div>• <strong>daily_price_text</strong> (문자형) - 1일 가격 (예: 하루당 450원)</div>
-                <div>• <strong>is_active</strong> (논리형) - 현재 유효 가격 여부</div>
+                <div>• <strong>is_active</strong> (논리형) - 현재 적용 중인 최신 가격 여부 (TRUE: 현재가, FALSE: 과거 이력)</div>
                 <div>• <strong>updated_at</strong> (일시) - 가격 갱신 일시</div>
               </div>
             </div>

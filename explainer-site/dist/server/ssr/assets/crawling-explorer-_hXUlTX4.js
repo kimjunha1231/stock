@@ -1612,7 +1612,7 @@ function CrawlingExplorer() {
 										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
 											"• ",
 											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "is_active" }),
-											" (논리형) - 현재 유효 가격 여부"
+											" (논리형) - 현재 적용 중인 최신 가격 여부 (TRUE: 현재가, FALSE: 과거 이력)"
 										] }),
 										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
 											"• ",
