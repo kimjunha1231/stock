@@ -36,8 +36,8 @@ export default function CrawlingDataPage() {
             </div>
             <div className="proof-item" style={{ background: '#ffffff', padding: '16px 20px', borderRadius: '14px', border: '1px solid var(--line)' }}>
               <span style={{ fontSize: '11px', color: 'var(--muted)', fontWeight: 700 }}>수집 항목 (컬럼)</span>
-              <strong style={{ fontSize: '28px', color: '#059669', display: 'block', margin: '4px 0 2px' }}>총 51개 필드</strong>
-              <span style={{ fontSize: '11px', color: 'var(--muted)' }}>그린푸드 20 · 웰니스 22 · 리바트 9</span>
+              <strong style={{ fontSize: '28px', color: '#059669', display: 'block', margin: '4px 0 2px' }}>총 57개 필드</strong>
+              <span style={{ fontSize: '11px', color: 'var(--muted)' }}>그린푸드 20 · 웰니스 22 · 리바트 15</span>
             </div>
             <div className="proof-item" style={{ background: '#ffffff', padding: '16px 20px', borderRadius: '14px', border: '1px solid var(--line)' }}>
               <span style={{ fontSize: '11px', color: 'var(--muted)', fontWeight: 700 }}>추천 DB 테이블</span>

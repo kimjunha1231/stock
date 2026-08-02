@@ -666,7 +666,7 @@ var livartData = {
 	affiliateId: "livart",
 	name: "현대리바트",
 	totalCount: 1810,
-	columnCount: 9,
+	columnCount: 15,
 	columns: [
 		"goodsSn",
 		"상품명",
@@ -675,6 +675,12 @@ var livartData = {
 		"브랜드",
 		"대분류",
 		"중분류",
+		"배송유형",
+		"배송료",
+		"배송기간",
+		"사다리차_유의사항",
+		"옵션목록",
+		"옵션별가격",
 		"썸네일URL",
 		"상품URL"
 	],
@@ -712,7 +718,14 @@ var livartData = {
 			"priceOriginal": "5280000",
 			"priceSale": "",
 			"url": "https://living.hyundailivart.co.kr/p/P200165385",
-			"imageUrl": "https://static.hyundailivart.co.kr/upload_mall/goods/P200165385/GM43266527_img.jpg?RS=0X250&CS=250X250&AO=1"
+			"imageUrl": "https://static.hyundailivart.co.kr/upload_mall/goods/P200165385/GM43266527_img.jpg?RS=0X250&CS=250X250&AO=1",
+			"extra": {
+				"배송유형": "현대 리바트 직접배송",
+				"배송기간": "설치제품, 가구제품: 배송기간은 주문 후 4~5일 정도 소요 됩니다. 결제 후 SMS, 알림톡 또는 유선을 통해",
+				"사다리차_유의사항": "생될 수 있습니다. 내용 더 보기 (사다리차 비용, 엘리베이터 사용료, 지게차 사용료 등 / 입구 협소 등의 이유로 발생) ※ 총 결제금액 300만 원 이상인 경우, 사다리차 필요시 전액 무상 지원됩니다. 엘리베이터나 사다리차 사용이 불가한 현장 상황으로 엔지니어가 직",
+				"옵션목록": "소프트 샌드 | 프로그피시",
+				"옵션별가격": "마가리트 4인 패브릭 소파 자이언트 프로그피시: 5,280,000원 | 마가리트 4인 패브릭 소파 자이언트 소프트 샌드: 5,280,000원"
+			}
 		},
 		{
 			"id": "P200165386",
@@ -723,7 +736,14 @@ var livartData = {
 			"priceOriginal": "3290000",
 			"priceSale": "",
 			"url": "https://living.hyundailivart.co.kr/p/P200165386",
-			"imageUrl": "https://static.hyundailivart.co.kr/upload_mall/goods/P200165386/GM43241713_img.jpg?RS=0X250&CS=250X250&AO=1"
+			"imageUrl": "https://static.hyundailivart.co.kr/upload_mall/goods/P200165386/GM43241713_img.jpg?RS=0X250&CS=250X250&AO=1",
+			"extra": {
+				"배송유형": "현대 리바트 직접배송",
+				"배송기간": "설치제품, 가구제품: 배송기간은 주문 후 4~5일 정도 소요 됩니다. 결제 후 SMS, 알림톡 또는 유선을 통해",
+				"사다리차_유의사항": "생될 수 있습니다. 내용 더 보기 (사다리차 비용, 엘리베이터 사용료, 지게차 사용료 등 / 입구 협소 등의 이유로 발생) ※ 총 결제금액 300만 원 이상인 경우, 사다리차 필요시 전액 무상 지원됩니다. 엘리베이터나 사다리차 사용이 불가한 현장 상황으로 엔지니어가 직",
+				"옵션목록": "",
+				"옵션별가격": ""
+			}
 		},
 		{
 			"id": "P200165387",
@@ -734,7 +754,14 @@ var livartData = {
 			"priceOriginal": "1980000",
 			"priceSale": "",
 			"url": "https://living.hyundailivart.co.kr/p/P200165387",
-			"imageUrl": "https://static.hyundailivart.co.kr/upload_mall/goods/P200165387/GM43249908_img.jpg?RS=0X250&CS=250X250&AO=1"
+			"imageUrl": "https://static.hyundailivart.co.kr/upload_mall/goods/P200165387/GM43249908_img.jpg?RS=0X250&CS=250X250&AO=1",
+			"extra": {
+				"배송유형": "현대 리바트 직접배송",
+				"배송기간": "설치제품, 가구제품: 배송기간은 주문 후 4~5일 정도 소요 됩니다. 결제 후 SMS, 알림톡 또는 유선을 통해",
+				"사다리차_유의사항": "생될 수 있습니다. 내용 더 보기 (사다리차 비용, 엘리베이터 사용료, 지게차 사용료 등 / 입구 협소 등의 이유로 발생) ※ 총 결제금액 300만 원 이상인 경우, 사다리차 필요시 전액 무상 지원됩니다. 엘리베이터나 사다리차 사용이 불가한 현장 상황으로 엔지니어가 직",
+				"옵션목록": "",
+				"옵션별가격": ""
+			}
 		},
 		{
 			"id": "P200165392",
@@ -745,7 +772,14 @@ var livartData = {
 			"priceOriginal": "1740000",
 			"priceSale": "",
 			"url": "https://living.hyundailivart.co.kr/p/P200165392",
-			"imageUrl": "https://static.hyundailivart.co.kr/upload_mall/goods/P200165392/GM43255295_img.jpg?RS=0X250&CS=250X250&AO=1"
+			"imageUrl": "https://static.hyundailivart.co.kr/upload_mall/goods/P200165392/GM43255295_img.jpg?RS=0X250&CS=250X250&AO=1",
+			"extra": {
+				"배송유형": "현대 리바트 직접배송",
+				"배송기간": "설치제품, 가구제품: 배송기간은 주문 후 4~5일 정도 소요 됩니다. 결제 후 SMS, 알림톡 또는 유선을 통해",
+				"사다리차_유의사항": "생될 수 있습니다. 내용 더 보기 (사다리차 비용, 엘리베이터 사용료, 지게차 사용료 등 / 입구 협소 등의 이유로 발생) ※ 총 결제금액 300만 원 이상인 경우, 사다리차 필요시 전액 무상 지원됩니다. 엘리베이터나 사다리차 사용이 불가한 현장 상황으로 엔지니어가 직",
+				"옵션목록": "",
+				"옵션별가격": ""
+			}
 		},
 		{
 			"id": "P200165393",
@@ -756,7 +790,14 @@ var livartData = {
 			"priceOriginal": "924000",
 			"priceSale": "",
 			"url": "https://living.hyundailivart.co.kr/p/P200165393",
-			"imageUrl": "https://static.hyundailivart.co.kr/upload_mall/goods/P200165393/GM43256779_img.jpg?RS=0X250&CS=250X250&AO=1"
+			"imageUrl": "https://static.hyundailivart.co.kr/upload_mall/goods/P200165393/GM43256779_img.jpg?RS=0X250&CS=250X250&AO=1",
+			"extra": {
+				"배송유형": "현대 리바트 직접배송",
+				"배송기간": "설치제품, 가구제품: 배송기간은 주문 후 4~5일 정도 소요 됩니다. 결제 후 SMS, 알림톡 또는 유선을 통해",
+				"사다리차_유의사항": "생될 수 있습니다. 내용 더 보기 (사다리차 비용, 엘리베이터 사용료, 지게차 사용료 등 / 입구 협소 등의 이유로 발생) ※ 총 결제금액 300만 원 이상인 경우, 사다리차 필요시 전액 무상 지원됩니다. 엘리베이터나 사다리차 사용이 불가한 현장 상황으로 엔지니어가 직",
+				"옵션목록": "",
+				"옵션별가격": ""
+			}
 		},
 		{
 			"id": "P200189253",
@@ -767,7 +808,14 @@ var livartData = {
 			"priceOriginal": "1890000",
 			"priceSale": "",
 			"url": "https://living.hyundailivart.co.kr/p/P200189253",
-			"imageUrl": "https://static.hyundailivart.co.kr/upload_mall/goods/P200189253/GM43674168_img.jpg?RS=0X250&CS=250X250&AO=1"
+			"imageUrl": "https://static.hyundailivart.co.kr/upload_mall/goods/P200189253/GM43674168_img.jpg?RS=0X250&CS=250X250&AO=1",
+			"extra": {
+				"배송유형": "현대 리바트 직접배송",
+				"배송기간": "설치제품, 가구제품: 배송기간은 주문 후 4~5일 정도 소요 됩니다. 결제 후 SMS, 알림톡 또는 유선을 통해",
+				"사다리차_유의사항": "생될 수 있습니다. 내용 더 보기 (사다리차 비용, 엘리베이터 사용료, 지게차 사용료 등 / 입구 협소 등의 이유로 발생) ※ 총 결제금액 300만 원 이상인 경우, 사다리차 필요시 전액 무상 지원됩니다. 엘리베이터나 사다리차 사용이 불가한 현장 상황으로 엔지니어가 직",
+				"옵션목록": "",
+				"옵션별가격": ""
+			}
 		},
 		{
 			"id": "P200189309",
@@ -778,7 +826,14 @@ var livartData = {
 			"priceOriginal": "10660000",
 			"priceSale": "",
 			"url": "https://living.hyundailivart.co.kr/p/P200189309",
-			"imageUrl": "https://static.hyundailivart.co.kr/upload_mall/goods/P200189309/GM43678006_img.jpg?RS=0X250&CS=250X250&AO=1"
+			"imageUrl": "https://static.hyundailivart.co.kr/upload_mall/goods/P200189309/GM43678006_img.jpg?RS=0X250&CS=250X250&AO=1",
+			"extra": {
+				"배송유형": "현대 리바트 직접배송",
+				"배송기간": "설치제품, 가구제품: 배송기간은 주문 후 4~5일 정도 소요 됩니다. 결제 후 SMS, 알림톡 또는 유선을 통해",
+				"사다리차_유의사항": "생될 수 있습니다. 내용 더 보기 (사다리차 비용, 엘리베이터 사용료, 지게차 사용료 등 / 입구 협소 등의 이유로 발생) ※ 총 결제금액 300만 원 이상인 경우, 사다리차 필요시 전액 무상 지원됩니다. 엘리베이터나 사다리차 사용이 불가한 현장 상황으로 엔지니어가 직",
+				"옵션목록": "",
+				"옵션별가격": ""
+			}
 		},
 		{
 			"id": "P200191349",
@@ -789,7 +844,14 @@ var livartData = {
 			"priceOriginal": "1670000",
 			"priceSale": "",
 			"url": "https://living.hyundailivart.co.kr/p/P200191349",
-			"imageUrl": "https://static.hyundailivart.co.kr/upload_mall/goods/P200191349/GM43720616_img.jpg?RS=0X250&CS=250X250&AO=1"
+			"imageUrl": "https://static.hyundailivart.co.kr/upload_mall/goods/P200191349/GM43720616_img.jpg?RS=0X250&CS=250X250&AO=1",
+			"extra": {
+				"배송유형": "현대 리바트 직접배송",
+				"배송기간": "설치제품, 가구제품: 배송기간은 주문 후 4~5일 정도 소요 됩니다. 결제 후 SMS, 알림톡 또는 유선을 통해",
+				"사다리차_유의사항": "생될 수 있습니다. 내용 더 보기 (사다리차 비용, 엘리베이터 사용료, 지게차 사용료 등 / 입구 협소 등의 이유로 발생) ※ 총 결제금액 300만 원 이상인 경우, 사다리차 필요시 전액 무상 지원됩니다. 엘리베이터나 사다리차 사용이 불가한 현장 상황으로 엔지니어가 직",
+				"옵션목록": "네이비 | 아이보리",
+				"옵션별가격": "미키마우스 1인 패브릭 소파 아이보리: 1,670,000원 | 미키마우스 1인 패브릭 소파 네이비: 1,670,000원"
+			}
 		},
 		{
 			"id": "P200194552",
@@ -800,7 +862,14 @@ var livartData = {
 			"priceOriginal": "315000",
 			"priceSale": "",
 			"url": "https://living.hyundailivart.co.kr/p/P200194552",
-			"imageUrl": "https://static.hyundailivart.co.kr/upload_mall/goods/P200194552/GM43802619_img.jpg?RS=0X250&CS=250X250&AO=1"
+			"imageUrl": "https://static.hyundailivart.co.kr/upload_mall/goods/P200194552/GM43802619_img.jpg?RS=0X250&CS=250X250&AO=1",
+			"extra": {
+				"배송유형": "현대 리바트 직접배송",
+				"배송기간": "설치제품, 가구제품: 배송기간은 주문 후 4~5일 정도 소요 됩니다. 결제 후 SMS, 알림톡 또는 유선을 통해",
+				"사다리차_유의사항": "생될 수 있습니다. 내용 더 보기 (사다리차 비용, 엘리베이터 사용료, 지게차 사용료 등 / 입구 협소 등의 이유로 발생) ※ 총 결제금액 300만 원 이상인 경우, 사다리차 필요시 전액 무상 지원됩니다. 엘리베이터나 사다리차 사용이 불가한 현장 상황으로 엔지니어가 직",
+				"옵션목록": "",
+				"옵션별가격": ""
+			}
 		},
 		{
 			"id": "P200191352",
@@ -811,7 +880,14 @@ var livartData = {
 			"priceOriginal": "71000",
 			"priceSale": "",
 			"url": "https://living.hyundailivart.co.kr/p/P200191352",
-			"imageUrl": "https://static.hyundailivart.co.kr/upload_mall/goods/P200191352/GM43720635_img.jpg?RS=0X250&CS=250X250&AO=1"
+			"imageUrl": "https://static.hyundailivart.co.kr/upload_mall/goods/P200191352/GM43720635_img.jpg?RS=0X250&CS=250X250&AO=1",
+			"extra": {
+				"배송유형": "현대 리바트 직접배송",
+				"배송기간": "설치제품, 가구제품: 배송기간은 주문 후 4~5일 정도 소요 됩니다. 결제 후 SMS, 알림톡 또는 유선을 통해",
+				"사다리차_유의사항": "생될 수 있습니다. 내용 더 보기 (사다리차 비용, 엘리베이터 사용료, 지게차 사용료 등 / 입구 협소 등의 이유로 발생) ※ 총 결제금액 300만 원 이상인 경우, 사다리차 필요시 전액 무상 지원됩니다. 엘리베이터나 사다리차 사용이 불가한 현장 상황으로 엔지니어가 직",
+				"옵션목록": "네이비 | 아이보리",
+				"옵션별가격": "미키마우스 1인 패브릭 소파 리본 쿠션 아이보리: 71,000원 | 미키마우스 1인 패브릭 소파 리본 쿠션 네이비: 71,000원"
+			}
 		},
 		{
 			"id": "P200198883",
@@ -822,7 +898,14 @@ var livartData = {
 			"priceOriginal": "6300000",
 			"priceSale": "",
 			"url": "https://living.hyundailivart.co.kr/p/P200198883",
-			"imageUrl": "https://static.hyundailivart.co.kr/upload_mall/goods/P200198883/GM43987294_img.jpg?RS=0X250&CS=250X250&AO=1"
+			"imageUrl": "https://static.hyundailivart.co.kr/upload_mall/goods/P200198883/GM43987294_img.jpg?RS=0X250&CS=250X250&AO=1",
+			"extra": {
+				"배송유형": "현대 리바트 직접배송",
+				"배송기간": "설치제품, 가구제품: 배송기간은 주문 후 4~5일 정도 소요 됩니다. 결제 후 SMS, 알림톡 또는 유선을 통해",
+				"사다리차_유의사항": "생될 수 있습니다. 내용 더 보기 (사다리차 비용, 엘리베이터 사용료, 지게차 사용료 등 / 입구 협소 등의 이유로 발생) ※ 총 결제금액 300만 원 이상인 경우, 사다리차 필요시 전액 무상 지원됩니다. 엘리베이터나 사다리차 사용이 불가한 현장 상황으로 엔지니어가 직",
+				"옵션목록": "",
+				"옵션별가격": ""
+			}
 		},
 		{
 			"id": "P200198484",
@@ -833,7 +916,14 @@ var livartData = {
 			"priceOriginal": "3090000",
 			"priceSale": "",
 			"url": "https://living.hyundailivart.co.kr/p/P200198484",
-			"imageUrl": "https://static.hyundailivart.co.kr/upload_mall/goods/P200198484/GM43950868_img.jpg?RS=0X250&CS=250X250&AO=1"
+			"imageUrl": "https://static.hyundailivart.co.kr/upload_mall/goods/P200198484/GM43950868_img.jpg?RS=0X250&CS=250X250&AO=1",
+			"extra": {
+				"배송유형": "현대 리바트 직접배송",
+				"배송기간": "설치제품, 가구제품: 배송기간은 주문 후 4~5일 정도 소요 됩니다. 결제 후 SMS, 알림톡 또는 유선을 통해",
+				"사다리차_유의사항": "생될 수 있습니다. 내용 더 보기 (사다리차 비용, 엘리베이터 사용료, 지게차 사용료 등 / 입구 협소 등의 이유로 발생) ※ 총 결제금액 300만 원 이상인 경우, 사다리차 필요시 전액 무상 지원됩니다. 엘리베이터나 사다리차 사용이 불가한 현장 상황으로 엔지니어가 직",
+				"옵션목록": "",
+				"옵션별가격": ""
+			}
 		},
 		{
 			"id": "P200198241",
@@ -844,7 +934,14 @@ var livartData = {
 			"priceOriginal": "3480000",
 			"priceSale": "",
 			"url": "https://living.hyundailivart.co.kr/p/P200198241",
-			"imageUrl": "https://static.hyundailivart.co.kr/upload_mall/goods/P200198241/GM43942574_img.jpg?RS=0X250&CS=250X250&AO=1"
+			"imageUrl": "https://static.hyundailivart.co.kr/upload_mall/goods/P200198241/GM43942574_img.jpg?RS=0X250&CS=250X250&AO=1",
+			"extra": {
+				"배송유형": "현대 리바트 직접배송",
+				"배송기간": "설치제품, 가구제품: 배송기간은 주문 후 4~5일 정도 소요 됩니다. 결제 후 SMS, 알림톡 또는 유선을 통해",
+				"사다리차_유의사항": "생될 수 있습니다. 내용 더 보기 (사다리차 비용, 엘리베이터 사용료, 지게차 사용료 등 / 입구 협소 등의 이유로 발생) ※ 총 결제금액 300만 원 이상인 경우, 사다리차 필요시 전액 무상 지원됩니다. 엘리베이터나 사다리차 사용이 불가한 현장 상황으로 엔지니어가 직",
+				"옵션목록": "",
+				"옵션별가격": ""
+			}
 		},
 		{
 			"id": "P200189315",
@@ -855,7 +952,14 @@ var livartData = {
 			"priceOriginal": "1340000",
 			"priceSale": "",
 			"url": "https://living.hyundailivart.co.kr/p/P200189315",
-			"imageUrl": "https://static.hyundailivart.co.kr/upload_mall/goods/P200189315/GM43678036_img.jpg?RS=0X250&CS=250X250&AO=1"
+			"imageUrl": "https://static.hyundailivart.co.kr/upload_mall/goods/P200189315/GM43678036_img.jpg?RS=0X250&CS=250X250&AO=1",
+			"extra": {
+				"배송유형": "현대 리바트 직접배송",
+				"배송기간": "설치제품, 가구제품: 배송기간은 주문 후 4~5일 정도 소요 됩니다. 결제 후 SMS, 알림톡 또는 유선을 통해",
+				"사다리차_유의사항": "생될 수 있습니다. 내용 더 보기 (사다리차 비용, 엘리베이터 사용료, 지게차 사용료 등 / 입구 협소 등의 이유로 발생) ※ 총 결제금액 300만 원 이상인 경우, 사다리차 필요시 전액 무상 지원됩니다. 엘리베이터나 사다리차 사용이 불가한 현장 상황으로 엔지니어가 직",
+				"옵션목록": "그린 (오션 그린) | 베이지 (오션 리지 그레이 샌드)",
+				"옵션별가격": "프레지던스 1인 패브릭 소파 Ⅰ 등받이 일체형 베이지: 1,340,000원"
+			}
 		},
 		{
 			"id": "P200187605",
@@ -866,7 +970,14 @@ var livartData = {
 			"priceOriginal": "17410001262500",
 			"priceSale": "27",
 			"url": "https://living.hyundailivart.co.kr/p/P200187605",
-			"imageUrl": "https://static.hyundailivart.co.kr/upload_mall/goods/P200187605/GM43615079_img.jpg?RS=0X250&CS=250X250&AO=1"
+			"imageUrl": "https://static.hyundailivart.co.kr/upload_mall/goods/P200187605/GM43615079_img.jpg?RS=0X250&CS=250X250&AO=1",
+			"extra": {
+				"배송유형": "현대 리바트 직접배송",
+				"배송기간": "설치제품, 가구제품: 배송기간은 주문 후 4~5일 정도 소요 됩니다. 결제 후 SMS, 알림톡 또는 유선을 통해",
+				"사다리차_유의사항": "생될 수 있습니다. 내용 더 보기 (사다리차 비용, 엘리베이터 사용료, 지게차 사용료 등 / 입구 협소 등의 이유로 발생) ※ 총 결제금액 300만 원 이상인 경우, 사다리차 필요시 전액 무상 지원됩니다. 엘리베이터나 사다리차 사용이 불가한 현장 상황으로 엔지니어가 직",
+				"옵션목록": "샌디베이지(웜그레이) | 카멜",
+				"옵션별가격": "그래비티 소파 천연가죽 4인 웜그레이: 1,329,000원 | 그래비티 소파 천연가죽 4인 카멜: 1,329,000원"
+			}
 		}
 	]
 };
