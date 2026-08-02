@@ -36,8 +36,8 @@ export default function CrawlingDataPage() {
             </div>
             <div className="proof-item" style={{ background: '#ffffff', padding: '16px 20px', borderRadius: '14px', border: '1px solid var(--line)' }}>
               <span style={{ fontSize: '11px', color: 'var(--muted)', fontWeight: 700 }}>수집 항목 (컬럼)</span>
-              <strong style={{ fontSize: '28px', color: '#059669', display: 'block', margin: '4px 0 2px' }}>총 57개 필드</strong>
-              <span style={{ fontSize: '11px', color: 'var(--muted)' }}>그린푸드 20 · 웰니스 22 · 리바트 15</span>
+              <strong style={{ fontSize: '28px', color: '#059669', display: 'block', margin: '4px 0 2px' }}>총 61개 필드</strong>
+              <span style={{ fontSize: '11px', color: 'var(--muted)' }}>그린푸드 20 · 웰니스 22 · 리바트 19</span>
             </div>
             <div className="proof-item" style={{ background: '#ffffff', padding: '16px 20px', borderRadius: '14px', border: '1px solid var(--line)' }}>
               <span style={{ fontSize: '11px', color: 'var(--muted)', fontWeight: 700 }}>추천 DB 테이블</span>
@@ -47,7 +47,7 @@ export default function CrawlingDataPage() {
             <div className="proof-item" style={{ background: '#ffffff', padding: '16px 20px', borderRadius: '14px', border: '1px solid var(--line)' }}>
               <span style={{ fontSize: '11px', color: 'var(--muted)', fontWeight: 700 }}>의사결정 정책 연계</span>
               <strong style={{ fontSize: '28px', color: '#d97706', display: 'block', margin: '4px 0 2px' }}>100% 한글 매핑</strong>
-              <span style={{ fontSize: '11px', color: 'var(--muted)' }}>decision-policy.md &amp; AI Blueprint</span>
+              <span style={{ fontSize: '11px', color: 'var(--muted)' }}>decision-policy.md &amp; CS 공지 규정</span>
             </div>
           </div>
         </div>
